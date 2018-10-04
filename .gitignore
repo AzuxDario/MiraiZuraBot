@@ -300,3 +300,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+/MiraiZuraBot/debug.json
+/MiraiZuraBot/release.json

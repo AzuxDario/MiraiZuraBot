@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MiraiZuraBot.Core;
+using System;
 
 namespace MiraiZuraBot
 {
@@ -6,7 +7,8 @@ namespace MiraiZuraBot
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            new Bot().Run();
+            while (Console.ReadLine() != "quit") ;
         }
     }
 }
