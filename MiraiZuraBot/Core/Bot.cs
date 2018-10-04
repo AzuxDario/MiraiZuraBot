@@ -71,7 +71,7 @@ namespace MiraiZuraBot.Core
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
-
+            DiscordClient.MessageCreated += DiscordClient_MessageCreated;
 
 
             var commandsConfig = new CommandsNextConfiguration
@@ -89,6 +89,11 @@ namespace MiraiZuraBot.Core
             RegisterCommands();
 
             await DiscordClient.ConnectAsync();
+        }
+
+        private Task DiscordClient_MessageCreated(DSharpPlus.EventArgs.MessageCreateEventArgs e)
+        {
+            return Task.CompletedTask;
         }
 
         private void SetNetworkParameters()
