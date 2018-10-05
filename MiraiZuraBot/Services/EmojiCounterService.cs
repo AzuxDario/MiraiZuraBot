@@ -57,7 +57,6 @@ namespace MiraiZuraBot.Services
                                 {
                                     Emoji dbEmoji = databaseContext.Emojis.Where(p => p.EmojiID == emoji.Id.ToString()).FirstOrDefault();
                                     dbEmoji.UsageCount += emojiCount;
-                                    databaseContext.Emojis.Update(dbEmoji);
                                     databaseContext.SaveChanges();
                                 }
                             }

@@ -19,5 +19,15 @@ namespace MiraiZuraBot.Database
         {
             return SqliteDbContextOptionsBuilderExtensions.UseSqlite(new DbContextOptionsBuilder(), connectionString).Options;
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Server>()
+                .HasMany(p => p.Emojis)
+                .WithOne(p => p.Server)
+                .IsRequired();
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

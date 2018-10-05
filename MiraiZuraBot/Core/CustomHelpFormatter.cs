@@ -108,7 +108,7 @@ namespace MiraiZuraBot.Core
 
         private CommandHelpMessage BuildGeneralHelp(DiscordEmbedBuilder embed)
         {
-            embed.AddField("HELP", "Write !help <command_name> for more information.");
+            embed.AddField("HELP", "Write *help <command_name> for more information.");
 
             var orderedSubCommands = _subCommands.OrderBy(p => p.Key).ToList();
             foreach (var group in orderedSubCommands)
