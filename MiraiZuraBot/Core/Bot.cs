@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Net.WebSocket;
 using MiraiZuraBot.Attributes;
+using MiraiZuraBot.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ namespace MiraiZuraBot.Core
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
-            DiscordClient.MessageCreated += DiscordClient_MessageCreated;
+            DiscordClient.MessageCreated += DiscordClient_MessageCreatedAsync;
 
 
             var commandsConfig = new CommandsNextConfiguration
@@ -91,9 +92,10 @@ namespace MiraiZuraBot.Core
             await DiscordClient.ConnectAsync();
         }
 
-        private Task DiscordClient_MessageCreated(DSharpPlus.EventArgs.MessageCreateEventArgs e)
+        private async Task DiscordClient_MessageCreatedAsync(DSharpPlus.EventArgs.MessageCreateEventArgs e)
         {
-            return Task.CompletedTask;
+            EmojiCounterService emojiCounterService = new EmojiCounterService();
+            emojiCounterService.countEmojiInMessage(e);
         }
 
         private void SetNetworkParameters()
