@@ -1,4 +1,6 @@
-﻿using MiraiZuraBot.Core;
+﻿using Microsoft.EntityFrameworkCore;
+using MiraiZuraBot.Core;
+using MiraiZuraBot.Database;
 using System;
 
 namespace MiraiZuraBot

@@ -7,7 +7,7 @@ namespace MiraiZuraBot.Database.Models.DynamicDB
     class Emoji
     {
         public int ID { get; set; }
-        public string Name { get; set; }
+        public string EmojiID { get; set; }
         public int UsageCount { get; set; }
 
         public int ServerID { get; set; }
