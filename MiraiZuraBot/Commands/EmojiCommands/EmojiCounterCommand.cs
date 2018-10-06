@@ -62,6 +62,11 @@ namespace MiraiZuraBot.Commands.EmojiCommands
                     foreach (EmojiHolder emoji in emojiHolderList)
                     {
                         wholeMessage += emoji.GetEmojiToSend() + "\n";
+                        if(wholeMessage.Length > 1800)
+                        {
+                            await ctx.RespondAsync(wholeMessage);
+                            wholeMessage = "";
+                        }
                     }
 
                     if (wholeMessage != null)

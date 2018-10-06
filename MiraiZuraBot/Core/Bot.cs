@@ -98,6 +98,12 @@ namespace MiraiZuraBot.Core
         {
             EmojiCounterService emojiCounterService = new EmojiCounterService();
             emojiCounterService.countEmojiInMessage(e.Message);
+            try
+            {
+                EmojiAddService emojiAddService = new EmojiAddService();
+                emojiAddService.AddEmojiOnServer(e.Guild, e.Message);
+            }
+            catch { }
         }
 
         private async Task DiscordClient_MessageUpdatedAsync(DSharpPlus.EventArgs.MessageUpdateEventArgs e)
@@ -109,7 +115,7 @@ namespace MiraiZuraBot.Core
         private async Task DiscordClient_MessageReactionAddedAsync(DSharpPlus.EventArgs.MessageReactionAddEventArgs e)
         {
             EmojiCounterService emojiCounterService = new EmojiCounterService();
-            emojiCounterService.countEmojiReaction(e.Emoji, e.Channel);
+            emojiCounterService.countEmojiReaction(e.User, e.Emoji, e.Channel);
         }
 
         private void SetNetworkParameters()

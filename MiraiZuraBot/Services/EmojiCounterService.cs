@@ -71,43 +71,46 @@ namespace MiraiZuraBot.Services
             }
         }
 
-        public async void countEmojiReaction(DiscordEmoji emoji, DiscordChannel channel)
+        public async void countEmojiReaction(DiscordUser user, DiscordEmoji emoji, DiscordChannel channel)
         {
-            using (var databaseContext = new DynamicDBContext())
+            if (user.IsCurrent == false)
             {
-                if (!databaseContext.Servers.Any(p => p.ServerID == channel.Guild.Id.ToString()))
+                using (var databaseContext = new DynamicDBContext())
                 {
-                    Server dbServer = new Server();
-                    dbServer.ServerID = channel.Guild.Id.ToString();
-                    databaseContext.Servers.Add(dbServer);
-                    databaseContext.SaveChanges();
-                }
-            }
-
-            IReadOnlyList<DiscordGuildEmoji> serverEmojiList;
-            serverEmojiList = await channel.Guild.GetEmojisAsync();
-
-            foreach (DiscordGuildEmoji serverEmoji in serverEmojiList)
-            {
-                if (emoji == serverEmoji)
-                {
-                    using (var databaseContext = new DynamicDBContext())
+                    if (!databaseContext.Servers.Any(p => p.ServerID == channel.Guild.Id.ToString()))
                     {
-                        Server dbServer = databaseContext.Servers.Where(p => p.ServerID == channel.Guild.Id.ToString()).FirstOrDefault();
-                        if (!databaseContext.Emojis.Any(p => p.EmojiID == serverEmoji.Id.ToString()))
+                        Server dbServer = new Server();
+                        dbServer.ServerID = channel.Guild.Id.ToString();
+                        databaseContext.Servers.Add(dbServer);
+                        databaseContext.SaveChanges();
+                    }
+                }
+
+                IReadOnlyList<DiscordGuildEmoji> serverEmojiList;
+                serverEmojiList = await channel.Guild.GetEmojisAsync();
+
+                foreach (DiscordGuildEmoji serverEmoji in serverEmojiList)
+                {
+                    if (emoji == serverEmoji)
+                    {
+                        using (var databaseContext = new DynamicDBContext())
                         {
-                            Emoji dbEmoji = new Emoji();
-                            dbEmoji.EmojiID = serverEmoji.Id.ToString();
-                            dbEmoji.UsageCount = 1;
-                            dbEmoji.ServerID = dbServer.ID;
-                            databaseContext.Emojis.Add(dbEmoji);
-                            databaseContext.SaveChanges();
-                        }
-                        else
-                        {
-                            Emoji dbEmoji = databaseContext.Emojis.Where(p => p.EmojiID == serverEmoji.Id.ToString()).FirstOrDefault();
-                            dbEmoji.UsageCount += 1;
-                            databaseContext.SaveChanges();
+                            Server dbServer = databaseContext.Servers.Where(p => p.ServerID == channel.Guild.Id.ToString()).FirstOrDefault();
+                            if (!databaseContext.Emojis.Any(p => p.EmojiID == serverEmoji.Id.ToString()))
+                            {
+                                Emoji dbEmoji = new Emoji();
+                                dbEmoji.EmojiID = serverEmoji.Id.ToString();
+                                dbEmoji.UsageCount = 1;
+                                dbEmoji.ServerID = dbServer.ID;
+                                databaseContext.Emojis.Add(dbEmoji);
+                                databaseContext.SaveChanges();
+                            }
+                            else
+                            {
+                                Emoji dbEmoji = databaseContext.Emojis.Where(p => p.EmojiID == serverEmoji.Id.ToString()).FirstOrDefault();
+                                dbEmoji.UsageCount += 1;
+                                databaseContext.SaveChanges();
+                            }
                         }
                     }
                 }
