@@ -73,6 +73,8 @@ namespace MiraiZuraBot.Core
 
             DiscordClient = new DiscordClient(connectionConfig);
             DiscordClient.MessageCreated += DiscordClient_MessageCreatedAsync;
+            DiscordClient.MessageUpdated += DiscordClient_MessageUpdatedAsync;
+            DiscordClient.MessageReactionAdded += DiscordClient_MessageReactionAddedAsync;
 
 
             var commandsConfig = new CommandsNextConfiguration
@@ -95,7 +97,19 @@ namespace MiraiZuraBot.Core
         private async Task DiscordClient_MessageCreatedAsync(DSharpPlus.EventArgs.MessageCreateEventArgs e)
         {
             EmojiCounterService emojiCounterService = new EmojiCounterService();
-            emojiCounterService.countEmojiInMessage(e);
+            emojiCounterService.countEmojiInMessage(e.Message);
+        }
+
+        private async Task DiscordClient_MessageUpdatedAsync(DSharpPlus.EventArgs.MessageUpdateEventArgs e)
+        {
+            EmojiCounterService emojiCounterService = new EmojiCounterService();
+            emojiCounterService.countEmojiInMessage(e.Message);
+        }
+
+        private async Task DiscordClient_MessageReactionAddedAsync(DSharpPlus.EventArgs.MessageReactionAddEventArgs e)
+        {
+            EmojiCounterService emojiCounterService = new EmojiCounterService();
+            emojiCounterService.countEmojiReaction(e.Emoji, e.Channel);
         }
 
         private void SetNetworkParameters()

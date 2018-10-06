@@ -12,42 +12,42 @@ namespace MiraiZuraBot.Services
 {
     class EmojiCounterService
     {
-        public async void countEmojiInMessage(MessageCreateEventArgs e)
+        public async void countEmojiInMessage(DiscordMessage message)
         {
-            if (e.Author.IsCurrent == false)
+            if (message.Author.IsCurrent == false)
             {
-                if (e.Message.Content.Contains(":") == true)
+                if (message.Content.Contains(":") == true)
                 {
                     using (var databaseContext = new DynamicDBContext())
                     {
-                        if (!databaseContext.Servers.Any(p => p.ServerID == e.Guild.Id.ToString()))
+                        if (!databaseContext.Servers.Any(p => p.ServerID == message.Channel.Guild.Id.ToString()))
                         {
                             Server dbServer = new Server();
-                            dbServer.ServerID = e.Guild.Id.ToString();
+                            dbServer.ServerID = message.Channel.Guild.Id.ToString();
                             databaseContext.Servers.Add(dbServer);
                             databaseContext.SaveChanges();
                         }
                     }
 
-                    IReadOnlyList<DiscordGuildEmoji> emojiList;
-                    emojiList = await e.Guild.GetEmojisAsync();
+                    IReadOnlyList<DiscordGuildEmoji> serverEmojiList;
+                    serverEmojiList = await message.Channel.Guild.GetEmojisAsync();
 
-                    foreach (DiscordGuildEmoji emoji in emojiList)
+                    foreach (DiscordGuildEmoji serverEmoji in serverEmojiList)
                     {
                         int emojiCount = 0;
-                        string emojiName = ":" + emoji.Name + ":";
+                        string emojiName = ":" + serverEmoji.Name + ":";
 
-                        if (e.Message.Content.Contains(emojiName) == true)
+                        if (message.Content.Contains(emojiName) == true)
                         {
-                            emojiCount = Regex.Matches(e.Message.Content, emojiName).Count;
+                            emojiCount = Regex.Matches(message.Content, emojiName).Count;
 
                             using (var databaseContext = new DynamicDBContext())
                             {
-                                Server dbServer = databaseContext.Servers.Where(p => p.ServerID == e.Guild.Id.ToString()).FirstOrDefault();
-                                if (!databaseContext.Emojis.Any(p => p.EmojiID == emoji.Id.ToString()))
+                                Server dbServer = databaseContext.Servers.Where(p => p.ServerID == message.Channel.Guild.Id.ToString()).FirstOrDefault();
+                                if (!databaseContext.Emojis.Any(p => p.EmojiID == serverEmoji.Id.ToString()))
                                 {
                                     Emoji dbEmoji = new Emoji();
-                                    dbEmoji.EmojiID = emoji.Id.ToString();
+                                    dbEmoji.EmojiID = serverEmoji.Id.ToString();
                                     dbEmoji.UsageCount = emojiCount;
                                     dbEmoji.ServerID = dbServer.ID;
                                     databaseContext.Emojis.Add(dbEmoji);
@@ -55,11 +55,54 @@ namespace MiraiZuraBot.Services
                                 }
                                 else
                                 {
-                                    Emoji dbEmoji = databaseContext.Emojis.Where(p => p.EmojiID == emoji.Id.ToString()).FirstOrDefault();
+                                    Emoji dbEmoji = databaseContext.Emojis.Where(p => p.EmojiID == serverEmoji.Id.ToString()).FirstOrDefault();
                                     dbEmoji.UsageCount += emojiCount;
                                     databaseContext.SaveChanges();
                                 }
                             }
+                        }
+                    }
+                }
+            }
+        }
+
+        public async void countEmojiReaction(DiscordEmoji emoji, DiscordChannel channel)
+        {
+            using (var databaseContext = new DynamicDBContext())
+            {
+                if (!databaseContext.Servers.Any(p => p.ServerID == channel.Guild.Id.ToString()))
+                {
+                    Server dbServer = new Server();
+                    dbServer.ServerID = channel.Guild.Id.ToString();
+                    databaseContext.Servers.Add(dbServer);
+                    databaseContext.SaveChanges();
+                }
+            }
+
+            IReadOnlyList<DiscordGuildEmoji> serverEmojiList;
+            serverEmojiList = await channel.Guild.GetEmojisAsync();
+
+            foreach (DiscordGuildEmoji serverEmoji in serverEmojiList)
+            {
+                if (emoji == serverEmoji)
+                {
+                    using (var databaseContext = new DynamicDBContext())
+                    {
+                        Server dbServer = databaseContext.Servers.Where(p => p.ServerID == channel.Guild.Id.ToString()).FirstOrDefault();
+                        if (!databaseContext.Emojis.Any(p => p.EmojiID == serverEmoji.Id.ToString()))
+                        {
+                            Emoji dbEmoji = new Emoji();
+                            dbEmoji.EmojiID = serverEmoji.Id.ToString();
+                            dbEmoji.UsageCount = 1;
+                            dbEmoji.ServerID = dbServer.ID;
+                            databaseContext.Emojis.Add(dbEmoji);
+                            databaseContext.SaveChanges();
+                        }
+                        else
+                        {
+                            Emoji dbEmoji = databaseContext.Emojis.Where(p => p.EmojiID == serverEmoji.Id.ToString()).FirstOrDefault();
+                            dbEmoji.UsageCount += 1;
+                            databaseContext.SaveChanges();
                         }
                     }
                 }
