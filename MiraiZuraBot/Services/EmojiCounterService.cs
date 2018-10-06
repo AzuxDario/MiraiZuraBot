@@ -16,6 +16,11 @@ namespace MiraiZuraBot.Services
         {
             if (message.Author.IsCurrent == false)
             {
+                if(message.Content == null)
+                {
+                    // No content in message
+                    return;
+                }
                 if (message.Content.Contains(":") == true)
                 {
                     using (var databaseContext = new DynamicDBContext())
