@@ -37,6 +37,11 @@ namespace MiraiZuraBot.Services
                     IReadOnlyList<DiscordGuildEmoji> serverEmojiList;
                     serverEmojiList = await message.Channel.Guild.GetEmojisAsync();
 
+                    if (serverEmojiList == null)
+                    {
+                        return;
+                    }
+
                     foreach (DiscordGuildEmoji serverEmoji in serverEmojiList)
                     {
                         int emojiCount = 0;

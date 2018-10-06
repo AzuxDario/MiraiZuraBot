@@ -42,6 +42,7 @@ namespace MiraiZuraBot.Services
                         if (Regex.Matches(serverEmoji.Name, "nusz").Count != 0)
                         {
                             AddEmoji(message, serverEmoji);
+                            return;
                         }
                     }
                 }

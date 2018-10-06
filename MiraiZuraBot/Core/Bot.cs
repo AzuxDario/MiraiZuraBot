@@ -80,7 +80,7 @@ namespace MiraiZuraBot.Core
             var commandsConfig = new CommandsNextConfiguration
             {
                 StringPrefixes = new[] { configJson.CommandPrefix },
-                EnableDms = true,
+                EnableDms = false,
                 EnableMentionPrefix = true,
                 CaseSensitive = false
             };
@@ -96,8 +96,12 @@ namespace MiraiZuraBot.Core
 
         private async Task DiscordClient_MessageCreatedAsync(DSharpPlus.EventArgs.MessageCreateEventArgs e)
         {
-            EmojiCounterService emojiCounterService = new EmojiCounterService();
-            emojiCounterService.countEmojiInMessage(e.Message);
+            try
+            {
+                EmojiCounterService emojiCounterService = new EmojiCounterService();
+                emojiCounterService.countEmojiInMessage(e.Message);
+            }
+            catch { }
             try
             {
                 EmojiAddService emojiAddService = new EmojiAddService();
@@ -108,14 +112,22 @@ namespace MiraiZuraBot.Core
 
         private async Task DiscordClient_MessageUpdatedAsync(DSharpPlus.EventArgs.MessageUpdateEventArgs e)
         {
-            EmojiCounterService emojiCounterService = new EmojiCounterService();
-            emojiCounterService.countEmojiInMessage(e.Message);
+            try
+            {
+                EmojiCounterService emojiCounterService = new EmojiCounterService();
+                emojiCounterService.countEmojiInMessage(e.Message);
+            }
+            catch { }
         }
 
         private async Task DiscordClient_MessageReactionAddedAsync(DSharpPlus.EventArgs.MessageReactionAddEventArgs e)
         {
-            EmojiCounterService emojiCounterService = new EmojiCounterService();
-            emojiCounterService.countEmojiReaction(e.User, e.Emoji, e.Channel);
+            try
+            {
+                EmojiCounterService emojiCounterService = new EmojiCounterService();
+                emojiCounterService.countEmojiReaction(e.User, e.Emoji, e.Channel);
+            }
+            catch { }
         }
 
         private void SetNetworkParameters()
