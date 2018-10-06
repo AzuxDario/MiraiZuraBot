@@ -20,6 +20,7 @@ namespace MiraiZuraBot.Commands.EmojiCommands
         [Description("Zlicza emoji użyte do tej pory na serwerze.")]
         public async Task CountEmoji(CommandContext ctx)
         {
+            ctx.TriggerTypingAsync();
             using (var databaseContext = new DynamicDBContext())
             {
                 Server dbServer = databaseContext.Servers.Where(p => p.ServerID == ctx.Guild.Id.ToString()).Include(p => p.Emojis).FirstOrDefault();
