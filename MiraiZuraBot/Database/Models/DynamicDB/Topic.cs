@@ -4,12 +4,12 @@ using System.Text;
 
 namespace MiraiZuraBot.Database.Models.DynamicDB
 {
-    class Server
+    class Topic
     {
         public int ID { get; set; }
-        public string ServerID { get; set; }
+        public int Name { get; set; }
 
-        public virtual List<Emoji> Emojis { get; set; }
         public virtual List<Channel> Channels { get; set; }
+        public virtual List<Information> Informations { get; set; }
     }
 }
