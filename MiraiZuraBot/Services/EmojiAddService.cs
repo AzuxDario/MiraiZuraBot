@@ -32,7 +32,7 @@ namespace MiraiZuraBot.Services
             }
             else if(guild.Id == 291868072531329024)
             {
-                if (Regex.Matches(message.Content, "nusz").Count + Regex.Matches(message.Content, "noż").Count != 0)
+                if (Regex.Matches(message.Content, "nusz", RegexOptions.IgnoreCase).Count + Regex.Matches(message.Content, "nóż", RegexOptions.IgnoreCase).Count > 0)
                 {
                     IReadOnlyList<DiscordGuildEmoji> serverEmojiList;
                     serverEmojiList = await message.Channel.Guild.GetEmojisAsync();
