@@ -41,36 +41,51 @@ namespace MiraiZuraBot.Services
                     {
                         return;
                     }
-
-                    foreach (DiscordGuildEmoji serverEmoji in serverEmojiList)
+                    try
                     {
-                        int emojiCount = 0;
-                        string emojiName = ":" + serverEmoji.Name + ":";
-
-                        if (message.Content.Contains(emojiName) == true)
+                        foreach (DiscordGuildEmoji serverEmoji in serverEmojiList)
                         {
-                            emojiCount = Regex.Matches(message.Content, emojiName).Count;
-
-                            using (var databaseContext = new DynamicDBContext())
+                            if (serverEmoji == null)
                             {
-                                Server dbServer = databaseContext.Servers.Where(p => p.ServerID == message.Channel.Guild.Id.ToString()).FirstOrDefault();
-                                if (!databaseContext.Emojis.Any(p => p.EmojiID == serverEmoji.Id.ToString()))
+                                continue;
+                            }
+                            int emojiCount = 0;
+                            string emojiName = ":" + serverEmoji.Name + ":";
+
+                            if (message.Content.Contains(emojiName) == true)
+                            {
+                                emojiCount = Regex.Matches(message.Content, emojiName).Count;
+
+                                using (var databaseContext = new DynamicDBContext())
                                 {
-                                    Emoji dbEmoji = new Emoji();
-                                    dbEmoji.EmojiID = serverEmoji.Id.ToString();
-                                    dbEmoji.UsageCount = emojiCount;
-                                    dbEmoji.ServerID = dbServer.ID;
-                                    databaseContext.Emojis.Add(dbEmoji);
-                                    databaseContext.SaveChanges();
-                                }
-                                else
-                                {
-                                    Emoji dbEmoji = databaseContext.Emojis.Where(p => p.EmojiID == serverEmoji.Id.ToString()).FirstOrDefault();
-                                    dbEmoji.UsageCount += emojiCount;
-                                    databaseContext.SaveChanges();
+                                    Server dbServer = databaseContext.Servers.Where(p => p.ServerID == message.Channel.Guild.Id.ToString()).FirstOrDefault();
+                                    if (!databaseContext.Emojis.Any(p => p.EmojiID == serverEmoji.Id.ToString()))
+                                    {
+                                        Emoji dbEmoji = new Emoji();
+                                        dbEmoji.EmojiID = serverEmoji.Id.ToString();
+                                        dbEmoji.UsageCount = emojiCount;
+                                        dbEmoji.ServerID = dbServer.ID;
+                                        databaseContext.Emojis.Add(dbEmoji);
+                                        databaseContext.SaveChanges();
+                                    }
+                                    else
+                                    {
+                                        Emoji dbEmoji = databaseContext.Emojis.Where(p => p.EmojiID == serverEmoji.Id.ToString()).FirstOrDefault();
+                                        dbEmoji.UsageCount += emojiCount;
+                                        databaseContext.SaveChanges();
+                                    }
                                 }
                             }
                         }
+                    }
+                    catch (Exception ie)
+                    {
+                        Console.WriteLine("Error: Counting emoji in new message.");
+                        Console.WriteLine("Message: " + message?.Content);
+                        Console.WriteLine("Channel: " + message?.Channel);
+                        Console.WriteLine("Exception: " + ie.Message);
+                        Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                        Console.WriteLine("Stack trace: " + ie.StackTrace);
                     }
                 }
             }

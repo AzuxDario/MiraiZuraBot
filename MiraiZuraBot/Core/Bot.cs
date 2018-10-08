@@ -101,13 +101,25 @@ namespace MiraiZuraBot.Core
                 EmojiCounterService emojiCounterService = new EmojiCounterService();
                 emojiCounterService.countEmojiInMessage(e.Message);
             }
-            catch { }
+            catch (Exception ie)
+            {
+                Console.WriteLine("Error: Counting emoji in new message.");
+                Console.WriteLine("Exception: " + ie.Message);
+                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                Console.WriteLine("Stack trace: " + ie.StackTrace);
+            }
             try
             {
                 EmojiAddService emojiAddService = new EmojiAddService();
                 emojiAddService.AddEmojiOnServer(e.Guild, e.Message);
             }
-            catch { }
+            catch (Exception ie)
+            {
+                Console.WriteLine("Error: Adding reactions.");
+                Console.WriteLine("Exception: " + ie.Message);
+                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                Console.WriteLine("Stack trace: " + ie.StackTrace);
+            }
         }
 
         private async Task DiscordClient_MessageUpdatedAsync(DSharpPlus.EventArgs.MessageUpdateEventArgs e)
@@ -117,7 +129,13 @@ namespace MiraiZuraBot.Core
                 EmojiCounterService emojiCounterService = new EmojiCounterService();
                 emojiCounterService.countEmojiInMessage(e.Message);
             }
-            catch { }
+            catch (Exception ie)
+            {
+                Console.WriteLine("Error: Counting emoji in edited message..");
+                Console.WriteLine("Exception: " + ie.Message);
+                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                Console.WriteLine("Stack trace: " + ie.StackTrace);
+            }
         }
 
         private async Task DiscordClient_MessageReactionAddedAsync(DSharpPlus.EventArgs.MessageReactionAddEventArgs e)
@@ -127,7 +145,13 @@ namespace MiraiZuraBot.Core
                 EmojiCounterService emojiCounterService = new EmojiCounterService();
                 emojiCounterService.countEmojiReaction(e.User, e.Emoji, e.Channel);
             }
-            catch { }
+            catch (Exception ie)
+            {
+                Console.WriteLine("Error: Counting emoji in reactions.");
+                Console.WriteLine("Exception: " + ie.Message);
+                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                Console.WriteLine("Stack trace: " + ie.StackTrace);
+            }
         }
 
         private void SetNetworkParameters()
