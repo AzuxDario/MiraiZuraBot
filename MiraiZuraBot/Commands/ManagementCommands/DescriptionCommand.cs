@@ -35,7 +35,17 @@ namespace MiraiZuraBot.Commands.ManagementCommands
             {
                 game = description;
 
-                await Bot.DiscordClient.UpdateStatusAsync(new DiscordActivity(description));
+                try
+                {
+                    await ctx.Client.UpdateStatusAsync(new DiscordActivity(description));
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Can't set status.");
+                    Console.WriteLine("Exception: " + ie.Message);
+                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                    Console.WriteLine("Stack trace: " + ie.StackTrace);
+                }
             }
         }
 
@@ -43,7 +53,17 @@ namespace MiraiZuraBot.Commands.ManagementCommands
         {
             if (game != string.Empty)
             {
-                Bot.DiscordClient.UpdateStatusAsync(new DiscordActivity(game));  
+                try
+                {
+                    Bot.DiscordClient.UpdateStatusAsync(new DiscordActivity(game));
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Can't update status.");
+                    Console.WriteLine("Exception: " + ie.Message);
+                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                    Console.WriteLine("Stack trace: " + ie.StackTrace);
+                }
             }
 
             refreshDescriptionTimer.Change(refreshDescriptionInterval, Timeout.Infinite);
