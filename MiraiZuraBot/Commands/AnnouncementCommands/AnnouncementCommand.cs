@@ -22,7 +22,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
         public AnnouncementCommand()
         {
-            checkMessagesInterval = 1000 * 60 * 60;    // every hour
+            checkMessagesInterval = 1000 * 60 * 5;    // every 5 minutes;
             checkMessagesTimer = new Timer(RefreshCurrentSongMessages, null, checkMessagesInterval, Timeout.Infinite);
         }
 
@@ -44,10 +44,10 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                     DateTime today = DateTime.Now;
 
                     // Get topic id for this channel
-                    int topicId = channel.Topic.ID;
+                    int topicId = channel.TopicID;
 
                     // Get all messages for today for this topic
-                    List<Information> dbInformations = databaseContext.Informations.Where(p => p.Topic.ID == topicId && p.Day == today.Day && p.Month == today.Month).ToList();
+                    List<Information> dbInformations = databaseContext.Informations.Where(p => p.TopicID == topicId && p.Day == today.Day && p.Month == today.Month && p.Hour <= today.Hour).ToList();
 
                     foreach(Information information in dbInformations)
                     {
@@ -67,7 +67,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                 DiscordMessage discordMessage = await discordChannel.SendMessageAsync(information.Content);
 
                                 // If message was sent add info to database
-                                if (discordMessage.Content != null)
+                                if (discordMessage != null)
                                 {
                                     PostedInformation postedInformation = new PostedInformation();
                                     postedInformation.Day = today.Day;
