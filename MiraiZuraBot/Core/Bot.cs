@@ -96,61 +96,70 @@ namespace MiraiZuraBot.Core
 
         private async Task DiscordClient_MessageCreatedAsync(DSharpPlus.EventArgs.MessageCreateEventArgs e)
         {
-            try
+            if (e.Channel.IsPrivate == false)
             {
-                EmojiCounterService emojiCounterService = new EmojiCounterService();
-                emojiCounterService.countEmojiInMessage(e.Message);
-            }
-            catch (Exception ie)
-            {
-                Console.WriteLine("Error: Counting emoji in new message.");
-                Console.WriteLine("Exception: " + ie.Message);
-                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
-                Console.WriteLine("Stack trace: " + ie.StackTrace);
-            }
-            try
-            {
-                EmojiAddService emojiAddService = new EmojiAddService();
-                emojiAddService.AddEmojiOnServer(e.Guild, e.Message);
-            }
-            catch (Exception ie)
-            {
-                Console.WriteLine("Error: Adding reactions.");
-                Console.WriteLine("Exception: " + ie.Message);
-                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
-                Console.WriteLine("Stack trace: " + ie.StackTrace);
+                try
+                {
+                    EmojiCounterService emojiCounterService = new EmojiCounterService();
+                    emojiCounterService.countEmojiInMessage(e.Message);
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Counting emoji in new message.");
+                    Console.WriteLine("Exception: " + ie.Message);
+                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                    Console.WriteLine("Stack trace: " + ie.StackTrace);
+                }
+                try
+                {
+                    EmojiAddService emojiAddService = new EmojiAddService();
+                    emojiAddService.AddEmojiOnServer(e.Guild, e.Message);
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Adding reactions.");
+                    Console.WriteLine("Exception: " + ie.Message);
+                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                    Console.WriteLine("Stack trace: " + ie.StackTrace);
+                }
             }
         }
 
         private async Task DiscordClient_MessageUpdatedAsync(DSharpPlus.EventArgs.MessageUpdateEventArgs e)
         {
-            try
+            if (e.Channel.IsPrivate == false)
             {
-                EmojiCounterService emojiCounterService = new EmojiCounterService();
-                emojiCounterService.countEmojiInMessage(e.Message);
-            }
-            catch (Exception ie)
-            {
-                Console.WriteLine("Error: Counting emoji in edited message..");
-                Console.WriteLine("Exception: " + ie.Message);
-                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
-                Console.WriteLine("Stack trace: " + ie.StackTrace);
+                try
+                {
+                    EmojiCounterService emojiCounterService = new EmojiCounterService();
+                    emojiCounterService.countEmojiInMessage(e.Message);
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Counting emoji in edited message..");
+                    Console.WriteLine("Exception: " + ie.Message);
+                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                    Console.WriteLine("Stack trace: " + ie.StackTrace);
+                }
             }
         }
 
         private async Task DiscordClient_MessageReactionAddedAsync(DSharpPlus.EventArgs.MessageReactionAddEventArgs e)
         {
-            try
+            if (e.Channel.IsPrivate == false)
             {
-                EmojiCounterService emojiCounterService = new EmojiCounterService();
-                emojiCounterService.countEmojiReaction(e.User, e.Emoji, e.Channel);
-            }
-            catch (Exception ie)
-            {
-                Console.WriteLine("Error: Counting emoji in reactions.");
-                Console.WriteLine("Exception: " + ie.Message);
-                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
-                Console.WriteLine("Stack trace: " + ie.StackTrace);
+                try
+                {
+                    EmojiCounterService emojiCounterService = new EmojiCounterService();
+                    emojiCounterService.countEmojiReaction(e.User, e.Emoji, e.Channel);
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Counting emoji in reactions.");
+                    Console.WriteLine("Exception: " + ie.Message);
+                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                    Console.WriteLine("Stack trace: " + ie.StackTrace);
+                }
             }
         }
 
