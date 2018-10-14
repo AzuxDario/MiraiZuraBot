@@ -10,6 +10,10 @@ namespace MiraiZuraBot.Database
     {
         public virtual DbSet<Server> Servers { get; set; }
         public virtual DbSet<Emoji> Emojis { get; set; }
+        public virtual DbSet<Channel> Channels { get; set; }
+        public virtual DbSet<Topic> Topics { get; set; }
+        public virtual DbSet<Information> Informations { get; set; }
+        public virtual DbSet<PostedInformation> PostedInformations { get; set; }
         public DynamicDBContext() : base(GetOptions("Data Source=DynamicDatabase.sqlite"))
         {
 
@@ -20,14 +24,5 @@ namespace MiraiZuraBot.Database
             return SqliteDbContextOptionsBuilderExtensions.UseSqlite(new DbContextOptionsBuilder(), connectionString).Options;
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Server>()
-                .HasMany(p => p.Emojis)
-                .WithOne(p => p.Server)
-                .IsRequired();
-
-            base.OnModelCreating(modelBuilder);
-        }
     }
 }
