@@ -8,6 +8,13 @@ namespace MiraiZuraBot.Services
 {
     class EmojiAddService
     {
+        private Random random;
+
+        public EmojiAddService()
+        {
+            random = new Random();
+        }
+
         public async void AddEmojiOnServer(DiscordGuild guild, DiscordMessage message)
         {
             if (message.Author.IsCurrent == true)
@@ -37,14 +44,19 @@ namespace MiraiZuraBot.Services
                     IReadOnlyList<DiscordGuildEmoji> serverEmojiList;
                     serverEmojiList = await message.Channel.Guild.GetEmojisAsync();
 
+                    List<DiscordEmoji> emojiList = new List<DiscordEmoji>();
+
                     foreach (DiscordEmoji serverEmoji in serverEmojiList)
                     {
                         if (Regex.Matches(serverEmoji.Name, "nusz").Count != 0)
                         {
-                            AddEmoji(message, serverEmoji);
-                            return;
+                            emojiList.Add(serverEmoji);
                         }
                     }
+
+                    var emojiIndex = random.Next(0, emojiList.Count);
+                    AddEmoji(message, emojiList[emojiIndex]);
+                    return;
                 }
             }
         }
