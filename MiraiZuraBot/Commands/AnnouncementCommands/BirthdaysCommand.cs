@@ -11,18 +11,19 @@ using MiraiZuraBot.Core;
 using DSharpPlus.Entities;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext.Attributes;
+using System.Runtime.InteropServices;
 
 namespace MiraiZuraBot.Commands.AnnouncementCommands
 {
     [CommandsGroup("Powiadamianie")]
-    class AnnouncementCommand : BaseCommandModule
+    class BirthdaysCommand : BaseCommandModule
     {
         private Timer checkMessagesTimer;
         private int checkMessagesInterval;
 
-        public AnnouncementCommand()
+        public BirthdaysCommand()
         {
-            checkMessagesInterval = 1000 * 60 * 5;    // every 5 minutes;
+            checkMessagesInterval = 1000 * 60 * 1;    // every 1 minutes;
             checkMessagesTimer = new Timer(RefreshCurrentSongMessages, null, checkMessagesInterval, Timeout.Infinite);
         }
 
@@ -41,19 +42,29 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
                 foreach(Channel channel in dbChannels)
                 {
-                    DateTime today = DateTime.Now;
+                    DateTime todayUTC = DateTime.UtcNow;
+                    TimeZoneInfo japanTimeZone;
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
+                    }
+                    else
+                    {
+                        japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Japan");
+                    }
+                    DateTime todayJapan = TimeZoneInfo.ConvertTimeFromUtc(todayUTC, japanTimeZone);
 
                     // Get topic id for this channel
                     int topicId = channel.TopicID;
 
                     // Get all messages for today for this topic
-                    List<Information> dbInformations = databaseContext.Informations.Where(p => p.TopicID == topicId && p.Day == today.Day && p.Month == today.Month && p.Hour <= today.Hour).ToList();
+                    List<Birthday> dbInformations = databaseContext.Birthdays.Where(p => p.TopicID == topicId && p.Day == todayJapan.Day && p.Month == todayJapan.Month).ToList();
 
-                    foreach(Information information in dbInformations)
+                    foreach(Birthday information in dbInformations)
                     {
                         // If information was already posted there will be data
-                        List<PostedInformation> dbPostedInformations = databaseContext.PostedInformations.Where(p => p.Information.ID == information.ID && p.Day == information.Day &&
-                                                                                                                p.Month == information.Month && p.Year == today.Year 
+                        List<PostedBirthday> dbPostedInformations = databaseContext.PostedBirthdays.Where(p => p.Information.ID == information.ID && p.Day == information.Day &&
+                                                                                                                p.Month == information.Month && p.Year == todayJapan.Year 
                                                                                                                 && p.Channel.ID == channel.ID).ToList();
 
                         if (dbPostedInformations.Count == 0)
@@ -64,19 +75,19 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                 ulong id;
                                 ulong.TryParse(channel.ChannelID, out id);
                                 DiscordChannel discordChannel = await Bot.DiscordClient.GetChannelAsync(id);
-                                DiscordMessage discordMessage = await discordChannel.SendMessageAsync(information.Content);
+                                DiscordMessage discordMessage = await discordChannel.SendMessageAsync(todayJapan.ToString() + " " + information.Content);
 
                                 // If message was sent add info to database
                                 if (discordMessage != null)
                                 {
-                                    PostedInformation postedInformation = new PostedInformation();
-                                    postedInformation.Day = today.Day;
-                                    postedInformation.Month = today.Month;
-                                    postedInformation.Year = today.Year;
+                                    PostedBirthday postedInformation = new PostedBirthday();
+                                    postedInformation.Day = todayJapan.Day;
+                                    postedInformation.Month = todayJapan.Month;
+                                    postedInformation.Year = todayJapan.Year;
                                     postedInformation.InformationID = information.ID;
                                     postedInformation.ChannelID = channel.ID;
 
-                                    databaseContext.PostedInformations.Add(postedInformation);
+                                    databaseContext.PostedBirthdays.Add(postedInformation);
                                     databaseContext.SaveChanges();
                                 }
 

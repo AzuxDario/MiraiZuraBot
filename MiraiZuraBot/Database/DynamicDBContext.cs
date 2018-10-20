@@ -12,8 +12,8 @@ namespace MiraiZuraBot.Database
         public virtual DbSet<Emoji> Emojis { get; set; }
         public virtual DbSet<Channel> Channels { get; set; }
         public virtual DbSet<Topic> Topics { get; set; }
-        public virtual DbSet<Information> Informations { get; set; }
-        public virtual DbSet<PostedInformation> PostedInformations { get; set; }
+        public virtual DbSet<Birthday> Birthdays { get; set; }
+        public virtual DbSet<PostedBirthday> PostedBirthdays { get; set; }
         public DynamicDBContext() : base(GetOptions("Data Source=DynamicDatabase.sqlite"))
         {
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MiraiZuraBot.Database.Models.DynamicDB
 {
-    class PostedInformation
+    class PostedBirthday
     {
         public int ID { get; set; }
         public int Day { get; set; }
@@ -15,6 +15,6 @@ namespace MiraiZuraBot.Database.Models.DynamicDB
         public virtual Channel Channel { get; set; }
 
         public int InformationID { get; set; }
-        public virtual Information Information { get; set; }
+        public virtual Birthday Information { get; set; }
     }
 }

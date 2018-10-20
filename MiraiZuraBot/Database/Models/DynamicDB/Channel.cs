@@ -9,7 +9,7 @@ namespace MiraiZuraBot.Database.Models.DynamicDB
         public int ID { get; set; }
         public string ChannelID { get; set; }
 
-        public virtual List<PostedInformation> PostedInformations { get; set; }
+        public virtual List<PostedBirthday> PostedInformations { get; set; }
 
         public int ServerID { get; set; }
         public virtual Server Server { get; set; }
