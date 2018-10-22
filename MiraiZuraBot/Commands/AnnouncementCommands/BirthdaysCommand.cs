@@ -12,6 +12,8 @@ using DSharpPlus.Entities;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext.Attributes;
 using System.Runtime.InteropServices;
+using System.Net;
+using System.IO;
 
 namespace MiraiZuraBot.Commands.AnnouncementCommands
 {
@@ -71,16 +73,16 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                         {
                             try
                             {
-                                // There was no such information
+                                // There was no such posted information         
+                                var client = new WebClient();
+                                var picture = client.DownloadData(birthday.ImageLink);
+                                var stream = new MemoryStream(picture);
+                                string name = birthday.ImageLink.Split('/').Last();
+
                                 ulong id;
                                 ulong.TryParse(channel.ChannelID, out id);
                                 DiscordChannel discordChannel = await Bot.DiscordClient.GetChannelAsync(id);
-                                var embed = new DiscordEmbedBuilder
-                                {
-                                    Color = new DiscordColor("#5588EE"),
-                                    ImageUrl = birthday.ImageLink
-                                };
-                                DiscordMessage discordMessage = await discordChannel.SendMessageAsync(birthday.Content, false, embed);
+                                DiscordMessage discordMessage = await discordChannel.SendFileAsync(name, stream, birthday.Content);
 
                                 // If message was sent add info to database
                                 if (discordMessage != null)
