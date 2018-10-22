@@ -58,13 +58,13 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                     int topicId = channel.TopicID;
 
                     // Get all messages for today for this topic
-                    List<Birthday> dbInformations = databaseContext.Birthdays.Where(p => p.TopicID == topicId && p.Day == todayJapan.Day && p.Month == todayJapan.Month).ToList();
+                    List<Birthday> dbBirthdays = databaseContext.Birthdays.Where(p => p.TopicID == topicId && p.Day == todayJapan.Day && p.Month == todayJapan.Month).ToList();
 
-                    foreach(Birthday information in dbInformations)
+                    foreach(Birthday birthday in dbBirthdays)
                     {
                         // If information was already posted there will be data
-                        List<PostedBirthday> dbPostedInformations = databaseContext.PostedBirthdays.Where(p => p.Information.ID == information.ID && p.Day == information.Day &&
-                                                                                                                p.Month == information.Month && p.Year == todayJapan.Year 
+                        List<PostedBirthday> dbPostedInformations = databaseContext.PostedBirthdays.Where(p => p.Birthdays.ID == birthday.ID && p.Day == birthday.Day &&
+                                                                                                                p.Month == birthday.Month && p.Year == todayJapan.Year 
                                                                                                                 && p.Channel.ID == channel.ID).ToList();
 
                         if (dbPostedInformations.Count == 0)
@@ -75,7 +75,12 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                 ulong id;
                                 ulong.TryParse(channel.ChannelID, out id);
                                 DiscordChannel discordChannel = await Bot.DiscordClient.GetChannelAsync(id);
-                                DiscordMessage discordMessage = await discordChannel.SendMessageAsync(information.Content);
+                                var embed = new DiscordEmbedBuilder
+                                {
+                                    Color = new DiscordColor("#5588EE"),
+                                    ImageUrl = birthday.ImageLink
+                                };
+                                DiscordMessage discordMessage = await discordChannel.SendMessageAsync(birthday.Content, false, embed);
 
                                 // If message was sent add info to database
                                 if (discordMessage != null)
@@ -84,7 +89,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                     postedInformation.Day = todayJapan.Day;
                                     postedInformation.Month = todayJapan.Month;
                                     postedInformation.Year = todayJapan.Year;
-                                    postedInformation.InformationID = information.ID;
+                                    postedInformation.BirthdayID = birthday.ID;
                                     postedInformation.ChannelID = channel.ID;
 
                                     databaseContext.PostedBirthdays.Add(postedInformation);

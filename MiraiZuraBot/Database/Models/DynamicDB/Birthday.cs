@@ -10,8 +10,9 @@ namespace MiraiZuraBot.Database.Models.DynamicDB
         public int Day { get; set; }
         public int Month { get; set; }
         public string Content { get; set; }
+        public string ImageLink { get; set; }
 
-        public virtual List<PostedBirthday> PostedInformations { get; set; }
+        public virtual List<PostedBirthday> PostedBirthdays { get; set; }
 
         public int TopicID { get; set; }
         public virtual Topic Topic { get; set; }

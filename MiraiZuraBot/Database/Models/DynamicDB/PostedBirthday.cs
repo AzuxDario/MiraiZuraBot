@@ -14,7 +14,7 @@ namespace MiraiZuraBot.Database.Models.DynamicDB
         public int ChannelID { get; set; }
         public virtual Channel Channel { get; set; }
 
-        public int InformationID { get; set; }
-        public virtual Birthday Information { get; set; }
+        public int BirthdayID { get; set; }
+        public virtual Birthday Birthdays { get; set; }
     }
 }

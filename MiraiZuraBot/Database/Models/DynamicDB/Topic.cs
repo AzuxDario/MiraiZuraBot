@@ -10,6 +10,6 @@ namespace MiraiZuraBot.Database.Models.DynamicDB
         public int Name { get; set; }
 
         public virtual List<Channel> Channels { get; set; }
-        public virtual List<Birthday> Informations { get; set; }
+        public virtual List<Birthday> Birthdays { get; set; }
     }
 }
