@@ -75,7 +75,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                 ulong id;
                                 ulong.TryParse(channel.ChannelID, out id);
                                 DiscordChannel discordChannel = await Bot.DiscordClient.GetChannelAsync(id);
-                                DiscordMessage discordMessage = await discordChannel.SendMessageAsync(todayJapan.ToString() + " " + information.Content);
+                                DiscordMessage discordMessage = await discordChannel.SendMessageAsync(information.Content);
 
                                 // If message was sent add info to database
                                 if (discordMessage != null)
