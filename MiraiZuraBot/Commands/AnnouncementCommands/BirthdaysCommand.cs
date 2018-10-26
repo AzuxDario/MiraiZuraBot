@@ -14,6 +14,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using System.Runtime.InteropServices;
 using System.Net;
 using System.IO;
+using DSharpPlus;
 
 namespace MiraiZuraBot.Commands.AnnouncementCommands
 {
@@ -26,16 +27,80 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         public BirthdaysCommand()
         {
             checkMessagesInterval = 1000 * 60 * 1;    // every 1 minutes;
-            checkMessagesTimer = new Timer(RefreshCurrentSongMessages, null, checkMessagesInterval, Timeout.Infinite);
+            checkMessagesTimer = new Timer(PostBirthdayMessage, null, checkMessagesInterval, Timeout.Infinite);
         }
 
-        [Command("Dummy")]
-        public async Task Dummy(CommandContext ctx)
+        [Command("tematyUrodzin")]
+        [Description("Wyświetla możliwe tematy urodzin.")]
+        public async Task BirthdayTopics(CommandContext ctx)
         {
-
+            using (var databaseContext = new DynamicDBContext())
+            {
+                List<Topic> dbTopics = databaseContext.Topics.ToList();
+                string response = "Dostępne tematy urodzin:\n";
+                foreach(Topic topic in dbTopics)
+                {
+                    response += topic.Name;
+                    response += "\n";
+                    if (response.Length > 1800)
+                    {
+                        await ctx.RespondAsync(response);
+                        response = "";
+                    }   
+                }
+                if (response != string.Empty)
+                {
+                    await ctx.RespondAsync(response);
+                    return;
+                }
+            }
         }
 
-        private async void RefreshCurrentSongMessages(object state)
+        [Command("aktywneTematyUrodziny")]
+        [Description("Wyświetla aktywne tematy urodzin dla danego kanału.")]
+        [RequirePermissions(Permissions.ManageGuild)]
+        public async Task ActiveBirthdayTopics(CommandContext ctx, DiscordChannel channel = null)
+        {
+            string channelId;
+            if(channel == null)
+            {
+                channelId = ctx.Channel.Id.ToString();
+            }
+            else
+            {
+                channelId = channel.Id.ToString();
+            }
+
+            using (var databaseContext = new DynamicDBContext())
+            {
+                List<Topic> dbTopics = databaseContext.Topics.Where(p => p.Channels.Any(m => m.ChannelID == channelId)).ToList();
+                if(dbTopics.Count > 0)
+                {
+                    string response = "Tematy urodzin włączone na tym kanale:\n";
+                    foreach (Topic topic in dbTopics)
+                    {
+                        response += topic.Name;
+                        response += "\n";
+                        if (response.Length > 1800)
+                        {
+                            await ctx.RespondAsync(response);
+                            response = "";
+                        }
+                    }
+                    if (response != string.Empty)
+                    {
+                        await ctx.RespondAsync(response);
+                        return;
+                    }
+                }
+                else
+                {
+                    await ctx.RespondAsync("Dla tego kanału nie ma włączonych żadnych tematów urodzin.");
+                }
+            }
+        }
+
+        private async void PostBirthdayMessage(object state)
         {
             using (var databaseContext = new DynamicDBContext())
             {

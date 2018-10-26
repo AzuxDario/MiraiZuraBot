@@ -7,7 +7,7 @@ namespace MiraiZuraBot.Database.Models.DynamicDB
     class Topic
     {
         public int ID { get; set; }
-        public int Name { get; set; }
+        public string Name { get; set; }
 
         public virtual List<Channel> Channels { get; set; }
         public virtual List<Birthday> Birthdays { get; set; }
