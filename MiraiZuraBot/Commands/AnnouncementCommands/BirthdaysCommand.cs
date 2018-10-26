@@ -56,7 +56,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             }
         }
 
-        [Command("aktywneTematyUrodziny")]
+        [Command("aktywneTematyUrodzin")]
         [Description("Wyświetla aktywne tematy urodzin dla danego kanału.")]
         [RequirePermissions(Permissions.ManageGuild)]
         public async Task ActiveBirthdayTopics(CommandContext ctx, DiscordChannel channel = null)
