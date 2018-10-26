@@ -73,16 +73,26 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                         {
                             try
                             {
-                                // There was no such posted information         
-                                var client = new WebClient();
-                                var picture = client.DownloadData(birthday.ImageLink);
-                                var stream = new MemoryStream(picture);
-                                string name = birthday.ImageLink.Split('/').Last();
-
+                                // There was no such posted information  
                                 ulong id;
                                 ulong.TryParse(channel.ChannelID, out id);
                                 DiscordChannel discordChannel = await Bot.DiscordClient.GetChannelAsync(id);
-                                DiscordMessage discordMessage = await discordChannel.SendFileAsync(name, stream, birthday.Content);
+                                DiscordMessage discordMessage = null;
+
+
+                                if (birthday.ImageLink != null)
+                                {
+                                    var client = new WebClient();
+                                    var picture = client.DownloadData(birthday.ImageLink);
+                                    var stream = new MemoryStream(picture);
+                                    string name = birthday.ImageLink.Split('/').Last();
+
+                                    discordMessage = await discordChannel.SendFileAsync(name, stream, birthday.Content);
+                                }
+                                else
+                                {
+                                    discordMessage = await discordChannel.SendMessageAsync(birthday.Content);
+                                }
 
                                 // If message was sent add info to database
                                 if (discordMessage != null)
