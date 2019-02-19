@@ -130,7 +130,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
         }
 
         [Command("odbierzRole")]
-        [Description("Dodaje role z listy ról.")]
+        [Description("Odbiera role z listy ról.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         [RequireUserPermissions(DSharpPlus.Permissions.None)]
         public async Task RemoveRole(CommandContext ctx, params string[] message)
