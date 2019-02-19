@@ -11,6 +11,7 @@ namespace MiraiZuraBot.Database
         public virtual DbSet<Server> Servers { get; set; }
         public virtual DbSet<Emoji> Emojis { get; set; }
         public virtual DbSet<Channel> Channels { get; set; }
+        public virtual DbSet<AssignRole> AssignRoles { get; set; }
         public virtual DbSet<Topic> Topics { get; set; }
         public virtual DbSet<Birthday> Birthdays { get; set; }
         public virtual DbSet<PostedBirthday> PostedBirthdays { get; set; }
