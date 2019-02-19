@@ -1,5 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Exceptions;
 using DSharpPlus.Net.WebSocket;
 using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Services;
@@ -197,8 +198,21 @@ namespace MiraiZuraBot.Core
         private async Task Commands_CommandErrored(CommandErrorEventArgs e)
         {
             e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, "ExampleBot", $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now);
-        }
 
+            switch (e.Exception)
+            {
+                case UnauthorizedException _:
+                    {
+                        await e.Context.RespondAsync("Nie mam wystarczających uprawnień aby dokończyć akcje.");
+                        break;
+                    }
+
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
     
     }
 }
