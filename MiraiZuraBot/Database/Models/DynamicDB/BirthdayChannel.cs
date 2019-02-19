@@ -4,10 +4,11 @@ using System.Text;
 
 namespace MiraiZuraBot.Database.Models.DynamicDB
 {
-    class Channel
+    class BirthdayChannel
     {
         public int ID { get; set; }
         public string ChannelID { get; set; }
+        public bool IsEnabled { get; set; }
 
         public virtual List<PostedBirthday> PostedBirthdays { get; set; }
 

@@ -73,7 +73,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
             using (var databaseContext = new DynamicDBContext())
             {
-                List<Topic> dbTopics = databaseContext.Topics.Where(p => p.Channels.Any(m => m.ChannelID == channelId)).ToList();
+                List<Topic> dbTopics = databaseContext.Topics.Where(p => p.BirthdayChannels.Any(m => m.ChannelID == channelId && m.IsEnabled == true )).ToList();
                 if(dbTopics.Count > 0)
                 {
                     string response = "Tematy urodzin włączone na tym kanale:\n";
@@ -105,10 +105,16 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             using (var databaseContext = new DynamicDBContext())
             {
                 // Get all channels to post message
-                List<Channel> dbChannels = databaseContext.Channels.ToList();
+                List<BirthdayChannel> dbChannels = databaseContext.BirthdayChannels.ToList();
 
-                foreach(Channel channel in dbChannels)
+                foreach(BirthdayChannel channel in dbChannels)
                 {
+                    // If channel is disabled go to next one
+                    if (channel.IsEnabled == false)
+                    {
+                        continue;
+                    }
+
                     DateTime todayUTC = DateTime.UtcNow;
                     TimeZoneInfo japanTimeZone;
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -132,7 +138,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                         // If information was already posted there will be data
                         List<PostedBirthday> dbPostedInformations = databaseContext.PostedBirthdays.Where(p => p.Birthdays.ID == birthday.ID && p.Day == birthday.Day &&
                                                                                                                 p.Month == birthday.Month && p.Year == todayJapan.Year 
-                                                                                                                && p.Channel.ID == channel.ID).ToList();
+                                                                                                                && p.BirthdayChannel.ID == channel.ID).ToList();
 
                         if (dbPostedInformations.Count == 0)
                         {
@@ -167,7 +173,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                     postedInformation.Month = todayJapan.Month;
                                     postedInformation.Year = todayJapan.Year;
                                     postedInformation.BirthdayID = birthday.ID;
-                                    postedInformation.ChannelID = channel.ID;
+                                    postedInformation.BirthdayChannelID = channel.ID;
 
                                     databaseContext.PostedBirthdays.Add(postedInformation);
                                     databaseContext.SaveChanges();

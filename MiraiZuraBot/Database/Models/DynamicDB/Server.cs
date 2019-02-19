@@ -16,7 +16,7 @@ namespace MiraiZuraBot.Database.Models.DynamicDB
         public string ServerID { get; set; }
 
         public virtual List<Emoji> Emojis { get; set; }
-        public virtual List<Channel> Channels { get; set; }
+        public virtual List<BirthdayChannel> BirthdayChannels { get; set; }
         public virtual List<AssignRole> AssignRoles { get; set; }
     }
 }
