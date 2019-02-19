@@ -37,13 +37,11 @@ namespace MiraiZuraBot.Commands.RolesCommands
                 // Get server roles.
                 var serverRoles = ctx.Guild.Roles;
 
-                var role = serverRoles.Where(p => p.Id.ToString() == assignRole.RoleID).FirstOrDefault();
-
                 foreach (AssignRole assignRole in dbServer.AssignRoles)
                 {
-                    
+                    var role = serverRoles.Where(p => p.Id.ToString() == assignRole.RoleID).FirstOrDefault();
 
-                    if(role != null)
+                    if (role != null)
                     {
                         if (assignRole != dbServer.AssignRoles[0])
                         {
