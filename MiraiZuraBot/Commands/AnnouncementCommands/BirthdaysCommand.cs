@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Net;
 using System.IO;
 using DSharpPlus;
+using Microsoft.EntityFrameworkCore;
 
 namespace MiraiZuraBot.Commands.AnnouncementCommands
 {
@@ -105,7 +106,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             using (var databaseContext = new DynamicDBContext())
             {
                 // Get all channels to post message
-                List<BirthdayChannel> dbChannels = databaseContext.BirthdayChannels.ToList();
+                List<BirthdayChannel> dbChannels = databaseContext.BirthdayChannels.Include(p => p.BirthdayRoles).Include(q => q.Server).ToList();
 
                 foreach(BirthdayChannel channel in dbChannels)
                 {
@@ -129,6 +130,9 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
                     // Get topic id for this channel
                     int topicId = channel.TopicID;
+
+                    // Get all roles for this topic in this channel
+                    string rolesMention = GetRolesMention(channel.Server.ServerID, channel.BirthdayRoles);
 
                     // Get all messages for today for this topic
                     List<Birthday> dbBirthdays = databaseContext.Birthdays.Where(p => p.TopicID == topicId && p.Day == todayJapan.Day && p.Month == todayJapan.Month).ToList();
@@ -158,11 +162,11 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                     var stream = new MemoryStream(picture);
                                     string name = birthday.ImageLink.Split('/').Last();
 
-                                    discordMessage = await discordChannel.SendFileAsync(name, stream, birthday.Content);
+                                    discordMessage = await discordChannel.SendFileAsync(name, stream, rolesMention + birthday.Content);
                                 }
                                 else
                                 {
-                                    discordMessage = await discordChannel.SendMessageAsync(birthday.Content);
+                                    discordMessage = await discordChannel.SendMessageAsync(rolesMention + birthday.Content);
                                 }
 
                                 // If message was sent add info to database
@@ -195,5 +199,31 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             checkMessagesTimer.Change(checkMessagesInterval, Timeout.Infinite);
             return;
         }
+
+        private string GetRolesMention(string serverID, List<BirthdayRole> birthdayRoles)
+        {
+            StringBuilder roles = new StringBuilder();
+            DiscordGuild server = Bot.DiscordClient.GetGuildAsync(ulong.Parse(serverID)).Result;
+            var serverRoles = server.Roles;
+            foreach(var birthdayRole in birthdayRoles)
+            {
+                if(birthdayRole.RoleID == "everyone")
+                {
+                    roles.Append("@everyone ");
+                }
+                else
+                {
+                    DiscordRole role = serverRoles.FirstOrDefault(p => p.Id.ToString() == birthdayRole.RoleID);
+                    if (role != null)
+                    {
+                        roles.Append(role.Mention);
+                        roles.Append(" ");
+                    }
+                }
+            }
+
+            return roles.ToString();
+        }
     }
+
 }

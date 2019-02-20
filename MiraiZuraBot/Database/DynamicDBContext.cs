@@ -15,6 +15,7 @@ namespace MiraiZuraBot.Database
         public virtual DbSet<Topic> Topics { get; set; }
         public virtual DbSet<Birthday> Birthdays { get; set; }
         public virtual DbSet<PostedBirthday> PostedBirthdays { get; set; }
+        public virtual List<BirthdayRole> BirthdayRoles { get; set; }
         public DynamicDBContext() : base(GetOptions("Data Source=DynamicDatabase.sqlite"))
         {
 

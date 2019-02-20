@@ -11,6 +11,7 @@ namespace MiraiZuraBot.Database.Models.DynamicDB
         public bool IsEnabled { get; set; }
 
         public virtual List<PostedBirthday> PostedBirthdays { get; set; }
+        public virtual List<BirthdayRole> BirthdayRoles { get; set; }
 
         public int ServerID { get; set; }
         public virtual Server Server { get; set; }
