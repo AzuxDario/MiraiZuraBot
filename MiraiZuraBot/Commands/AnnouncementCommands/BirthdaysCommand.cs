@@ -24,6 +24,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
     {
         private Timer checkMessagesTimer;
         private int checkMessagesInterval;
+        private const string imageDirectory = "birthdays/";
 
         public BirthdaysCommand()
         {
@@ -155,14 +156,15 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                 DiscordMessage discordMessage = null;
 
 
-                                if (birthday.ImageLink != null)
+                                if (birthday.FileName != null)
                                 {
-                                    var client = new WebClient();
-                                    var picture = client.DownloadData(birthday.ImageLink);
-                                    var stream = new MemoryStream(picture);
-                                    string name = birthday.ImageLink.Split('/').Last();
+                                    using (StreamReader reader = new StreamReader(imageDirectory + birthday.FileName))
+                                    {
+                                        string name = birthday.FileName.Split('/').Last();
 
-                                    discordMessage = await discordChannel.SendFileAsync(name, stream, rolesMention + birthday.Content);
+                                        discordMessage = await discordChannel.SendFileAsync(name, reader.BaseStream, rolesMention + birthday.Content);
+                                        
+                                    }                                    
                                 }
                                 else
                                 {
