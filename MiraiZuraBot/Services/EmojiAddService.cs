@@ -63,7 +63,17 @@ namespace MiraiZuraBot.Services
 
         private async void AddEmoji(DiscordMessage message, DiscordEmoji emoji)
         {
-            await message.CreateReactionAsync(emoji);  
+            try
+            {
+                await message.CreateReactionAsync(emoji);
+            }
+            catch (Exception ie)
+            {
+                Console.WriteLine("Error: Cannot add emoji.");
+                Console.WriteLine("Exception: " + ie.Message);
+                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                Console.WriteLine("Stack trace: " + ie.StackTrace);
+            }
         }
     }
 }
