@@ -203,7 +203,7 @@ namespace MiraiZuraBot.Core
             {
                 case UnauthorizedException _:
                     {
-                        await e.Context.Member.SendMessageAsync("Nie mam wystarczających uprawnień aby dokończyć akcje.");
+                        await e.Context.Member.SendMessageAsync("Brak wystarczających uprawnień aby dokończyć akcje.");
                         break;
                     }
 
