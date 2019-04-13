@@ -117,17 +117,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                         continue;
                     }
 
-                    DateTime todayUTC = DateTime.UtcNow;
-                    TimeZoneInfo japanTimeZone;
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
-                    }
-                    else
-                    {
-                        japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Japan");
-                    }
-                    DateTime todayJapan = TimeZoneInfo.ConvertTimeFromUtc(todayUTC, japanTimeZone);
+                    DateTime todayJapan = GetCurrentJapanTime();
 
                     // Get topic id for this channel
                     int topicId = channel.TopicID;
@@ -200,6 +190,21 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
             checkMessagesTimer.Change(checkMessagesInterval, Timeout.Infinite);
             return;
+        }
+
+        private DateTime GetCurrentJapanTime()
+        {
+            DateTime todayUTC = DateTime.UtcNow;
+            TimeZoneInfo japanTimeZone;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
+            }
+            else
+            {
+                japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Japan");
+            }
+            return TimeZoneInfo.ConvertTimeFromUtc(todayUTC, japanTimeZone);
         }
 
         private string GetRolesMention(string serverID, List<BirthdayRole> birthdayRoles)
