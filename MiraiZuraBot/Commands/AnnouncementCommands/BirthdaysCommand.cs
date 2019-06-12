@@ -165,7 +165,9 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                 }
 
                                 // If message was sent add info to database
-                                if (discordMessage != null)
+                                // For now just add everytime
+                                // TODO: check error with task cancel during image posting
+                                //if (discordMessage != null)
                                 {
                                     PostedBirthday postedInformation = new PostedBirthday();
                                     postedInformation.Day = todayJapan.Day;
