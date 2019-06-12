@@ -151,8 +151,11 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                     using (StreamReader reader = new StreamReader(imageDirectory + birthday.FileName))
                                     {
                                         string name = birthday.FileName.Split('/').Last();
+                                        var buffer = new byte[reader.BaseStream.Length];
+                                        reader.BaseStream.Read(buffer, 0, (int)reader.BaseStream.Length);
+                                        var memStream = new MemoryStream(buffer);
 
-                                        discordMessage = await discordChannel.SendFileAsync(name, reader.BaseStream, rolesMention + birthday.Content);
+                                        discordMessage = await discordChannel.SendFileAsync(name, memStream, rolesMention + birthday.Content);
                                         
                                     }                                    
                                 }
@@ -220,7 +223,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                 }
                 else
                 {
-                    DiscordRole role = serverRoles.FirstOrDefault(p => p.Id.ToString() == birthdayRole.RoleID);
+                    DiscordRole role = serverRoles.FirstOrDefault(p => p.Value.Id.ToString() == birthdayRole.RoleID).Value;
                     if (role != null)
                     {
                         roles.Append(role.Mention);
