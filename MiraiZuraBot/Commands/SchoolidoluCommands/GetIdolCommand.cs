@@ -42,6 +42,29 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
         }
 
+        [Command("losowaIdolka")]
+        [Description("Pokazuje karte na bazie jej id.\nnp:\n*losowaIdolka")]
+        public async Task RandomIdol(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var client = new HttpClient();
+            IdolsResponse idolsResponse;
+
+            var response = client.GetAsync("http://schoolido.lu/api/idols/" + ctx.RawArgumentString + "/").Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                idolsResponse = JsonConvert.DeserializeObject<IdolsResponse>(response.Content.ReadAsStringAsync().Result);
+
+                string description = MakeIdolDescription(idolsResponse.Results[0]);
+                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolsResponse.Results[0].Chibi, footer);
+            }
+            else
+            {
+                await ctx.RespondAsync("Wystąpił błąd.");
+            }
+        }
+
         public string MakeIdolDescription(IdolObject cardObject)
         {
             StringBuilder idolDescription = new StringBuilder();

@@ -51,7 +51,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("losowaKarta")]
-        [Description("Pokazuje losową karte. Można sprecyzować imie idolki.\np:\n*losowaKarta\n*losowaKarta Watanabe You")]
+        [Description("Pokazuje losową karte. Można sprecyzować imie idolki.\nnp:\n*losowaKarta\n*losowaKarta Watanabe You")]
         public async Task RandomCard(CommandContext ctx, [Description("Imie idolki.")] params string[] name)
         {
             await ctx.TriggerTypingAsync();
