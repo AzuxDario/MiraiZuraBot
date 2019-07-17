@@ -35,13 +35,31 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (isIdolised == "idolizowana")
                 {
-                    string description = MakeCardDescription(cardObject, true);
-                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardObject.Id + " : " + cardObject.Idol.Name, description, "http:" + cardObject.Card_idolized_image, footer);
+                    // Some cards might not have idolised version
+                    if (cardObject.Card_idolized_image != null)
+                    {
+                        string description = MakeCardDescription(cardObject, true);
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardObject.Id + " : " + cardObject.Idol.Name, description, "http:" + cardObject.Card_idolized_image, footer);
+                    }
+                    else
+                    {
+                        string description = MakeCardDescription(cardObject, false);
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardObject.Id + " : " + cardObject.Idol.Name, description, "http:" + cardObject.Card_image, footer);
+                    }
                 }
                 else
                 {
-                    string description = MakeCardDescription(cardObject, false);
-                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardObject.Id + " : " + cardObject.Idol.Name, description, "http:" + cardObject.Card_image, footer);
+                    // Some cards are only idolised
+                    if (cardObject.Card_image != null)
+                    {
+                        string description = MakeCardDescription(cardObject, false);
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardObject.Id + " : " + cardObject.Idol.Name, description, "http:" + cardObject.Card_image, footer);
+                    }
+                    else
+                    {
+                        string description = MakeCardDescription(cardObject, true);
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardObject.Id + " : " + cardObject.Idol.Name, description, "http:" + cardObject.Card_idolized_image, footer);
+                    }
                 }
             }
             else
