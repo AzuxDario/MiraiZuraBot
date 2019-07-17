@@ -82,8 +82,18 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             {
                 cardsResponse = JsonConvert.DeserializeObject<CardsResponse>(response.Content.ReadAsStringAsync().Result);
 
-                string description = MakeCardDescription(cardsResponse.Results[0], false);
-                await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Results[0].Id + " : " + cardsResponse.Results[0].Idol.Name, description, "http:" + cardsResponse.Results[0].Card_image, footer);
+                
+                // Some cards are only idolised
+                if (cardsResponse.Results[0].Card_image != null)
+                {
+                    string description = MakeCardDescription(cardsResponse.Results[0], false);
+                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Results[0].Id + " : " + cardsResponse.Results[0].Idol.Name, description, "http:" + cardsResponse.Results[0].Card_image, footer);
+                }
+                else
+                {
+                    string description = MakeCardDescription(cardsResponse.Results[0], true);
+                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Results[0].Id + " : " + cardsResponse.Results[0].Idol.Name, description, "http:" + cardsResponse.Results[0].Card_idolized_image, footer);
+                }
             }
             else
             {
