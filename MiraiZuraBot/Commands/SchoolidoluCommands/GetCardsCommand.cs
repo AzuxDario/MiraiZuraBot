@@ -14,7 +14,7 @@ using static DSharpPlus.Entities.DiscordEmbedBuilder;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {
-    [CommandsGroup("Karty")]
+    [CommandsGroup("SIF")]
     class GetCardsCommand : BaseCommandModule
     {
         private EmbedFooter footer = new EmbedFooter { Text = "Powered by schoolido.lu", IconUrl = "https://i.schoolido.lu/android/icon.png" };
@@ -59,7 +59,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             cardDescription.Append("**Rzadkość:** ").Append(cardObject.Rarity).AppendLine();
             cardDescription.Append("**Atrybut:** ").Append(cardObject.Attribute).AppendLine();
             cardDescription.Append("**Set:** ").Append(cardObject.Translated_collection).AppendLine();
-            cardDescription.Append("**Data wypuszczenia:** ").Append(cardObject.Release_date).AppendLine();
+            cardDescription.Append("**Data wypuszczenia (yyyy-MM-dd) :** ").Append(cardObject.Release_date).AppendLine();
             cardDescription.Append("**URL:** ").Append(cardObject.Website_url).AppendLine();
             cardDescription.Append("**Typ skilla:** ").Append(cardObject.Skill).AppendLine();
             cardDescription.Append("**Szczegóły skilla:** ").Append(cardObject.Skill_details).AppendLine();
