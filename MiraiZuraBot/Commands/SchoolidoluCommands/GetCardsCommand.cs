@@ -25,8 +25,6 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             await ctx.TriggerTypingAsync();
 
             var client = new HttpClient();
-            //CardsRequest cardsRequest = new CardsRequest();
-            //cardsRequest.Ids = id;
             CardObject cardObject;
 
             var response = client.GetAsync("http://schoolido.lu/api/cards/" + id + "/").Result;

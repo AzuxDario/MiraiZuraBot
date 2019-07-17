@@ -20,14 +20,12 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         private EmbedFooter footer = new EmbedFooter { Text = "Powered by schoolido.lu", IconUrl = "https://i.schoolido.lu/android/icon.png" };
 
         [Command("idolka")]
-        [Description("Pokazuje karte na bazie jej id.\nnp:\n*idolka Watanabe You \n*idolka ")]
+        [Description("Pokazuje karte na bazie jej id.\nnp:\n*idolka Watanabe You \n*idolka Sonoda Umi")]
         public async Task Idol(CommandContext ctx, [Description("Imie postaci.")] params string[] name)
         {
             await ctx.TriggerTypingAsync();
 
             var client = new HttpClient();
-            //CardsRequest cardsRequest = new CardsRequest();
-            //cardsRequest.Ids = id;
             IdolObject idolObject;
 
             var response = client.GetAsync("http://schoolido.lu/api/idols/" + ctx.RawArgumentString + "/").Result;
