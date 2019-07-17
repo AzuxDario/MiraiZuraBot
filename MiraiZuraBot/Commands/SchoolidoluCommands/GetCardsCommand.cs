@@ -18,6 +18,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
     class GetCardsCommand : BaseCommandModule
     {
         private EmbedFooter footer = new EmbedFooter { Text = "Powered by schoolido.lu", IconUrl = "https://i.schoolido.lu/android/icon.png" };
+
         [Command("karta")]
         [Description("Pokazuje karte na bazie jej id.\nnp:\n*karta 1599\n*karta 1599 idolizowana")]
         public async Task Card(CommandContext ctx, [Description("ID karty.")] string id, [Description("Czy idolizowana.")] string isIdolised = null)
@@ -35,17 +36,40 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 if (isIdolised == "idolizowana")
                 {
                     string description = MakeCardDescription(cardObject, true);
-                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + id + " : " + cardObject.Idol.Name, description, "http:" + cardObject.Card_idolized_image, footer);
+                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardObject.Id + " : " + cardObject.Idol.Name, description, "http:" + cardObject.Card_idolized_image, footer);
                 }
                 else
                 {
                     string description = MakeCardDescription(cardObject, false);
-                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + id + " : " + cardObject.Idol.Name, description, "http:" + cardObject.Card_image, footer);
+                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardObject.Id + " : " + cardObject.Idol.Name, description, "http:" + cardObject.Card_image, footer);
                 }
             }
             else
             {
                 await ctx.RespondAsync("Podana karta nie istnieje.");
+            }
+        }
+
+        [Command("losowaKarta")]
+        [Description("Pokazuje losową karte. Można sprecyzować imie idolki.\np:\n*losowaKarta\n*losowaKarta Watanabe You")]
+        public async Task RandomCard(CommandContext ctx, [Description("Imie idolki.")] params string[] name)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var client = new HttpClient();
+            CardsResponse cardsResponse;
+
+            var response = client.GetAsync("https://schoolido.lu/api/cards/?name=" + ctx.RawArgumentString + "&ordering=random&page_size=1").Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                cardsResponse = JsonConvert.DeserializeObject<CardsResponse>(response.Content.ReadAsStringAsync().Result);
+
+                string description = MakeCardDescription(cardsResponse.Results[0], false);
+                await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Results[0].Id + " : " + cardsResponse.Results[0].Idol.Name, description, "http:" + cardsResponse.Results[0].Card_image, footer);
+            }
+            else
+            {
+                await ctx.RespondAsync("Podana idolka nie istnieje.");
             }
         }
 
