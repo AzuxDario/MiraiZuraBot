@@ -16,7 +16,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
     [CommandsGroup("Role")]
     class AssignRolesCommand : BaseCommandModule
     {
-        [Command("pokażRole")]
+        [Command("pokazRole")]
         [Description("Pokazuje role, które można przydzielić sobie na tym serwerze.")]
         public async Task ShowRoles(CommandContext ctx)
         {
@@ -253,7 +253,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
             }
         }
 
-        [Command("usuńRole")]
+        [Command("usunRole")]
         [Description("Usuwa rolę z listy roli jakie mogą sobie przydzielać członkowie serwera.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         [RequireUserPermissions(DSharpPlus.Permissions.ManageRoles)]
