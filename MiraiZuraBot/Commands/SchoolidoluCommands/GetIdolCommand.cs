@@ -75,9 +75,9 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             idolDescription.Append("**Urodziny (MM-dd):** ").Append(cardObject.Birthday).AppendLine();
             idolDescription.Append("**Znak zodiaku:** ").Append(cardObject.Astrological_sign).AppendLine();
             idolDescription.Append("**Grupa krwi:** ").Append(cardObject.Blood).AppendLine();
-            idolDescription.Append("**Wzrozt:** ").Append(cardObject.Height).AppendLine();
+            idolDescription.Append("**Wzrost:** ").Append(cardObject.Height).AppendLine();
             idolDescription.Append("**Wymiary: ** ").Append(cardObject.Measurements).AppendLine();
-            idolDescription.Append("**Ulubuine jedzenie: ** ").Append(cardObject.Favorite_food).AppendLine();
+            idolDescription.Append("**Ulubione jedzenie: ** ").Append(cardObject.Favorite_food).AppendLine();
             idolDescription.Append("**Nielubiane jedzenie: ** ").Append(cardObject.Least_favorite_food).AppendLine();
             idolDescription.Append("**Hobby: ** ").Append(cardObject.Hobbies).AppendLine();
             idolDescription.Append("**Atrybut: ** ").Append(cardObject.Attribute).AppendLine();
