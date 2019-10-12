@@ -72,7 +72,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
         [Description("Dodaje role z listy ról.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         [RequireUserPermissions(DSharpPlus.Permissions.None)]
-        public async Task GiveRole(CommandContext ctx, params string[] message)
+        public async Task GiveRole(CommandContext ctx, [RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
 
@@ -84,7 +84,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
 
                 foreach (var serverRole in serverRoles)
                 {
-                    if (serverRole.Value.Name == ctx.RawArgumentString)
+                    if (serverRole.Value.Name == message)
                     {
                         // Check if role is already in database
                         if (IsRoleInDatabase(dbServer, serverRole.Value.Id))
@@ -133,7 +133,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
         [Description("Odbiera role z listy ról.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         [RequireUserPermissions(DSharpPlus.Permissions.None)]
-        public async Task RemoveRole(CommandContext ctx, params string[] message)
+        public async Task RemoveRole(CommandContext ctx, [RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
 
@@ -145,7 +145,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
 
                 foreach (var serverRole in serverRoles)
                 {
-                    if (serverRole.Value.Name == ctx.RawArgumentString)
+                    if (serverRole.Value.Name == message)
                     {
                         // Check if role is already in database
                         if (IsRoleInDatabase(dbServer, serverRole.Value.Id))
@@ -194,7 +194,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
         [Description("Dodaje rolę do listy roli jakie mogą sobie przydzielać członkowie serwera.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         [RequireUserPermissions(DSharpPlus.Permissions.ManageRoles)]
-        public async Task AddRole(CommandContext ctx, params string[] message)
+        public async Task AddRole(CommandContext ctx, [RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
 
@@ -207,7 +207,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
 
                 foreach (var serverRole in serverRoles)
                 {
-                    if(serverRole.Value.Name == ctx.RawArgumentString)
+                    if(serverRole.Value.Name == message)
                     {
                         // Check if role is already in database
                         if (IsRoleInDatabase(dbServer, serverRole.Value.Id))
@@ -257,7 +257,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
         [Description("Usuwa rolę z listy roli jakie mogą sobie przydzielać członkowie serwera.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         [RequireUserPermissions(DSharpPlus.Permissions.ManageRoles)]
-        public async Task DeleteRole(CommandContext ctx, params string[] message)
+        public async Task DeleteRole(CommandContext ctx, [RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
 
@@ -270,7 +270,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
 
                 foreach (var serverRole in serverRoles)
                 {
-                    if (serverRole.Value.Name == ctx.RawArgumentString)
+                    if (serverRole.Value.Name == message)
                     {
 
                         // Check if role is already in database
