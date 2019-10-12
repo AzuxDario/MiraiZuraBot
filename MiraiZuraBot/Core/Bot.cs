@@ -1,5 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Exceptions;
 using DSharpPlus.Net.WebSocket;
 using MiraiZuraBot.Attributes;
@@ -201,6 +202,11 @@ namespace MiraiZuraBot.Core
 
             switch (e.Exception)
             {
+                case Checks​Failed​Exception _:
+                    {
+                        await e.Context.Channel.SendMessageAsync("Brak wystarczających uprawnień aby dokończyć akcje.");
+                        break;
+                    }
                 case UnauthorizedException _:
                     {
                         await e.Context.Member.SendMessageAsync("Brak wystarczających uprawnień aby dokończyć akcje.");
@@ -213,6 +219,6 @@ namespace MiraiZuraBot.Core
                     }
             }
         }
-    
+
     }
 }

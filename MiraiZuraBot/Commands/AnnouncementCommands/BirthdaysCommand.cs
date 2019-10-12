@@ -61,17 +61,10 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [Command("aktywneTematyUrodzin")]
         [Description("Wyświetla aktywne tematy urodzin dla danego kanału.")]
         [RequirePermissions(Permissions.ManageGuild)]
-        public async Task ActiveBirthdayTopics(CommandContext ctx, DiscordChannel channel = null)
+        public async Task ActiveBirthdayTopics(CommandContext ctx)
         {
             string channelId;
-            if(channel == null)
-            {
-                channelId = ctx.Channel.Id.ToString();
-            }
-            else
-            {
-                channelId = channel.Id.ToString();
-            }
+            channelId = ctx.Channel.Id.ToString();
 
             using (var databaseContext = new DynamicDBContext())
             {
@@ -117,17 +110,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                         continue;
                     }
 
-                    DateTime todayUTC = DateTime.UtcNow;
-                    TimeZoneInfo japanTimeZone;
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
-                    }
-                    else
-                    {
-                        japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Japan");
-                    }
-                    DateTime todayJapan = TimeZoneInfo.ConvertTimeFromUtc(todayUTC, japanTimeZone);
+                    DateTime todayJapan = GetCurrentJapanTime();
 
                     // Get topic id for this channel
                     int topicId = channel.TopicID;
@@ -161,8 +144,11 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                     using (StreamReader reader = new StreamReader(imageDirectory + birthday.FileName))
                                     {
                                         string name = birthday.FileName.Split('/').Last();
+                                        var buffer = new byte[reader.BaseStream.Length];
+                                        reader.BaseStream.Read(buffer, 0, (int)reader.BaseStream.Length);
+                                        var memStream = new MemoryStream(buffer);
 
-                                        discordMessage = await discordChannel.SendFileAsync(name, reader.BaseStream, rolesMention + birthday.Content);
+                                        discordMessage = await discordChannel.SendFileAsync(name, memStream, rolesMention + birthday.Content);
                                         
                                     }                                    
                                 }
@@ -172,7 +158,9 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                 }
 
                                 // If message was sent add info to database
-                                if (discordMessage != null)
+                                // For now just add everytime
+                                // TODO: check error with task cancel during image posting
+                                //if (discordMessage != null)
                                 {
                                     PostedBirthday postedInformation = new PostedBirthday();
                                     postedInformation.Day = todayJapan.Day;
@@ -202,6 +190,126 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             return;
         }
 
+        [Command("wlaczTematUrodzin")]
+        [Description("Włącza temat urodzin dla danego kanału.")]
+        [RequirePermissions(Permissions.ManageGuild)]
+        public async Task TurnOnBirthdayTopic(CommandContext ctx, [Description("Temat.")] params string[] name)
+        {
+            string channelId;
+            channelId = ctx.Channel.Id.ToString();
+            string topicName = ctx.RawArgumentString;
+
+
+            using (var databaseContext = new DynamicDBContext())
+            {
+                // Check if topic exist
+                Topic topic = databaseContext.Topics.Where(p => p.Name == topicName).FirstOrDefault();
+                if (topic == null)
+                {
+                    await ctx.RespondAsync("Podany temat nie istnieje.");
+                    return;
+                }
+
+                // Check if this channel and topic has enter in database
+                BirthdayChannel birthdayChannel = databaseContext.BirthdayChannels.Include(p => p.Topic).Where(p => p.ChannelID == channelId && p.Topic.Name == topicName).FirstOrDefault();
+                if (birthdayChannel != null)
+                {
+                    // Entry exist
+                    if (birthdayChannel.IsEnabled == true)
+                    {
+                        await ctx.RespondAsync("Podany temat jest włączony.");
+                    }
+                    else
+                    {
+                        birthdayChannel.IsEnabled = true;
+                        databaseContext.SaveChanges();
+                        await ctx.RespondAsync("Temat włączono.");
+                    }
+                }
+                else
+                {
+                    //Check if server exist
+                    Server server = databaseContext.Servers.Where(p => p.ServerID == ctx.Guild.Id.ToString()).FirstOrDefault();
+                    if(server == null)
+                    {
+                        server = new Server();
+                        server.ServerID = ctx.Guild.Id.ToString();
+                    }
+
+                    // Create new entry
+                    BirthdayChannel newChannel = new BirthdayChannel();
+                    newChannel.Server = server;
+                    newChannel.ChannelID = channelId;
+                    newChannel.IsEnabled = true;
+                    newChannel.Topic = topic;
+                    databaseContext.Add(newChannel);
+                    databaseContext.SaveChanges();
+                    await ctx.RespondAsync("Temat włączono.");
+                }
+
+            }
+        }
+
+        [Command("wylaczTematUrodzin")]
+        [Description("Wyłącza temat urodzin dla danego kanału.")]
+        [RequirePermissions(Permissions.ManageGuild)]
+        public async Task TurnOffBirthdayTopic(CommandContext ctx, [Description("Temat.")] params string[] name)
+        {
+            string channelId;
+            channelId = ctx.Channel.Id.ToString();
+            string topicName = ctx.RawArgumentString;
+
+
+            using (var databaseContext = new DynamicDBContext())
+            {
+                // Check if topic exist
+                Topic topic = databaseContext.Topics.Where(p => p.Name == topicName).FirstOrDefault();
+                if (topic == null)
+                {
+                    await ctx.RespondAsync("Podany temat nie istnieje.");
+                    return;
+                }
+
+                // Check if this channel and topic has enter in database
+                BirthdayChannel birthdayChannel = databaseContext.BirthdayChannels.Include(p => p.Topic).Where(p => p.ChannelID == channelId && p.Topic.Name == topicName).FirstOrDefault();
+                if (birthdayChannel != null)
+                {
+                    // Entry exist
+                    if (birthdayChannel.IsEnabled == false)
+                    {
+                        await ctx.RespondAsync("Podany temat jest wyłączony.");
+                    }
+                    else
+                    {
+                        birthdayChannel.IsEnabled = false;
+                        databaseContext.SaveChanges();
+                        await ctx.RespondAsync("Temat wyłączono.");
+                    }
+                }
+                else
+                {
+                    // Entry doesn't exist
+                    await ctx.RespondAsync("Podany temat jest wyłączony.");
+                }
+
+            }
+        }
+
+        private DateTime GetCurrentJapanTime()
+        {
+            DateTime todayUTC = DateTime.UtcNow;
+            TimeZoneInfo japanTimeZone;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
+            }
+            else
+            {
+                japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Japan");
+            }
+            return TimeZoneInfo.ConvertTimeFromUtc(todayUTC, japanTimeZone);
+        }
+
         private string GetRolesMention(string serverID, List<BirthdayRole> birthdayRoles)
         {
             StringBuilder roles = new StringBuilder();
@@ -215,7 +323,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                 }
                 else
                 {
-                    DiscordRole role = serverRoles.FirstOrDefault(p => p.Id.ToString() == birthdayRole.RoleID);
+                    DiscordRole role = serverRoles.FirstOrDefault(p => p.Value.Id.ToString() == birthdayRole.RoleID).Value;
                     if (role != null)
                     {
                         roles.Append(role.Mention);
