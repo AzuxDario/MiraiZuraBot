@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Services
 {
@@ -15,7 +16,7 @@ namespace MiraiZuraBot.Services
             random = new Random();
         }
 
-        public async void AddEmojiOnServer(DiscordGuild guild, DiscordMessage message)
+        public async Task AddEmojiOnServer(DiscordGuild guild, DiscordMessage message)
         {
             if (message.Author.IsCurrent == true)
             {
