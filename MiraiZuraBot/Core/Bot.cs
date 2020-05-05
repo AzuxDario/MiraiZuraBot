@@ -65,12 +65,6 @@ namespace MiraiZuraBot.Core
                 AutoReconnect = true,
                 LogLevel = LogLevel.Debug,
                 UseInternalLogHandler = true
-
-#if DEBUG
-                ,
-                // For Windows 7 I'm using to test
-                WebSocketClientFactory = WebSocket4NetCoreClient.CreateNew
-#endif
             };
 
             DiscordClient = new DiscordClient(connectionConfig);
