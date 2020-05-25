@@ -7,7 +7,7 @@ Bots has features like system which allows members to auto assign roles, simple 
 ## Emoji counter
 Bot counts emojis used on channels and used in reactions and store emoji's count in database.
 
-## Advertising
+## Birthdays
 Bot has advertising feature, which allows to auto post messages every year on certain date. It's used to send birthday messages on server.
 
 # Commands
