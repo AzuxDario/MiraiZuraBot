@@ -1,4 +1,10 @@
 # Mirai Zura bot
+<p align="center">
+<a href="https://travis-ci.org/AzuxDario/MiraiZuraBot"><img src="https://travis-ci.org/AzuxDario/MiraiZuraBot.svg?branch=master" alt="Build status"></img></a>
+<a href="https://github.com/AzuxDario/MiraiZuraBot/pulls?q=is%3Apr+is%3Aclosed"><img src="https://img.shields.io/github/issues-pr-closed-raw/AzuxDario/MiraiZuraBot" alt="Closed pull requests"></img></a>
+<a href="https://github.com/AzuxDario/MiraiZuraBot/blob/master/LICENSE"><img src="https://img.shields.io/github/license/AzuxDario/MiraiZuraBot" alt="License"></img></a>
+</p>
+
 Simple Discord bot developed for polish community server of Love Live! series.
 
 # Bot features
