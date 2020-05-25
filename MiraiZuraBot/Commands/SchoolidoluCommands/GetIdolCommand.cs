@@ -20,7 +20,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         private EmbedFooter footer = new EmbedFooter { Text = "Powered by schoolido.lu", IconUrl = "https://i.schoolido.lu/android/icon.png" };
 
         [Command("idolka")]
-        [Description("Pokazuje karte na bazie jej id.\nnp:\n*idolka Watanabe You \n*idolka Sonoda Umi")]
+        [Description("Pokazuje idolkę na bazie jej nazwy.\nnp:\n*idolka Watanabe You \n*idolka Sonoda Umi")]
         public async Task Idol(CommandContext ctx, [Description("Imie postaci.")] params string[] name)
         {
             await ctx.TriggerTypingAsync();
@@ -43,7 +43,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("losowaIdolka")]
-        [Description("Pokazuje karte na bazie jej id.\nnp:\n*losowaIdolka")]
+        [Description("Pokazuje losową idolkę.\nnp:\n*losowaIdolka")]
         public async Task RandomIdol(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
