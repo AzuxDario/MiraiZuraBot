@@ -32,7 +32,6 @@ Since it's polish bot, most commands are in polish.
   * usunRole - Removes a role from the role list that can be assigned by server members.
 ## Help
   * help - Shows help.
-  * help <command> - Shows help about specific command.
 ## Special
   * ping - Check ping
  
