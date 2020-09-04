@@ -51,7 +51,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             var client = new HttpClient();
             IdolsResponse idolsResponse;
 
-            var response = client.GetAsync("http://schoolido.lu/api/idols/" + ctx.RawArgumentString + "/").Result;
+            var response = client.GetAsync("http://schoolido.lu/api/idols/?ordering=random&page_size=1").Result;
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 idolsResponse = JsonConvert.DeserializeObject<IdolsResponse>(response.Content.ReadAsStringAsync().Result);
@@ -65,28 +65,39 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
         }
 
-        public string MakeIdolDescription(IdolObject cardObject)
+        private string MakeIdolDescription(IdolObject cardObject)
         {
             StringBuilder idolDescription = new StringBuilder();
-            idolDescription.Append("**Imie:** ").Append(cardObject.Name).AppendLine();
-            idolDescription.Append("**Japońskie imie:** ").Append(cardObject.Japanese_name).AppendLine();
-            idolDescription.Append("**Wiek:** ").Append(cardObject.Age).AppendLine();
-            idolDescription.Append("**Szkoła:** ").Append(cardObject.School).AppendLine();
-            idolDescription.Append("**Urodziny (MM-dd):** ").Append(cardObject.Birthday).AppendLine();
-            idolDescription.Append("**Znak zodiaku:** ").Append(cardObject.Astrological_sign).AppendLine();
-            idolDescription.Append("**Grupa krwi:** ").Append(cardObject.Blood).AppendLine();
-            idolDescription.Append("**Wzrost:** ").Append(cardObject.Height).AppendLine();
-            idolDescription.Append("**Wymiary: ** ").Append(cardObject.Measurements).AppendLine();
-            idolDescription.Append("**Ulubione jedzenie: ** ").Append(cardObject.Favorite_food).AppendLine();
-            idolDescription.Append("**Nielubiane jedzenie: ** ").Append(cardObject.Least_favorite_food).AppendLine();
-            idolDescription.Append("**Hobby: ** ").Append(cardObject.Hobbies).AppendLine();
-            idolDescription.Append("**Atrybut: ** ").Append(cardObject.Attribute).AppendLine();
-            idolDescription.Append("**Rok: ** ").Append(cardObject.Year).AppendLine();
-            idolDescription.Append("**Main unit: ** ").Append(cardObject.Main_unit).AppendLine();
-            idolDescription.Append("**Sub unit: ** ").Append(cardObject.Sub_unit).AppendLine();
-            idolDescription.Append("**Seiyuu: ** ").Append(cardObject.Cv.Name).AppendLine();
+            AddLineToIdolDescription(idolDescription, "**Imie:** ", cardObject.Name);
+            AddLineToIdolDescription(idolDescription, "**Japońskie imie:** ", cardObject.Japanese_name);
+            AddLineToIdolDescription(idolDescription, "**Wiek:** ", cardObject.Age);
+            AddLineToIdolDescription(idolDescription, "**Szkoła:** ", cardObject.School);
+            AddLineToIdolDescription(idolDescription, "**Urodziny (MM-dd):** ", cardObject.Birthday);
+            AddLineToIdolDescription(idolDescription, "**Znak zodiaku:** ", cardObject.Astrological_sign);
+            AddLineToIdolDescription(idolDescription, "**Grupa krwi:** ", cardObject.Blood);
+            AddLineToIdolDescription(idolDescription, "**Wzrost:** ", cardObject.Height);
+            AddLineToIdolDescription(idolDescription, "**Wymiary: ** ", cardObject.Measurements);
+            AddLineToIdolDescription(idolDescription, "**Ulubione jedzenie: ** ", cardObject.Favorite_food);
+            AddLineToIdolDescription(idolDescription, "**Nielubiane jedzenie: ** ", cardObject.Least_favorite_food);
+            AddLineToIdolDescription(idolDescription, "**Hobby: ** ", cardObject.Hobbies);
+            AddLineToIdolDescription(idolDescription, "**Atrybut: ** ", cardObject.Attribute);
+            AddLineToIdolDescription(idolDescription, "**Rok: ** ", cardObject.Year);
+            AddLineToIdolDescription(idolDescription, "**Main unit: ** ", cardObject.Main_unit);
+            AddLineToIdolDescription(idolDescription, "**Sub unit: ** ", cardObject.Sub_unit);
+            if(cardObject.Cv != null)
+            {
+                AddLineToIdolDescription(idolDescription, "**Seiyuu: ** ", cardObject.Cv.Name);
+            }
 
             return idolDescription.ToString();
+        }
+
+        private void AddLineToIdolDescription<T>(StringBuilder builder, string description, T field)
+        {
+            if(field != null)
+            {
+                builder.Append(description).Append(field).AppendLine();
+            }
         }
     }
 }
