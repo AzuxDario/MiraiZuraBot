@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using MiraiZuraBot.Attributes;
+using MiraiZuraBot.Containers.Schoolidolu;
 using MiraiZuraBot.Containers.Schoolidolu.Idols;
 using MiraiZuraBot.Helpers;
 using Newtonsoft.Json;
@@ -49,12 +50,12 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             await ctx.TriggerTypingAsync();
 
             var client = new HttpClient();
-            IdolsResponse idolsResponse;
+            PaginatedResponse<IdolObject> idolsResponse;
 
             var response = client.GetAsync("http://schoolido.lu/api/idols/?ordering=random&page_size=1").Result;
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                idolsResponse = JsonConvert.DeserializeObject<IdolsResponse>(response.Content.ReadAsStringAsync().Result);
+                idolsResponse = JsonConvert.DeserializeObject<PaginatedResponse<IdolObject>>(response.Content.ReadAsStringAsync().Result);
 
                 string description = MakeIdolDescription(idolsResponse.Results[0]);
                 await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolsResponse.Results[0].Chibi, footer);

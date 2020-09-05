@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using MiraiZuraBot.Attributes;
+using MiraiZuraBot.Containers.Schoolidolu;
 using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Helpers;
 using Newtonsoft.Json;
@@ -75,12 +76,12 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             await ctx.TriggerTypingAsync();
 
             var client = new HttpClient();
-            CardsResponse cardsResponse;
+            PaginatedResponse<CardObject> cardsResponse;
 
             var response = client.GetAsync("https://schoolido.lu/api/cards/?name=" + ctx.RawArgumentString + "&ordering=random&page_size=1").Result;
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                cardsResponse = JsonConvert.DeserializeObject<CardsResponse>(response.Content.ReadAsStringAsync().Result);
+                cardsResponse = JsonConvert.DeserializeObject<PaginatedResponse<CardObject>>(response.Content.ReadAsStringAsync().Result);
 
                 
                 // Some cards are only idolised
