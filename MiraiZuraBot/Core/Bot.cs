@@ -3,8 +3,10 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Exceptions;
 using DSharpPlus.Net.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Services;
+using MiraiZuraBot.Services.RandomMessages;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -84,7 +86,9 @@ namespace MiraiZuraBot.Core
                 StringPrefixes = new[] { configJson.CommandPrefix },
                 EnableDms = false,
                 EnableMentionPrefix = true,
-                CaseSensitive = false
+                CaseSensitive = false,
+                IgnoreExtraArguments = true,
+                Services = BuildDependencies()
             };
 
             _commands = DiscordClient.UseCommandsNext(commandsConfig);
@@ -94,6 +98,16 @@ namespace MiraiZuraBot.Core
             RegisterCommands();
 
             await DiscordClient.ConnectAsync();
+        }
+
+        private ServiceProvider BuildDependencies()
+        {
+            return new ServiceCollection()
+
+            // Services
+            .AddScoped<RandomMessageService>()
+
+            .BuildServiceProvider();
         }
 
         private async Task DiscordClient_MessageCreatedAsync(DSharpPlus.EventArgs.MessageCreateEventArgs e)
