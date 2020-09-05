@@ -5,13 +5,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MiraiZuraBot.Services
+namespace MiraiZuraBot.Handlers.EmojiHandlers
 {
-    class EmojiAddService
+    class EmojiAddHandler
     {
         private Random random;
 
-        public EmojiAddService()
+        public EmojiAddHandler()
         {
             random = new Random();
         }

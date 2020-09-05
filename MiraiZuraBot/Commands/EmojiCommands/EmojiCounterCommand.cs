@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Database;
 using MiraiZuraBot.Database.Models.DynamicDB;
+using MiraiZuraBot.Services.EmojiService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,70 +17,71 @@ namespace MiraiZuraBot.Commands.EmojiCommands
     [CommandsGroup("Emoji")]
     class EmojiCounterCommand : BaseCommandModule
     {
+        private EmojiCounterService _emojiCounterService;
+
+        public EmojiCounterCommand(EmojiCounterService emojiCounterService)
+        {
+            _emojiCounterService = emojiCounterService;
+        }
+
         [Command("policzEmoji")]
         [Description("Zlicza emoji użyte do tej pory na serwerze podczas działania bota.")]
         public async Task CountEmoji(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
-            using (var databaseContext = new DynamicDBContext())
+            List<EmojiData> emojiData = _emojiCounterService.GetEmojiData(ctx.Guild.Id);
+
+            if (emojiData.Count != 0)
             {
-                Server dbServer = databaseContext.Servers.Where(p => p.ServerID == ctx.Guild.Id.ToString()).Include(p => p.Emojis).FirstOrDefault();
-                if (dbServer != null)
+                IReadOnlyList<DiscordGuildEmoji> serverEmojiList;
+                // List for emojis to print
+                List<EmojiHolder> emojiHolderList = new List<EmojiHolder>();
+                // Get server emoji
+                serverEmojiList = await ctx.Guild.GetEmojisAsync();
+
+                foreach (DiscordGuildEmoji emoji in serverEmojiList)
                 {
-
-                    IReadOnlyList<DiscordGuildEmoji> serverEmojiList;
-                    // List for emojis to print
-                    List<EmojiHolder> emojiHolderList = new List<EmojiHolder>();
-                    // Get server emoji
-                    serverEmojiList = await ctx.Guild.GetEmojisAsync();
-
-                    // Get emoji from database
-                    List<Emoji> dbEmojis = dbServer.Emojis.OrderBy(p => p.UsageCount).ToList();
-
-                    foreach (DiscordGuildEmoji emoji in serverEmojiList)
+                    if(emoji.IsAnimated == true)
                     {
-                        if(emoji.IsAnimated == true)
-                        {
-                            continue;
-                        }
+                        continue;
+                    }
 
-                        Emoji tempEmoji = dbEmojis.Where(p => p.EmojiID == emoji.Id.ToString()).FirstOrDefault();
+                    EmojiData tempEmoji = emojiData.Where(p => p.EmojiID == emoji.Id).FirstOrDefault();
                             
-                        if(tempEmoji != null)
-                        {
-                            EmojiHolder emojiHolder = new EmojiHolder(emoji.Name, emoji.Id, tempEmoji.UsageCount);
-                            emojiHolderList.Add(emojiHolder);
-                        }
-                        else
-                        {
-                            EmojiHolder emojiHolder = new EmojiHolder(emoji.Name, emoji.Id, 0);
-                            emojiHolderList.Add(emojiHolder);
-                        }
-                    }
-
-                    string wholeMessage = "";
-                    emojiHolderList = emojiHolderList.OrderByDescending(p => p.UsageCount).ToList();
-
-                    foreach (EmojiHolder emoji in emojiHolderList)
+                    if(tempEmoji != null)
                     {
-                        wholeMessage += emoji.GetEmojiToSend() + "\n";
-                        if(wholeMessage.Length > 1800)
-                        {
-                            await ctx.RespondAsync(wholeMessage);
-                            wholeMessage = "";
-                        }
+                        EmojiHolder emojiHolder = new EmojiHolder(emoji.Name, emoji.Id, tempEmoji.UsageCount);
+                        emojiHolderList.Add(emojiHolder);
                     }
-
-                    if (wholeMessage != null)
+                    else
                     {
-                        await ctx.RespondAsync(wholeMessage);
-                        return;
+                        EmojiHolder emojiHolder = new EmojiHolder(emoji.Name, emoji.Id, 0);
+                        emojiHolderList.Add(emojiHolder);
                     }
-
                 }
 
-                await ctx.RespondAsync("Na tym serwerze jeszcze nie użyto emoji.");
+                string wholeMessage = "";
+                emojiHolderList = emojiHolderList.OrderByDescending(p => p.UsageCount).ToList();
+
+                foreach (EmojiHolder emoji in emojiHolderList)
+                {
+                    wholeMessage += emoji.GetEmojiToSend() + "\n";
+                    if(wholeMessage.Length > 1800)
+                    {
+                        await ctx.RespondAsync(wholeMessage);
+                        wholeMessage = "";
+                    }
+                }
+
+                if (wholeMessage != null)
+                {
+                    await ctx.RespondAsync(wholeMessage);
+                    return;
+                }
+
             }
+
+            await ctx.RespondAsync("Na tym serwerze jeszcze nie użyto emoji.");
         }
     }
 

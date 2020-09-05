@@ -9,9 +9,9 @@ using System.Linq;
 using MiraiZuraBot.Database.Models.DynamicDB;
 using System.Threading.Tasks;
 
-namespace MiraiZuraBot.Services
+namespace MiraiZuraBot.Handlers.EmojiHandlers
 {
-    class EmojiCounterService
+    class EmojiCounterHandler
     {
         public async Task CountEmojiInMessage(DiscordMessage message)
         {

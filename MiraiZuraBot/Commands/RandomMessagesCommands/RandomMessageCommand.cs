@@ -1,7 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using MiraiZuraBot.Attributes;
-using MiraiZuraBot.Services.RandomMessages;
+using MiraiZuraBot.Services.RandomMessagesService;
 using System;
 using System.Collections.Generic;
 using System.Text;

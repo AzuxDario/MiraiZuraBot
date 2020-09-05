@@ -5,8 +5,9 @@ using DSharpPlus.Exceptions;
 using DSharpPlus.Net.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using MiraiZuraBot.Attributes;
-using MiraiZuraBot.Services;
-using MiraiZuraBot.Services.RandomMessages;
+using MiraiZuraBot.Handlers.EmojiHandlers;
+using MiraiZuraBot.Services.EmojiService;
+using MiraiZuraBot.Services.RandomMessagesService;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -105,6 +106,7 @@ namespace MiraiZuraBot.Core
             return new ServiceCollection()
 
             // Services
+            .AddScoped<EmojiCounterService>()
             .AddScoped<RandomMessageService>()
 
             .BuildServiceProvider();
@@ -116,8 +118,8 @@ namespace MiraiZuraBot.Core
             {
                 try
                 {
-                    EmojiCounterService emojiCounterService = new EmojiCounterService();
-                    await emojiCounterService.CountEmojiInMessage(e.Message);
+                    EmojiCounterHandler emojiCounterHandler = new EmojiCounterHandler();
+                    await emojiCounterHandler.CountEmojiInMessage(e.Message);
                 }
                 catch (Exception ie)
                 {
@@ -128,8 +130,8 @@ namespace MiraiZuraBot.Core
                 }
                 try
                 {
-                    EmojiAddService emojiAddService = new EmojiAddService();
-                    await emojiAddService.AddEmojiOnServer(e.Guild, e.Message);
+                    EmojiAddHandler emojiAddHanlder = new EmojiAddHandler();
+                    await emojiAddHanlder.AddEmojiOnServer(e.Guild, e.Message);
                 }
                 catch (Exception ie)
                 {
@@ -147,8 +149,8 @@ namespace MiraiZuraBot.Core
             {
                 try
                 {
-                    EmojiCounterService emojiCounterService = new EmojiCounterService();
-                    await emojiCounterService.CountEmojiInMessage(e.Message);
+                    EmojiCounterHandler emojiCounterHandler = new EmojiCounterHandler();
+                    await emojiCounterHandler.CountEmojiInMessage(e.Message);
                 }
                 catch (Exception ie)
                 {
@@ -166,8 +168,8 @@ namespace MiraiZuraBot.Core
             {
                 try
                 {
-                    EmojiCounterService emojiCounterService = new EmojiCounterService();
-                    await emojiCounterService.CountEmojiReaction(e.User, e.Emoji, e.Channel);
+                    EmojiCounterHandler emojiCounterHandler = new EmojiCounterHandler();
+                    await emojiCounterHandler.CountEmojiReaction(e.User, e.Emoji, e.Channel);
                 }
                 catch (Exception ie)
                 {
