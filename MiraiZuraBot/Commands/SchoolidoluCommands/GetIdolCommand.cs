@@ -95,7 +95,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
         private void AddLineToIdolDescription<T>(StringBuilder builder, string description, T field)
         {
-            if(field != null)
+            if(field != null && field.ToString() != "")
             {
                 builder.Append(description).Append(field).AppendLine();
             }
