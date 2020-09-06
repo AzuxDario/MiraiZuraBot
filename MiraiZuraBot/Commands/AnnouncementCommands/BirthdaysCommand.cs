@@ -17,18 +17,21 @@ using System.IO;
 using DSharpPlus;
 using Microsoft.EntityFrameworkCore;
 using MiraiZuraBot.Helpers;
+using MiraiZuraBot.Services.AnnouncementService;
 
 namespace MiraiZuraBot.Commands.AnnouncementCommands
 {
     [CommandsGroup("Powiadamianie")]
     class BirthdaysCommand : BaseCommandModule
     {
+        private BirthdaysService _birthdaysService;
         private Timer checkMessagesTimer;
         private int checkMessagesInterval;
         private const string imageDirectory = "birthdays/";
 
-        public BirthdaysCommand()
+        public BirthdaysCommand(BirthdaysService birthdaysService)
         {
+            _birthdaysService = birthdaysService;
             checkMessagesInterval = 1000 * 60 * 1;    // every 1 minutes;
             checkMessagesTimer = new Timer(PostBirthdayMessage, null, checkMessagesInterval, Timeout.Infinite);
         }
@@ -37,11 +40,8 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [Description("Wyświetla możliwe tematy urodzin.")]
         public async Task BirthdayTopics(CommandContext ctx)
         {
-            using (var databaseContext = new DynamicDBContext())
-            {
-                List<Topic> dbTopics = databaseContext.Topics.ToList();
-                await PostLongMessageHelper.PostLongMessage(ctx, dbTopics.Select(p => p.Name).ToList(), "Dostępne tematy urodzin:");
-            }
+            var topics = _birthdaysService.GetBirthdayTopics();
+            await PostLongMessageHelper.PostLongMessage(ctx, topics, "Dostępne tematy urodzin:");
         }
 
         [Command("aktywneTematyUrodzin")]
@@ -52,17 +52,14 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             string channelId;
             channelId = ctx.Channel.Id.ToString();
 
-            using (var databaseContext = new DynamicDBContext())
+            var topics = _birthdaysService.GetActiveBirthdayTopicsForChannel(channelId);
+            if (topics.Count > 0)
             {
-                List<Topic> dbTopics = databaseContext.Topics.Where(p => p.BirthdayChannels.Any(m => m.ChannelID == channelId && m.IsEnabled == true)).ToList();
-                if(dbTopics.Count > 0)
-                {
-                    await PostLongMessageHelper.PostLongMessage(ctx, dbTopics.Select(p => p.Name).ToList(), "Tematy urodzin włączone na tym kanale:");
-                }
-                else
-                {
-                    await ctx.RespondAsync("Dla tego kanału nie ma włączonych żadnych tematów urodzin.");
-                }
+                await PostLongMessageHelper.PostLongMessage(ctx, topics, "Tematy urodzin włączone na tym kanale:");
+            }
+            else
+            {
+                await ctx.RespondAsync("Dla tego kanału nie ma włączonych żadnych tematów urodzin.");
             }
         }
 

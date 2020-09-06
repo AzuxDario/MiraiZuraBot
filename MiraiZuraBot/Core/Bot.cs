@@ -6,6 +6,7 @@ using DSharpPlus.Net.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Handlers.EmojiHandlers;
+using MiraiZuraBot.Services.AnnouncementService;
 using MiraiZuraBot.Services.EmojiService;
 using MiraiZuraBot.Services.RandomMessagesService;
 using MiraiZuraBot.Services.SchoolidoluService;
@@ -107,6 +108,7 @@ namespace MiraiZuraBot.Core
             return new ServiceCollection()
 
             // Services
+            .AddScoped<BirthdaysService>()
             .AddScoped<EmojiCounterService>()
             .AddScoped<RandomMessageService>()
             .AddScoped<SchoolidoluService>()
