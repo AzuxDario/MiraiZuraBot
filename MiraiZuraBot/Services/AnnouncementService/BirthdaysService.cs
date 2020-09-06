@@ -71,11 +71,13 @@ namespace MiraiZuraBot.Services.AnnouncementService
                     }
 
                     // Create new entry
-                    BirthdayChannel newChannel = new BirthdayChannel();
-                    newChannel.Server = server;
-                    newChannel.ChannelID = channelId;
-                    newChannel.IsEnabled = true;
-                    newChannel.Topic = topic;
+                    BirthdayChannel newChannel = new BirthdayChannel
+                    {
+                        Server = server,
+                        ChannelID = channelId,
+                        IsEnabled = true,
+                        Topic = topic
+                    };
                     databaseContext.Add(newChannel);
                     databaseContext.SaveChanges();
                     return TurnOnStatus.turnedOn;
