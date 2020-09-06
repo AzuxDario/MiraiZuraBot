@@ -161,105 +161,42 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [Command("wlaczTematUrodzin")]
         [Description("Włącza temat urodzin dla danego kanału.")]
         [RequirePermissions(Permissions.ManageGuild)]
-        public async Task TurnOnBirthdayTopic(CommandContext ctx, [Description("Temat.")] params string[] name)
+        public async Task TurnOnBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
         {
-            string channelId;
-            channelId = ctx.Channel.Id.ToString();
-            string topicName = ctx.RawArgumentString;
+            var result = _birthdaysService.TurnOnBirthdayTopic(ctx.Guild.Id.ToString(), ctx.Channel.Id.ToString(), topicName);
 
-
-            using (var databaseContext = new DynamicDBContext())
+            switch(result)
             {
-                // Check if topic exist
-                Topic topic = databaseContext.Topics.Where(p => p.Name == topicName).FirstOrDefault();
-                if (topic == null)
-                {
+                case BirthdaysService.TurnOnStatus.turnedOn:
+                    await ctx.RespondAsync("Temat włączono.");
+                    return;
+                case BirthdaysService.TurnOnStatus.alreadyTurnedOn:
+                    await ctx.RespondAsync("Podany temat jest włączony.");
+                    return;
+                case BirthdaysService.TurnOnStatus.topicDoesntExist:
                     await ctx.RespondAsync("Podany temat nie istnieje.");
                     return;
-                }
-
-                // Check if this channel and topic has enter in database
-                BirthdayChannel birthdayChannel = databaseContext.BirthdayChannels.Include(p => p.Topic).Where(p => p.ChannelID == channelId && p.Topic.Name == topicName).FirstOrDefault();
-                if (birthdayChannel != null)
-                {
-                    // Entry exist
-                    if (birthdayChannel.IsEnabled == true)
-                    {
-                        await ctx.RespondAsync("Podany temat jest włączony.");
-                    }
-                    else
-                    {
-                        birthdayChannel.IsEnabled = true;
-                        databaseContext.SaveChanges();
-                        await ctx.RespondAsync("Temat włączono.");
-                    }
-                }
-                else
-                {
-                    //Check if server exist
-                    Server server = databaseContext.Servers.Where(p => p.ServerID == ctx.Guild.Id.ToString()).FirstOrDefault();
-                    if(server == null)
-                    {
-                        server = new Server();
-                        server.ServerID = ctx.Guild.Id.ToString();
-                    }
-
-                    // Create new entry
-                    BirthdayChannel newChannel = new BirthdayChannel();
-                    newChannel.Server = server;
-                    newChannel.ChannelID = channelId;
-                    newChannel.IsEnabled = true;
-                    newChannel.Topic = topic;
-                    databaseContext.Add(newChannel);
-                    databaseContext.SaveChanges();
-                    await ctx.RespondAsync("Temat włączono.");
-                }
-
             }
         }
 
         [Command("wylaczTematUrodzin")]
         [Description("Wyłącza temat urodzin dla danego kanału.")]
         [RequirePermissions(Permissions.ManageGuild)]
-        public async Task TurnOffBirthdayTopic(CommandContext ctx, [Description("Temat.")] params string[] name)
+        public async Task TurnOffBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
         {
-            string channelId;
-            channelId = ctx.Channel.Id.ToString();
-            string topicName = ctx.RawArgumentString;
+            var result = _birthdaysService.TurnOffBirthdayTopic(ctx.Guild.Id.ToString(), ctx.Channel.Id.ToString(), topicName);
 
-
-            using (var databaseContext = new DynamicDBContext())
+            switch (result)
             {
-                // Check if topic exist
-                Topic topic = databaseContext.Topics.Where(p => p.Name == topicName).FirstOrDefault();
-                if (topic == null)
-                {
+                case BirthdaysService.TurnOffStatus.turnedOff:
+                    await ctx.RespondAsync("Temat wyłączono.");
+                    return;
+                case BirthdaysService.TurnOffStatus.alreadyTurnedOff:
+                    await ctx.RespondAsync("Podany temat jest wyłączony.");
+                    return;
+                case BirthdaysService.TurnOffStatus.topicDoesntExist:
                     await ctx.RespondAsync("Podany temat nie istnieje.");
                     return;
-                }
-
-                // Check if this channel and topic has enter in database
-                BirthdayChannel birthdayChannel = databaseContext.BirthdayChannels.Include(p => p.Topic).Where(p => p.ChannelID == channelId && p.Topic.Name == topicName).FirstOrDefault();
-                if (birthdayChannel != null)
-                {
-                    // Entry exist
-                    if (birthdayChannel.IsEnabled == false)
-                    {
-                        await ctx.RespondAsync("Podany temat jest wyłączony.");
-                    }
-                    else
-                    {
-                        birthdayChannel.IsEnabled = false;
-                        databaseContext.SaveChanges();
-                        await ctx.RespondAsync("Temat wyłączono.");
-                    }
-                }
-                else
-                {
-                    // Entry doesn't exist
-                    await ctx.RespondAsync("Podany temat jest wyłączony.");
-                }
-
             }
         }
 
