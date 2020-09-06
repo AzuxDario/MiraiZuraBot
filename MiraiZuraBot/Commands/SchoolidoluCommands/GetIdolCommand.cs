@@ -4,6 +4,7 @@ using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Containers.Schoolidolu;
 using MiraiZuraBot.Containers.Schoolidolu.Idols;
 using MiraiZuraBot.Helpers;
+using MiraiZuraBot.Services.SchoolidoluService;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,23 +20,25 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
     class GetIdolCommand : BaseCommandModule
     {
         private EmbedFooter footer = new EmbedFooter { Text = "Powered by schoolido.lu", IconUrl = "https://i.schoolido.lu/android/icon.png" };
+        private SchoolidoluService _schoolidoluService;
+
+        public GetIdolCommand(SchoolidoluService schoolidoluService)
+        {
+            _schoolidoluService = schoolidoluService;
+        }
 
         [Command("idolka")]
         [Description("Pokazuje idolkę na bazie jej nazwy.\nnp:\n*idolka Watanabe You \n*idolka Sonoda Umi")]
-        public async Task Idol(CommandContext ctx, [Description("Imie postaci.")] params string[] name)
+        public async Task Idol(CommandContext ctx, [Description("Imie postaci."), RemainingText] string name)
         {
             await ctx.TriggerTypingAsync();
 
-            var client = new HttpClient();
-            IdolObject idolObject;
+            var idolObject = _schoolidoluService.GetIdolByName(name);
 
-            var response = client.GetAsync("http://schoolido.lu/api/idols/" + ctx.RawArgumentString + "/").Result;
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (idolObject.StatusCode == HttpStatusCode.OK)
             {
-                idolObject = JsonConvert.DeserializeObject<IdolObject>(response.Content.ReadAsStringAsync().Result);
-
-                string description = MakeIdolDescription(idolObject);
-                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolObject.Chibi, footer);
+                string description = MakeIdolDescription(idolObject.Data);
+                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolObject.Data.Chibi, footer);
             }
             else
             {
@@ -49,16 +52,12 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         {
             await ctx.TriggerTypingAsync();
 
-            var client = new HttpClient();
-            PaginatedResponse<IdolObject> idolsResponse;
+            var idolsResponse = _schoolidoluService.GetRandomIdol();
 
-            var response = client.GetAsync("http://schoolido.lu/api/idols/?ordering=random&page_size=1").Result;
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (idolsResponse.StatusCode == HttpStatusCode.OK)
             {
-                idolsResponse = JsonConvert.DeserializeObject<PaginatedResponse<IdolObject>>(response.Content.ReadAsStringAsync().Result);
-
-                string description = MakeIdolDescription(idolsResponse.Results[0]);
-                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolsResponse.Results[0].Chibi, footer);
+                 string description = MakeIdolDescription(idolsResponse.Data.Results[0]);
+                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolsResponse.Data.Results[0].Chibi, footer);
             }
             else
             {

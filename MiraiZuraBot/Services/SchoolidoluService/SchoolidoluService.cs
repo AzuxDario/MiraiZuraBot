@@ -1,5 +1,6 @@
 ﻿using MiraiZuraBot.Containers.Schoolidolu;
 using MiraiZuraBot.Containers.Schoolidolu.Cards;
+using MiraiZuraBot.Containers.Schoolidolu.Idols;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,36 @@ namespace MiraiZuraBot.Services.SchoolidoluService
             }
 
             return new SchoolidoluResponse<PaginatedResponse<CardObject>>(null, response.StatusCode);
+        }
+
+        public SchoolidoluResponse<IdolObject> GetIdolByName(string name)
+        {
+            var client = new HttpClient();
+            IdolObject idolObject;
+
+            var response = client.GetAsync(apiBase + "idols/" + name + "/").Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                idolObject = JsonConvert.DeserializeObject<IdolObject>(response.Content.ReadAsStringAsync().Result);
+                return new SchoolidoluResponse<IdolObject>(idolObject, response.StatusCode);
+            }
+
+            return new SchoolidoluResponse<IdolObject>(null, response.StatusCode);
+        }
+
+        public SchoolidoluResponse<PaginatedResponse<IdolObject>> GetRandomIdol()
+        {
+            var client = new HttpClient();
+            PaginatedResponse<IdolObject> idolObject;
+
+            var response = client.GetAsync(apiBase + "idols/?ordering=random&page_size=1").Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                idolObject = JsonConvert.DeserializeObject<PaginatedResponse<IdolObject>>(response.Content.ReadAsStringAsync().Result);
+                return new SchoolidoluResponse<PaginatedResponse<IdolObject>>(idolObject, response.StatusCode);
+            }
+
+            return new SchoolidoluResponse<PaginatedResponse<IdolObject>>(null, response.StatusCode);
         }
     }
 }
