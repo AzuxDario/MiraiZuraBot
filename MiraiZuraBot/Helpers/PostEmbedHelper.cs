@@ -21,5 +21,10 @@ namespace MiraiZuraBot.Helpers
             };
             await ctx.RespondAsync(null, false, embed);
         }
+
+        public static DiscordEmbedBuilder.EmbedFooter GetSchoolidoluFotter()
+        {
+            return new DiscordEmbedBuilder.EmbedFooter { Text = "Powered by schoolido.lu", IconUrl = "https://i.schoolido.lu/android/icon.png" };
+        }
     }
-}
+}   

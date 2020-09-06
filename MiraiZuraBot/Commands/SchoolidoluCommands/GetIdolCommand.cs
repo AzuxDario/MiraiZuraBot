@@ -19,7 +19,6 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
     [CommandsGroup("SIF")]
     class GetIdolCommand : BaseCommandModule
     {
-        private EmbedFooter footer = new EmbedFooter { Text = "Powered by schoolido.lu", IconUrl = "https://i.schoolido.lu/android/icon.png" };
         private SchoolidoluService _schoolidoluService;
 
         public GetIdolCommand(SchoolidoluService schoolidoluService)
@@ -38,7 +37,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             if (idolObject.StatusCode == HttpStatusCode.OK)
             {
                 string description = MakeIdolDescription(idolObject.Data);
-                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolObject.Data.Chibi, footer);
+                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolObject.Data.Chibi, PostEmbedHelper.GetSchoolidoluFotter());
             }
             else
             {
@@ -57,7 +56,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             if (idolsResponse.StatusCode == HttpStatusCode.OK)
             {
                  string description = MakeIdolDescription(idolsResponse.Data.Results[0]);
-                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolsResponse.Data.Results[0].Chibi, footer);
+                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolsResponse.Data.Results[0].Chibi, PostEmbedHelper.GetSchoolidoluFotter());
             }
             else
             {
