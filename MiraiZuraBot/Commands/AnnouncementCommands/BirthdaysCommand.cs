@@ -16,6 +16,7 @@ using System.Net;
 using System.IO;
 using DSharpPlus;
 using Microsoft.EntityFrameworkCore;
+using MiraiZuraBot.Helpers;
 
 namespace MiraiZuraBot.Commands.AnnouncementCommands
 {
@@ -39,22 +40,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             using (var databaseContext = new DynamicDBContext())
             {
                 List<Topic> dbTopics = databaseContext.Topics.ToList();
-                string response = "Dostępne tematy urodzin:\n";
-                foreach(Topic topic in dbTopics)
-                {
-                    response += topic.Name;
-                    response += "\n";
-                    if (response.Length > 1800)
-                    {
-                        await ctx.RespondAsync(response);
-                        response = "";
-                    }   
-                }
-                if (response != string.Empty)
-                {
-                    await ctx.RespondAsync(response);
-                    return;
-                }
+                await PostLongMessageHelper.PostLongMessage(ctx, dbTopics.Select(p => p.Name).ToList(), "Dostępne tematy urodzin:");
             }
         }
 
@@ -68,25 +54,10 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
             using (var databaseContext = new DynamicDBContext())
             {
-                List<Topic> dbTopics = databaseContext.Topics.Where(p => p.BirthdayChannels.Any(m => m.ChannelID == channelId && m.IsEnabled == true )).ToList();
+                List<Topic> dbTopics = databaseContext.Topics.Where(p => p.BirthdayChannels.Any(m => m.ChannelID == channelId && m.IsEnabled == true)).ToList();
                 if(dbTopics.Count > 0)
                 {
-                    string response = "Tematy urodzin włączone na tym kanale:\n";
-                    foreach (Topic topic in dbTopics)
-                    {
-                        response += topic.Name;
-                        response += "\n";
-                        if (response.Length > 1800)
-                        {
-                            await ctx.RespondAsync(response);
-                            response = "";
-                        }
-                    }
-                    if (response != string.Empty)
-                    {
-                        await ctx.RespondAsync(response);
-                        return;
-                    }
+                    await PostLongMessageHelper.PostLongMessage(ctx, dbTopics.Select(p => p.Name).ToList(), "Tematy urodzin włączone na tym kanale:");
                 }
                 else
                 {
