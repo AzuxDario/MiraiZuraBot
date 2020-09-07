@@ -49,7 +49,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             string channelId;
             channelId = ctx.Channel.Id.ToString();
 
-            var topics = _birthdaysService.GetActiveBirthdayTopicsForChannel(channelId);
+            var topics = _birthdaysService.GetActiveBirthdayTopicsForChannel(Convert.ToUInt64(channelId));
             if (topics.Count > 0)
             {
                 await PostLongMessageHelper.PostLongMessage(ctx, topics, "Tematy urodzin włączone na tym kanale:");
@@ -118,7 +118,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [RequirePermissions(Permissions.ManageGuild)]
         public async Task TurnOnBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
         {
-            var result = _birthdaysService.TurnOnBirthdayTopic(ctx.Guild.Id.ToString(), ctx.Channel.Id.ToString(), topicName);
+            var result = _birthdaysService.TurnOnBirthdayTopic(ctx.Guild.Id, ctx.Channel.Id, topicName);
 
             switch(result)
             {
@@ -139,7 +139,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [RequirePermissions(Permissions.ManageGuild)]
         public async Task TurnOffBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
         {
-            var result = _birthdaysService.TurnOffBirthdayTopic(ctx.Guild.Id.ToString(), ctx.Channel.Id.ToString(), topicName);
+            var result = _birthdaysService.TurnOffBirthdayTopic(ctx.Guild.Id, ctx.Channel.Id, topicName);
 
             switch (result)
             {

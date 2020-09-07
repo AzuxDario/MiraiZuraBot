@@ -23,16 +23,16 @@ namespace MiraiZuraBot.Services.AnnouncementService
             }
         }
 
-        public List<string> GetActiveBirthdayTopicsForChannel(string channelId)
+        public List<string> GetActiveBirthdayTopicsForChannel(ulong channelId)
         {
             using (var databaseContext = new DynamicDBContext())
             {
-                List<Topic> dbTopics = databaseContext.Topics.Where(p => p.BirthdayChannels.Any(m => m.ChannelID == channelId && m.IsEnabled == true)).ToList();
+                List<Topic> dbTopics = databaseContext.Topics.Where(p => p.BirthdayChannels.Any(m => m.ChannelID == channelId.ToString() && m.IsEnabled == true)).ToList();
                 return dbTopics.Select(p => p.Name).ToList();
             }
         }
 
-        public TurnOnStatus TurnOnBirthdayTopic(string serverId, string channelId, string topicName)
+        public TurnOnStatus TurnOnBirthdayTopic(ulong serverId, ulong channelId, string topicName)
         {
             using (var databaseContext = new DynamicDBContext())
             {
@@ -44,7 +44,7 @@ namespace MiraiZuraBot.Services.AnnouncementService
                 }
 
                 // Check if this channel and topic has enter in database
-                BirthdayChannel birthdayChannel = databaseContext.BirthdayChannels.Include(p => p.Topic).Where(p => p.ChannelID == channelId && p.Topic.Name == topicName).FirstOrDefault();
+                BirthdayChannel birthdayChannel = databaseContext.BirthdayChannels.Include(p => p.Topic).Where(p => p.ChannelID == channelId.ToString() && p.Topic.Name == topicName).FirstOrDefault();
                 if (birthdayChannel != null)
                 {
                     // Entry exist
@@ -62,12 +62,12 @@ namespace MiraiZuraBot.Services.AnnouncementService
                 else
                 {
                     //Check if server exist
-                    Server server = databaseContext.Servers.Where(p => p.ServerID == serverId).FirstOrDefault();
+                    Server server = databaseContext.Servers.Where(p => p.ServerID == serverId.ToString()).FirstOrDefault();
                     if (server == null)
                     {
                         server = new Server
                         {
-                            ServerID = serverId
+                            ServerID = serverId.ToString()
                         };
                     }
 
@@ -75,7 +75,7 @@ namespace MiraiZuraBot.Services.AnnouncementService
                     BirthdayChannel newChannel = new BirthdayChannel
                     {
                         Server = server,
-                        ChannelID = channelId,
+                        ChannelID = channelId.ToString(),
                         IsEnabled = true,
                         Topic = topic
                     };
@@ -87,7 +87,7 @@ namespace MiraiZuraBot.Services.AnnouncementService
             }
         }
 
-        public TurnOffStatus TurnOffBirthdayTopic(string serverId, string channelId, string topicName)
+        public TurnOffStatus TurnOffBirthdayTopic(ulong serverId, ulong channelId, string topicName)
         {
             using (var databaseContext = new DynamicDBContext())
             {
@@ -99,7 +99,7 @@ namespace MiraiZuraBot.Services.AnnouncementService
                 }
 
                 // Check if this channel and topic has enter in database
-                BirthdayChannel birthdayChannel = databaseContext.BirthdayChannels.Include(p => p.Topic).Where(p => p.ChannelID == channelId && p.Topic.Name == topicName).FirstOrDefault();
+                BirthdayChannel birthdayChannel = databaseContext.BirthdayChannels.Include(p => p.Topic).Where(p => p.ChannelID == channelId.ToString() && p.Topic.Name == topicName).FirstOrDefault();
                 if (birthdayChannel != null)
                 {
                     // Entry exist
