@@ -12,7 +12,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using static DSharpPlus.Entities.DiscordEmbedBuilder;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {

@@ -1,10 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using Microsoft.EntityFrameworkCore;
 using MiraiZuraBot.Attributes;
-using MiraiZuraBot.Database;
-using MiraiZuraBot.Database.Models.DynamicDB;
 using MiraiZuraBot.Services.EmojiService;
 using System;
 using System.Collections.Generic;

@@ -11,8 +11,8 @@ namespace MiraiZuraBot.Services.AnnouncementService
 {
     class BirthdaysService
     {
-        public enum TurnOnStatus { turnedOn, alreadyTurnedOn, topicDoesntExist };
-        public enum TurnOffStatus { turnedOff, alreadyTurnedOff, topicDoesntExist };
+        public enum TurnOnStatus { TurnedOn, AlreadyTurnedOn, TopicDoesntExist };
+        public enum TurnOffStatus { TurnedOff, AlreadyTurnedOff, TopicDoesntExist };
 
         public List<string> GetBirthdayTopics()
         {
@@ -40,7 +40,7 @@ namespace MiraiZuraBot.Services.AnnouncementService
                 Topic topic = databaseContext.Topics.Where(p => p.Name == topicName).FirstOrDefault();
                 if (topic == null)
                 {
-                    return TurnOnStatus.topicDoesntExist;
+                    return TurnOnStatus.TopicDoesntExist;
                 }
 
                 // Check if this channel and topic has enter in database
@@ -50,13 +50,13 @@ namespace MiraiZuraBot.Services.AnnouncementService
                     // Entry exist
                     if (birthdayChannel.IsEnabled == true)
                     {
-                        return TurnOnStatus.alreadyTurnedOn;
+                        return TurnOnStatus.AlreadyTurnedOn;
                     }
                     else
                     {
                         birthdayChannel.IsEnabled = true;
                         databaseContext.SaveChanges();
-                        return TurnOnStatus.turnedOn;
+                        return TurnOnStatus.TurnedOn;
                     }
                 }
                 else
@@ -81,7 +81,7 @@ namespace MiraiZuraBot.Services.AnnouncementService
                     };
                     databaseContext.Add(newChannel);
                     databaseContext.SaveChanges();
-                    return TurnOnStatus.turnedOn;
+                    return TurnOnStatus.TurnedOn;
                 }
 
             }
@@ -95,7 +95,7 @@ namespace MiraiZuraBot.Services.AnnouncementService
                 Topic topic = databaseContext.Topics.Where(p => p.Name == topicName).FirstOrDefault();
                 if (topic == null)
                 {
-                    return TurnOffStatus.topicDoesntExist;
+                    return TurnOffStatus.TopicDoesntExist;
                 }
 
                 // Check if this channel and topic has enter in database
@@ -105,19 +105,19 @@ namespace MiraiZuraBot.Services.AnnouncementService
                     // Entry exist
                     if (birthdayChannel.IsEnabled == false)
                     {
-                        return TurnOffStatus.alreadyTurnedOff;
+                        return TurnOffStatus.AlreadyTurnedOff;
                     }
                     else
                     {
                         birthdayChannel.IsEnabled = false;
                         databaseContext.SaveChanges();
-                        return TurnOffStatus.turnedOff;
+                        return TurnOffStatus.TurnedOff;
                     }
                 }
                 else
                 {
                     // Entry doesn't exist
-                    return TurnOffStatus.alreadyTurnedOff;
+                    return TurnOffStatus.AlreadyTurnedOff;
                 }
 
             }

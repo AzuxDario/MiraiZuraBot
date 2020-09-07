@@ -1,7 +1,5 @@
 ﻿using DSharpPlus.CommandsNext;
 using MiraiZuraBot.Attributes;
-using MiraiZuraBot.Database;
-using MiraiZuraBot.Database.Models.DynamicDB;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,7 +13,6 @@ using System.Runtime.InteropServices;
 using System.Net;
 using System.IO;
 using DSharpPlus;
-using Microsoft.EntityFrameworkCore;
 using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Services.AnnouncementService;
 
@@ -126,13 +123,13 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
             switch(result)
             {
-                case BirthdaysService.TurnOnStatus.turnedOn:
+                case BirthdaysService.TurnOnStatus.TurnedOn:
                     await ctx.RespondAsync("Temat włączono.");
                     return;
-                case BirthdaysService.TurnOnStatus.alreadyTurnedOn:
+                case BirthdaysService.TurnOnStatus.AlreadyTurnedOn:
                     await ctx.RespondAsync("Podany temat jest włączony.");
                     return;
-                case BirthdaysService.TurnOnStatus.topicDoesntExist:
+                case BirthdaysService.TurnOnStatus.TopicDoesntExist:
                     await ctx.RespondAsync("Podany temat nie istnieje.");
                     return;
             }
@@ -147,13 +144,13 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
             switch (result)
             {
-                case BirthdaysService.TurnOffStatus.turnedOff:
+                case BirthdaysService.TurnOffStatus.TurnedOff:
                     await ctx.RespondAsync("Temat wyłączono.");
                     return;
-                case BirthdaysService.TurnOffStatus.alreadyTurnedOff:
+                case BirthdaysService.TurnOffStatus.AlreadyTurnedOff:
                     await ctx.RespondAsync("Podany temat jest wyłączony.");
                     return;
-                case BirthdaysService.TurnOffStatus.topicDoesntExist:
+                case BirthdaysService.TurnOffStatus.TopicDoesntExist:
                     await ctx.RespondAsync("Podany temat nie istnieje.");
                     return;
             }
