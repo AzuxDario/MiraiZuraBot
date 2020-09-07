@@ -140,12 +140,25 @@ namespace MiraiZuraBot.Services.AnnouncementService
                     }
 
                     DateTime todayJapan = GetCurrentJapanTime();
+                    bool mentionEveryone = false;
 
                     // Get topic id for this channel
                     int topicId = channel.TopicID;
 
                     // Get all roles for this topic in this channel
-                    List<string> rolesMention = channel.BirthdayRoles.Select(p => p.RoleID).ToList();
+                    List<string> dbRoles = channel.BirthdayRoles.Select(p => p.RoleID).ToList();
+                    List<ulong> rolesMention = new List<ulong>();
+                    foreach(string dbRole in dbRoles)
+                    {
+                        if(dbRole == "everyone")
+                        {
+                            mentionEveryone = true;
+                        }
+                        else
+                        {
+                            rolesMention.Add(Convert.ToUInt64(dbRole));
+                        }
+                    }
 
                     // Get all messages for today for this topic
                     List<Birthday> dbBirthdays = databaseContext.Birthdays.Where(p => p.TopicID == topicId && p.Day == todayJapan.Day && p.Month == todayJapan.Month).ToList();
@@ -161,7 +174,7 @@ namespace MiraiZuraBot.Services.AnnouncementService
                         {
                             // There was no such posted information  
                             BirthdayChannelsResponse channelForMessage = new BirthdayChannelsResponse(Convert.ToUInt64(channel.ChannelID), Convert.ToUInt64(channel.Server.ServerID),
-                                                                                                      birthday.Content, rolesMention, channel.ID, birthday.ID, birthday.FileName);
+                                                                                                      birthday.Content, rolesMention, mentionEveryone, channel.ID, birthday.ID, birthday.FileName);
                             channelsForMessage.Add(channelForMessage);
                         }
                     }

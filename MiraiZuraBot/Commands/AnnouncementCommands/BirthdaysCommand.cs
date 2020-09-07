@@ -71,7 +71,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                     DiscordChannel discordChannel = await Bot.DiscordClient.GetChannelAsync(channel.ChannelId);
                     DiscordMessage discordMessage = null;
 
-                    string brithdayRolesMention = GetRolesMention(channel.ServerId, channel.BirthdayRoles);
+                    string brithdayRolesMention = GetRolesMention(channel.ServerId, channel.BirthdayRoles, channel.MentionEveryone);
 
                     if (channel.Filename != null)
                     {
@@ -166,25 +166,22 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             }
         }
 
-        private string GetRolesMention(ulong serverID, List<string> birthdayRoles)
+        private string GetRolesMention(ulong serverID, List<ulong> birthdayRoles, bool mentionEveryone)
         {
             StringBuilder roles = new StringBuilder();
             DiscordGuild server = Bot.DiscordClient.GetGuildAsync(serverID).Result;
             var serverRoles = server.Roles;
-            foreach(var birthdayRole in birthdayRoles)
+            if (mentionEveryone == true)
             {
-                if(birthdayRole == "everyone")
+                roles.Append("@everyone ");
+            }
+            foreach (var birthdayRole in birthdayRoles)
+            {
+                DiscordRole role = serverRoles.FirstOrDefault(p => p.Value.Id == birthdayRole).Value;
+                if (role != null)
                 {
-                    roles.Append("@everyone ");
-                }
-                else
-                {
-                    DiscordRole role = serverRoles.FirstOrDefault(p => p.Value.Id.ToString() == birthdayRole).Value;
-                    if (role != null)
-                    {
-                        roles.Append(role.Mention);
-                        roles.Append(" ");
-                    }
+                    roles.Append(role.Mention);
+                    roles.Append(" ");
                 }
             }
 
