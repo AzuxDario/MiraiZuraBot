@@ -11,6 +11,7 @@ namespace MiraiZuraBot.Helpers
     {
         public static async Task PostEmbed(CommandContext ctx, string title = null, string description = null, string imageLink = null, DiscordEmbedBuilder.EmbedFooter footer = null)
         {
+            imageLink = imageLink.Replace(" ", "%20");
             var embed = new DiscordEmbedBuilder
             {
                 Color = new DiscordColor("#00a8ff"),
@@ -22,9 +23,5 @@ namespace MiraiZuraBot.Helpers
             await ctx.RespondAsync(null, false, embed);
         }
 
-        public static DiscordEmbedBuilder.EmbedFooter GetSchoolidoluFotter()
-        {
-            return new DiscordEmbedBuilder.EmbedFooter { Text = "Powered by schoolido.lu", IconUrl = "https://i.schoolido.lu/android/icon.png" };
-        }
     }
 }   

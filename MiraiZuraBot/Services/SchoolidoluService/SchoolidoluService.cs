@@ -1,5 +1,6 @@
 ﻿using MiraiZuraBot.Containers.Schoolidolu;
 using MiraiZuraBot.Containers.Schoolidolu.Cards;
+using MiraiZuraBot.Containers.Schoolidolu.Event;
 using MiraiZuraBot.Containers.Schoolidolu.Idols;
 using Newtonsoft.Json;
 using System;
@@ -72,6 +73,31 @@ namespace MiraiZuraBot.Services.SchoolidoluService
             }
 
             return new SchoolidoluResponse<PaginatedResponse<IdolObject>>(null, response.StatusCode);
+        }
+
+        public SchoolidoluResponse<PaginatedResponse<EventObject>> GetEvent(Dictionary<string, string> options)
+        {
+            var client = new HttpClient();
+            PaginatedResponse<EventObject> eventObject;
+
+            var response = client.GetAsync(apiBase + "events/?" + CombineGetParameters(options)).Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                eventObject = JsonConvert.DeserializeObject<PaginatedResponse<EventObject>>(response.Content.ReadAsStringAsync().Result);
+                return new SchoolidoluResponse<PaginatedResponse<EventObject>>(eventObject, response.StatusCode);
+            }
+
+            return new SchoolidoluResponse<PaginatedResponse<EventObject>>(null, response.StatusCode);
+        }
+
+        private string CombineGetParameters(Dictionary<string, string> options)
+        {
+            StringBuilder parameters = new StringBuilder();
+            foreach (var elem in options)
+            {
+                parameters.Append(elem.Key).Append("=").Append(elem.Value).Append("&");
+            }
+            return parameters.ToString();
         }
     }
 }

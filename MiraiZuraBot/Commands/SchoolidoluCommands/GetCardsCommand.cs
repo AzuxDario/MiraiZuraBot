@@ -4,6 +4,7 @@ using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Containers.Schoolidolu;
 using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Helpers;
+using MiraiZuraBot.Helpers.SchoolidoluHelper;
 using MiraiZuraBot.Services.SchoolidoluService;
 using Newtonsoft.Json;
 using System;
@@ -42,12 +43,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     if (cardData.Data.Card_idolized_image != null)
                     {
                         string description = MakeCardDescription(cardData.Data, true);
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_idolized_image, PostEmbedHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_idolized_image,
+                                                        SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
                         string description = MakeCardDescription(cardData.Data, false);
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_image, PostEmbedHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_image,
+                                                        SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                 }
                 else
@@ -56,12 +59,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     if (cardData.Data.Card_image != null)
                     {
                         string description = MakeCardDescription(cardData.Data, false);
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_image, PostEmbedHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_image,
+                                                        SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
                         string description = MakeCardDescription(cardData.Data, true);
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_idolized_image, PostEmbedHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_idolized_image,
+                                                        SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                 }
             }
@@ -87,13 +92,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 {
                     string description = MakeCardDescription(cardsResponse.Data.Results[0], false);
                     await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name, description,
-                                                    "http:" + cardsResponse.Data.Results[0].Card_image, PostEmbedHelper.GetSchoolidoluFotter());
+                                                    "http:" + cardsResponse.Data.Results[0].Card_image, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else
                 {
                     string description = MakeCardDescription(cardsResponse.Data.Results[0], true);
                     await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name, description,
-                                                    "http:" + cardsResponse.Data.Results[0].Card_idolized_image, PostEmbedHelper.GetSchoolidoluFotter());
+                                                    "http:" + cardsResponse.Data.Results[0].Card_idolized_image, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
             }
             else
