@@ -108,7 +108,7 @@ namespace MiraiZuraBot.Core
 
         private CommandHelpMessage BuildGeneralHelp(DiscordEmbedBuilder embed)
         {
-            embed.AddField("HELP", "Write *help <command_name> for more information.");
+            embed.AddField("HELP", "Napisz *help <command_name> aby uzyskać informację o danej komendzie.");
 
             var orderedSubCommands = _subCommands.OrderBy(p => p.Key).ToList();
             foreach (var group in orderedSubCommands)
@@ -123,8 +123,8 @@ namespace MiraiZuraBot.Core
         {
             embed.AddField(_commandName, _commandDescription);
 
-            if (_aliases.Count > 0) embed.AddField("Aliases", string.Join(", ", _aliases));
-            if (_parameters.Count > 0) embed.AddField("Parameters", string.Join("\r\n", _parameters));
+            if (_aliases.Count > 0) embed.AddField("Aliasy", string.Join(", ", _aliases));
+            if (_parameters.Count > 0) embed.AddField("Parametry", string.Join("\r\n", _parameters));
 
             return new CommandHelpMessage(string.Empty, embed);
         }
