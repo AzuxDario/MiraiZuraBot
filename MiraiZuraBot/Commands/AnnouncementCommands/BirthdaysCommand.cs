@@ -92,7 +92,8 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
                     // If message was sent add info to database
                     // For now just add everytime
-                    // TODO: check error with task cancel during image posting
+                    // INFO: check error with task cancel during image posting
+                    // This was about size of image. Problalby bigger image caused timeout
                     //if (discordMessage != null)
                     {
                         _birthdaysService.AcknowledgementForPostingBirthdays(channel.BirthdayId, channel.BirthdayChannelId);
