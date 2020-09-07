@@ -237,15 +237,18 @@ namespace MiraiZuraBot.Core
                             {
                                 messageToSend.Append("Ja potrzebuje: ");
                                 messageToSend.Append(failBot.Permissions.ToPermissionString());
+                                messageToSend.AppendLine();
                             }
                             else if (failedCheck is RequireUserPermissionsAttribute failUser)
                             {
                                 messageToSend.Append("Ty potrzebujesz: ");
                                 messageToSend.Append(failUser.Permissions.ToPermissionString());
+                                messageToSend.AppendLine();
                             }
                             else if (failedCheck is RequireOwnerAttribute)
                             {
                                 messageToSend.Append("Tej komendy może użyć tylko mój twórca.");
+                                messageToSend.AppendLine();
                             }
                         }
 
