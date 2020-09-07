@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MiraiZuraBot.Commands.ManagementCommands
+namespace MiraiZuraBot.Commands.StatisticsCommands
 {
-    [CommandsGroup("Zarządzanie")]
+    [CommandsGroup("Statystyka")]
     class PingCommand : BaseCommandModule
     {
         [Command("ping")]
