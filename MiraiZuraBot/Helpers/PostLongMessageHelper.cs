@@ -31,7 +31,10 @@ namespace MiraiZuraBot.Helpers
                     }
                     continue;
                 }
-                response.Append(", ");
+                if (strings.IndexOf(s) != strings.Count - 1)
+                {
+                    response.Append(", ");
+                }
             }
             if (response.Length > 0)
             {
