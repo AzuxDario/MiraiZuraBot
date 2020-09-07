@@ -61,57 +61,36 @@ namespace MiraiZuraBot.Commands.RolesCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new DynamicDBContext())
+            var serverRoles = ctx.Guild.Roles;
+            var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
+            
+            if(role.Value == null)
             {
-                Server dbServer = GetServerFromDatabase(databaseContext, ctx.Guild.Id);
-
-                var serverRoles = ctx.Guild.Roles;
-
-                foreach (var serverRole in serverRoles)
-                {
-                    if (serverRole.Value.Name == message)
-                    {
-                        // Check if role is already in database
-                        if (IsRoleInDatabase(dbServer, serverRole.Value.Id))
-                        {
-                            // Check if user already has this role
-                            if(HasUserRole(ctx.Member, serverRole.Value))
-                            {
-                                await ctx.RespondAsync("Posiadasz już tę role.");
-                                return;
-                            }
-
-                            // User who triggered is owner, we can add role without problem
-                            if (ctx.User == ctx.Guild.Owner)
-                            {
-                                await ctx.Member.GrantRoleAsync(serverRole.Value, "Rola nadana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
-                                await ctx.RespondAsync("Rola nadana.");
-                            }
-                            // User who triggered isn't owner, we need to check if role is lower than the highest role he has
-                            else
-                            {
-                                var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
-                                // Role is lower than the highest role user has
-                                if (serverRole.Value.Position < userTheHighestRolePosition)
-                                {
-                                    await ctx.Member.GrantRoleAsync(serverRole.Value, "Rola nadana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
-                                    await ctx.RespondAsync("Rola nadana.");
-                                }
-                                // Role is equal or higher than the highest role user has
-                                else
-                                {
-                                    await ctx.RespondAsync("Nie możesz nadać sobie tej roli gdyż jest równa lub wyższa twojej najwyższej roli.");
-                                }
-
-                            }
-                            return;
-                        }
-       
-                    }
-                }
-                await ctx.RespondAsync("Roli nie ma na liście.");
+                await ctx.RespondAsync("Podana rola nie istnieje.");
+                return;
             }
 
+            if (HasUserRole(ctx.Member, role.Value))
+            {
+                await ctx.RespondAsync("Posiadasz już tę rolę.");
+                return;
+            }
+
+            if (_assignRolesService.IsRoleOnList(role.Value.Id))
+            {
+                if (!CanBotModifyThisRole(role.Value, ctx.Guild.CurrentMember.Roles.ToList()))
+                {
+                    await ctx.RespondAsync("Moje role są za nisko abym mógł nadać tę rolę.");
+                    return;
+                }
+
+                await ctx.Member.GrantRoleAsync(role.Value, "Rola nadana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
+                await ctx.RespondAsync("Rola nadana.");
+            }
+            else
+            {
+                await ctx.RespondAsync("Roli nie ma na liście.");
+            }
         }
 
         [Command("odbierzRole")]
@@ -122,58 +101,37 @@ namespace MiraiZuraBot.Commands.RolesCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new DynamicDBContext())
+            var serverRoles = ctx.Guild.Roles;
+            var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
+
+            if (role.Value == null)
             {
-                Server dbServer = GetServerFromDatabase(databaseContext, ctx.Guild.Id);
-
-                var serverRoles = ctx.Guild.Roles;
-
-                foreach (var serverRole in serverRoles)
-                {
-                    if (serverRole.Value.Name == message)
-                    {
-                        // Check if role is already in database
-                        if (IsRoleInDatabase(dbServer, serverRole.Value.Id))
-                        {
-                            // Check if user already has this role
-                            if (!HasUserRole(ctx.Member, serverRole.Value))
-                            {
-                                await ctx.RespondAsync("Nie posiadasz tej roli.");
-                                return;
-                            }
-
-                            // User who triggered is owner, we can add role without problem
-                            if (ctx.User == ctx.Guild.Owner)
-                            {
-                                await ctx.Member.RevokeRoleAsync(serverRole.Value, "Rola odebrana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
-                                await ctx.RespondAsync("Rola odebrana.");
-                            }
-                            // User who triggered isn't owner, we need to check if role is lower than the highest role he has
-                            else
-                            {
-                                var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
-                                // Role is lower than the highest role user has
-                                if (serverRole.Value.Position < userTheHighestRolePosition)
-                                {
-                                    await ctx.Member.RevokeRoleAsync(serverRole.Value, "Rola odebrana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
-                                    await ctx.RespondAsync("Rola odebrana.");
-                                }
-                                // Role is the highest role user has
-                                else
-                                {
-                                    await ctx.RespondAsync("Nie możesz odebrać sobie tej roli gdyż to twoja najwyższa rola.");
-                                }
-
-                            }
-                            return;
-                        }
-
-                    }
-                }
-                await ctx.RespondAsync("Roli nie ma na liście.");
+                await ctx.RespondAsync("Podana rola nie istnieje.");
+                return;
             }
 
+            if (!HasUserRole(ctx.Member, role.Value))
+            {
+                await ctx.RespondAsync("Nie posiadasz tej roli.");
+                return;
+            }
+
+            if (_assignRolesService.IsRoleOnList(role.Value.Id))
+            {
+                if (!CanBotModifyThisRole(role.Value, ctx.Guild.CurrentMember.Roles.ToList()))
+                {
+                    await ctx.RespondAsync("Moje role są za nisko abym mógł odebrać tę rolę.");
+                    return;
+                }
+                await ctx.Member.RevokeRoleAsync(role.Value, "Rola odebrana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
+                await ctx.RespondAsync("Rola odebrana.");
+            }
+            else
+            {
+                await ctx.RespondAsync("Roli nie ma na liście.");
+            }
         }
+
 
         [Command("dodajRole")]
         [Description("Dodaje rolę do listy roli jakie mogą sobie przydzielać członkowie serwera.")]
@@ -183,58 +141,32 @@ namespace MiraiZuraBot.Commands.RolesCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new DynamicDBContext())
+            var serverRoles = ctx.Guild.Roles;
+            var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
+
+            if (role.Value == null)
             {
-                Server dbServer = GetServerFromDatabase(databaseContext, ctx.Guild.Id);
-
-                // Get server roles.
-                var serverRoles = ctx.Guild.Roles;
-
-                foreach (var serverRole in serverRoles)
-                {
-                    if(serverRole.Value.Name == message)
-                    {
-                        // Check if role is already in database
-                        if (IsRoleInDatabase(dbServer, serverRole.Value.Id))
-                        {
-                            await ctx.RespondAsync("Rola jest już na liście.");
-                            return;
-                        }
-
-                        // User who triggered is owner, we can add role without problem
-                        if (ctx.User == ctx.Guild.Owner)
-                        {
-                            AssignRole assingRole = new AssignRole(serverRole.Value.Id);
-                            assingRole.Server = dbServer;
-                            databaseContext.Add(assingRole);
-                            databaseContext.SaveChanges();
-                            await ctx.RespondAsync("Rola dodana do listy ról.");
-                        }
-                        // User who triggered isn't owner, we need to check if role is lower than the highest role he has
-                        else
-                        {
-                            var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
-                            // Role is lower than the highest role user has
-                            if (serverRole.Value.Position < userTheHighestRolePosition)
-                            {
-                                AssignRole assingRole = new AssignRole(serverRole.Value.Id);
-                                assingRole.Server = dbServer;
-                                databaseContext.Add(assingRole);
-                                databaseContext.SaveChanges();
-                                await ctx.RespondAsync("Rola dodana do listy ról.");
-                            }
-                            // Role is equal or higher than the highest role user has
-                            else
-                            {
-                                await ctx.RespondAsync("Nie możesz dodać tej roli gdyż jest równa lub wyższa twojej najwyższej roli.");
-                            }
-
-                        }
-
-                        return;
-                    }
-                }
                 await ctx.RespondAsync("Podana rola nie istnieje.");
+                return;
+            }
+
+            if (_assignRolesService.IsRoleOnList(role.Value.Id))
+            {
+                await ctx.RespondAsync("Rola jest już na liście.");
+                return;
+            }
+
+            // User who triggered is owner, we can add role without problem or user who triggered isn't owner, we need to check if role is lower than the highest role he has
+            var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
+            if (ctx.User == ctx.Guild.Owner || role.Value.Position < userTheHighestRolePosition)
+            {
+                // Add role to database
+                _assignRolesService.AddRoleToDatabase(ctx.Guild.Id, role.Value.Id);
+                await ctx.RespondAsync("Rola dodana do listy ról.");
+            }
+            else
+            {
+                await ctx.RespondAsync("Nie możesz dodać tej roli gdyż jest równa lub wyższa twojej najwyższej roli.");
             }
         }
 
@@ -246,71 +178,33 @@ namespace MiraiZuraBot.Commands.RolesCommands
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new DynamicDBContext())
+            var serverRoles = ctx.Guild.Roles;
+            var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
+
+            if (role.Value == null)
             {
-                Server dbServer = GetServerFromDatabase(databaseContext, ctx.Guild.Id);
-
-                // Get server roles.
-                var serverRoles = ctx.Guild.Roles;
-
-                foreach (var serverRole in serverRoles)
-                {
-                    if (serverRole.Value.Name == message)
-                    {
-
-                        // Check if role is already in database
-                        if (!IsRoleInDatabase(dbServer, serverRole.Value.Id))
-                        {
-                            await ctx.RespondAsync("Roli nie ma na liście.");
-                            return;
-                        }
-
-                        // User who triggered is owner, we can add role without problem
-                        if (ctx.User == ctx.Guild.Owner)
-                        {
-                            dbServer.AssignRoles.RemoveAll(p => p.RoleID == serverRole.Value.Id.ToString());
-                            databaseContext.SaveChanges();
-                            await ctx.RespondAsync("Rola usunięta z listy ról.");
-                        }
-                        // User who triggered isn't owner, we need to check if role is lower than the highest role he has
-                        else
-                        {
-                            var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
-                            // Role is lower than the highest role user has
-                            if (serverRole.Value.Position < userTheHighestRolePosition)
-                            {
-                                dbServer.AssignRoles.RemoveAll(p => p.RoleID == serverRole.Value.Id.ToString());
-                                databaseContext.SaveChanges();
-                                await ctx.RespondAsync("Rola usunięta z listy ról.");
-                            }
-                            // Role is equal or higher than the highest role user has
-                            else
-                            {
-                                await ctx.RespondAsync("Nie możesz usunąć tej roli gdyż jest równa lub wyższa twojej najwyższej roli.");
-                            }
-
-                        }
-
-                        return;
-                    }
-                }
                 await ctx.RespondAsync("Podana rola nie istnieje.");
+                return;
             }
-        }
 
-        private Server GetServerFromDatabase(DynamicDBContext databaseContext, ulong GuildId)
-        {
-            Server dbServer = databaseContext.Servers.Where(p => p.ServerID == GuildId.ToString()).Include(p => p.AssignRoles).FirstOrDefault();
-
-            //If server is not present in database add it.
-            if (dbServer == null)
+            if (!_assignRolesService.IsRoleOnList(role.Value.Id))
             {
-                dbServer = new Server(GuildId);
-                dbServer.AssignRoles = new List<AssignRole>();
-                databaseContext.Add(dbServer);
-                databaseContext.SaveChanges();
+                await ctx.RespondAsync("Roli nie ma na liście.");
+                return;
             }
-            return dbServer;
+
+            // User who triggered is owner, we can add role without problem or user who triggered isn't owner, we need to check if role is lower than the highest role he has
+            var userTheHighestRolePosition = GetTheHighestRolePosition(ctx.Member.Roles.ToList());
+            if (ctx.User == ctx.Guild.Owner || role.Value.Position < userTheHighestRolePosition)
+            {
+                // Add role to database
+                _assignRolesService.RemoveRoleFromDatabase(ctx.Guild.Id, role.Value.Id);
+                await ctx.RespondAsync("Rola usunięta z listy ról.");
+            }
+            else
+            {
+                await ctx.RespondAsync("Nie możesz usunąć tej roli gdyż jest równa lub wyższa twojej najwyższej roli.");
+            }
         }
 
         private bool HasUserRole(DiscordMember member, DiscordRole role)
@@ -325,6 +219,19 @@ namespace MiraiZuraBot.Commands.RolesCommands
             return false;
         }
 
+        private bool CanBotModifyThisRole(DiscordRole role, List<DiscordRole> botRoles)
+        {
+            int highestBotRole = GetTheHighestRolePosition(botRoles);
+            if(role.Position < highestBotRole)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private int GetTheHighestRolePosition(List<DiscordRole> roles)
         {
             int position = 0;
@@ -337,19 +244,6 @@ namespace MiraiZuraBot.Commands.RolesCommands
             }
 
             return position;
-        }
-
-        private bool IsRoleInDatabase(Server server, ulong roleId)
-        {
-            if(server.AssignRoles == null || server.AssignRoles.Count == 0)
-            {
-                return false;
-            }
-            if(server.AssignRoles.FirstOrDefault(p => p.RoleID == roleId.ToString()) == null)
-            {
-                return false;
-            }
-            return true;
         }
     }
 }
