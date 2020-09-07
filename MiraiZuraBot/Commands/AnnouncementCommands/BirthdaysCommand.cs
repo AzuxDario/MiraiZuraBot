@@ -74,15 +74,25 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
                     if (channel.Filename != null)
                     {
-                        using (StreamReader reader = new StreamReader(imageDirectory + channel.Filename))
+                        try
                         {
-                            string name = channel.Filename.Split('/').Last();
-                            var buffer = new byte[reader.BaseStream.Length];
-                            reader.BaseStream.Read(buffer, 0, (int)reader.BaseStream.Length);
-                            var memStream = new MemoryStream(buffer);
+                            using (StreamReader reader = new StreamReader(imageDirectory + channel.Filename))
+                            {
+                                string name = channel.Filename.Split('/').Last();
+                                var buffer = new byte[reader.BaseStream.Length];
+                                reader.BaseStream.Read(buffer, 0, (int)reader.BaseStream.Length);
+                                var memStream = new MemoryStream(buffer);
 
-                            discordMessage = await discordChannel.SendFileAsync(name, memStream, channel.BirthdayRoles + channel.Content);
-
+                                discordMessage = await discordChannel.SendFileAsync(name, memStream, channel.BirthdayRoles + channel.Content);
+                            }
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            discordMessage = await discordChannel.SendMessageAsync(channel.BirthdayRoles + channel.Content);
+                        }
+                        catch (DirectoryNotFoundException)
+                        {
+                            discordMessage = await discordChannel.SendMessageAsync(channel.BirthdayRoles + channel.Content);
                         }
                     }
                     else
