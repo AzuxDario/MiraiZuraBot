@@ -68,9 +68,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                 try
                 {
                     // There was no such posted information  
-                    ulong id;
-                    ulong.TryParse(channel.ChannelId, out id);
-                    DiscordChannel discordChannel = await Bot.DiscordClient.GetChannelAsync(id);
+                    DiscordChannel discordChannel = await Bot.DiscordClient.GetChannelAsync(channel.ChannelId);
                     DiscordMessage discordMessage = null;
 
 

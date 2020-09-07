@@ -6,14 +6,14 @@ namespace MiraiZuraBot.Services.AnnouncementService
 {
     class BirthdayChannelsResponse
     {
-        public string ChannelId { get; }
-        public string ServerId { get; }
+        public ulong ChannelId { get; }
+        public ulong ServerId { get; }
         public string Content { get; }
         public List<string> BirthdayRoles { get; }
         public int BirthdayChannelId { get; }
         public int BirthdayId { get; }
         public string Filename { get; }
-        public BirthdayChannelsResponse(string channelId, string serverId, string content, List<string> birthdayRoles, int birthdayChannelId, int birthdayId, string filename)
+        public BirthdayChannelsResponse(ulong channelId, ulong serverId, string content, List<string> birthdayRoles, int birthdayChannelId, int birthdayId, string filename)
         {
             ChannelId = channelId;
             ServerId = serverId;

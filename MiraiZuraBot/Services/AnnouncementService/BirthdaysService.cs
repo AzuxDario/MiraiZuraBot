@@ -160,7 +160,8 @@ namespace MiraiZuraBot.Services.AnnouncementService
                         if (dbPostedInformations.Count == 0)
                         {
                             // There was no such posted information  
-                            BirthdayChannelsResponse channelForMessage = new BirthdayChannelsResponse(channel.ChannelID, channel.Server.ServerID, birthday.Content, rolesMention, channel.ID, birthday.ID, birthday.FileName);
+                            BirthdayChannelsResponse channelForMessage = new BirthdayChannelsResponse(Convert.ToUInt64(channel.ChannelID), Convert.ToUInt64(channel.Server.ServerID),
+                                                                                                      birthday.Content, rolesMention, channel.ID, birthday.ID, birthday.FileName);
                             channelsForMessage.Add(channelForMessage);
                         }
                     }
