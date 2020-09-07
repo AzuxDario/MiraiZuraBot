@@ -51,7 +51,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         {
             await ctx.TriggerTypingAsync();
 
-            var idolsResponse = _schoolidoluService.GetRandomIdol();
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { "ordering", "random" },
+                { "page_size", "1" }
+            };
+
+            var idolsResponse = _schoolidoluService.GetIdol(options);
 
             if (idolsResponse.StatusCode == HttpStatusCode.OK)
             {

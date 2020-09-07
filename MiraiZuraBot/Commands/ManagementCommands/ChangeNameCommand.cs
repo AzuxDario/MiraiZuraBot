@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.ManagementCommands
 {
-    [CommandsGroup("Management")]
+    [CommandsGroup("Zarządzanie")]
     class ChangeNameCommand : BaseCommandModule
     {
-        [Command("changeName")]
-        [Description("Change bot descrition.")]
+        [Command("zmienNazwe")]
+        [Description("Zmień imię bota.")]
+        [RequireOwner]
         public async Task ChangeName(CommandContext ctx, [Description("New name.")] [RemainingText] string name)
         {
             if (ctx.Member.Id == Bot.configJson.Developer)

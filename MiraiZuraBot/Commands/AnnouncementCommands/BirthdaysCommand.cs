@@ -43,7 +43,8 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
         [Command("aktywneTematyUrodzin")]
         [Description("Wyświetla aktywne tematy urodzin dla danego kanału.")]
-        [RequirePermissions(Permissions.ManageGuild)]
+        [RequireBotPermissions(Permissions.ManageGuild)]
+        [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task ActiveBirthdayTopics(CommandContext ctx)
         {
             string channelId;
@@ -126,7 +127,8 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
         [Command("wlaczTematUrodzin")]
         [Description("Włącza temat urodzin dla danego kanału.")]
-        [RequirePermissions(Permissions.ManageGuild)]
+        [RequireBotPermissions(Permissions.ManageGuild)]
+        [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task TurnOnBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
         {
             var result = _birthdaysService.TurnOnBirthdayTopic(ctx.Guild.Id, ctx.Channel.Id, topicName);
@@ -147,7 +149,8 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
         [Command("wylaczTematUrodzin")]
         [Description("Wyłącza temat urodzin dla danego kanału.")]
-        [RequirePermissions(Permissions.ManageGuild)]
+        [RequireBotPermissions(Permissions.ManageGuild)]
+        [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task TurnOffBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
         {
             var result = _birthdaysService.TurnOffBirthdayTopic(ctx.Guild.Id, ctx.Channel.Id, topicName);

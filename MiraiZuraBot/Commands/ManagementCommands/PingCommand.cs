@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.ManagementCommands
 {
-    [CommandsGroup("Management")]
+    [CommandsGroup("Zarządzanie")]
     class PingCommand : BaseCommandModule
     {
         [Command("ping")]
-        [Description("Show ping.")]
+        [Description("Sprawdź ping.")]
         public async Task Ping(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

@@ -30,12 +30,12 @@ namespace MiraiZuraBot.Services.SchoolidoluService
             return new SchoolidoluResponse<CardObject>(null, response.StatusCode);
         }
 
-        public SchoolidoluResponse<PaginatedResponse<CardObject>> GetRandomCard(string name)
+        public SchoolidoluResponse<PaginatedResponse<CardObject>> GetCard(Dictionary<string, string> options)
         {
             var client = new HttpClient();
             PaginatedResponse<CardObject> cardObject;
 
-            var response = client.GetAsync(apiBase + "cards/?name=" + name + "&ordering=random&page_size=1").Result;
+            var response = client.GetAsync(apiBase + "cards/?" + CombineGetParameters(options)).Result;
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 cardObject = JsonConvert.DeserializeObject<PaginatedResponse<CardObject>>(response.Content.ReadAsStringAsync().Result);
@@ -60,12 +60,12 @@ namespace MiraiZuraBot.Services.SchoolidoluService
             return new SchoolidoluResponse<IdolObject>(null, response.StatusCode);
         }
 
-        public SchoolidoluResponse<PaginatedResponse<IdolObject>> GetRandomIdol()
+        public SchoolidoluResponse<PaginatedResponse<IdolObject>> GetIdol(Dictionary<string, string> options)
         {
             var client = new HttpClient();
             PaginatedResponse<IdolObject> idolObject;
 
-            var response = client.GetAsync(apiBase + "idols/?ordering=random&page_size=1").Result;
+            var response = client.GetAsync(apiBase + "idols/?" + CombineGetParameters(options)).Result;
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 idolObject = JsonConvert.DeserializeObject<PaginatedResponse<IdolObject>>(response.Content.ReadAsStringAsync().Result);
