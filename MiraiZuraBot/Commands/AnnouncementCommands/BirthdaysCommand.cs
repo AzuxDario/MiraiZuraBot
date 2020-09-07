@@ -1,7 +1,5 @@
 ﻿using DSharpPlus.CommandsNext;
 using MiraiZuraBot.Attributes;
-using MiraiZuraBot.Database;
-using MiraiZuraBot.Database.Models.DynamicDB;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,19 +13,22 @@ using System.Runtime.InteropServices;
 using System.Net;
 using System.IO;
 using DSharpPlus;
-using Microsoft.EntityFrameworkCore;
+using MiraiZuraBot.Helpers;
+using MiraiZuraBot.Services.AnnouncementService;
 
 namespace MiraiZuraBot.Commands.AnnouncementCommands
 {
     [CommandsGroup("Powiadamianie")]
     class BirthdaysCommand : BaseCommandModule
     {
+        private BirthdaysService _birthdaysService;
         private Timer checkMessagesTimer;
         private int checkMessagesInterval;
         private const string imageDirectory = "birthdays/";
 
-        public BirthdaysCommand()
+        public BirthdaysCommand(BirthdaysService birthdaysService)
         {
+            _birthdaysService = birthdaysService;
             checkMessagesInterval = 1000 * 60 * 1;    // every 1 minutes;
             checkMessagesTimer = new Timer(PostBirthdayMessage, null, checkMessagesInterval, Timeout.Infinite);
         }
@@ -36,26 +37,8 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [Description("Wyświetla możliwe tematy urodzin.")]
         public async Task BirthdayTopics(CommandContext ctx)
         {
-            using (var databaseContext = new DynamicDBContext())
-            {
-                List<Topic> dbTopics = databaseContext.Topics.ToList();
-                string response = "Dostępne tematy urodzin:\n";
-                foreach(Topic topic in dbTopics)
-                {
-                    response += topic.Name;
-                    response += "\n";
-                    if (response.Length > 1800)
-                    {
-                        await ctx.RespondAsync(response);
-                        response = "";
-                    }   
-                }
-                if (response != string.Empty)
-                {
-                    await ctx.RespondAsync(response);
-                    return;
-                }
-            }
+            var topics = _birthdaysService.GetBirthdayTopics();
+            await PostLongMessageHelper.PostLongMessage(ctx, topics, "Dostępne tematy urodzin:");
         }
 
         [Command("aktywneTematyUrodzin")]
@@ -66,123 +49,74 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             string channelId;
             channelId = ctx.Channel.Id.ToString();
 
-            using (var databaseContext = new DynamicDBContext())
+            var topics = _birthdaysService.GetActiveBirthdayTopicsForChannel(Convert.ToUInt64(channelId));
+            if (topics.Count > 0)
             {
-                List<Topic> dbTopics = databaseContext.Topics.Where(p => p.BirthdayChannels.Any(m => m.ChannelID == channelId && m.IsEnabled == true )).ToList();
-                if(dbTopics.Count > 0)
-                {
-                    string response = "Tematy urodzin włączone na tym kanale:\n";
-                    foreach (Topic topic in dbTopics)
-                    {
-                        response += topic.Name;
-                        response += "\n";
-                        if (response.Length > 1800)
-                        {
-                            await ctx.RespondAsync(response);
-                            response = "";
-                        }
-                    }
-                    if (response != string.Empty)
-                    {
-                        await ctx.RespondAsync(response);
-                        return;
-                    }
-                }
-                else
-                {
-                    await ctx.RespondAsync("Dla tego kanału nie ma włączonych żadnych tematów urodzin.");
-                }
+                await PostLongMessageHelper.PostLongMessage(ctx, topics, "Tematy urodzin włączone na tym kanale:");
+            }
+            else
+            {
+                await ctx.RespondAsync("Dla tego kanału nie ma włączonych żadnych tematów urodzin.");
             }
         }
 
         private async void PostBirthdayMessage(object state)
         {
-            using (var databaseContext = new DynamicDBContext())
+            var channels = _birthdaysService.GetChannelsForPostingBirthdays();
+            foreach (var channel in channels)
             {
-                // Get all channels to post message
-                List<BirthdayChannel> dbChannels = databaseContext.BirthdayChannels.Include(p => p.BirthdayRoles).Include(q => q.Server).ToList();
-
-                foreach(BirthdayChannel channel in dbChannels)
+                try
                 {
-                    // If channel is disabled go to next one
-                    if (channel.IsEnabled == false)
+                    // There was no such posted information  
+                    DiscordChannel discordChannel = await Bot.DiscordClient.GetChannelAsync(channel.ChannelId);
+                    DiscordMessage discordMessage = null;
+
+                    string brithdayRolesMention = GetRolesMention(channel.ServerId, channel.BirthdayRoles, channel.MentionEveryone);
+
+                    if (channel.Filename != null)
                     {
-                        continue;
-                    }
-
-                    DateTime todayJapan = GetCurrentJapanTime();
-
-                    // Get topic id for this channel
-                    int topicId = channel.TopicID;
-
-                    // Get all roles for this topic in this channel
-                    string rolesMention = GetRolesMention(channel.Server.ServerID, channel.BirthdayRoles);
-
-                    // Get all messages for today for this topic
-                    List<Birthday> dbBirthdays = databaseContext.Birthdays.Where(p => p.TopicID == topicId && p.Day == todayJapan.Day && p.Month == todayJapan.Month).ToList();
-
-                    foreach(Birthday birthday in dbBirthdays)
-                    {
-                        // If information was already posted there will be data
-                        List<PostedBirthday> dbPostedInformations = databaseContext.PostedBirthdays.Where(p => p.Birthdays.ID == birthday.ID && p.Day == birthday.Day &&
-                                                                                                                p.Month == birthday.Month && p.Year == todayJapan.Year 
-                                                                                                                && p.BirthdayChannel.ID == channel.ID).ToList();
-
-                        if (dbPostedInformations.Count == 0)
+                        try
                         {
-                            try
+                            using (StreamReader reader = new StreamReader(imageDirectory + channel.Filename))
                             {
-                                // There was no such posted information  
-                                ulong id;
-                                ulong.TryParse(channel.ChannelID, out id);
-                                DiscordChannel discordChannel = await Bot.DiscordClient.GetChannelAsync(id);
-                                DiscordMessage discordMessage = null;
+                                string name = channel.Filename.Split('/').Last();
+                                var buffer = new byte[reader.BaseStream.Length];
+                                reader.BaseStream.Read(buffer, 0, (int)reader.BaseStream.Length);
+                                var memStream = new MemoryStream(buffer);
 
-
-                                if (birthday.FileName != null)
-                                {
-                                    using (StreamReader reader = new StreamReader(imageDirectory + birthday.FileName))
-                                    {
-                                        string name = birthday.FileName.Split('/').Last();
-                                        var buffer = new byte[reader.BaseStream.Length];
-                                        reader.BaseStream.Read(buffer, 0, (int)reader.BaseStream.Length);
-                                        var memStream = new MemoryStream(buffer);
-
-                                        discordMessage = await discordChannel.SendFileAsync(name, memStream, rolesMention + birthday.Content);
-                                        
-                                    }                                    
-                                }
-                                else
-                                {
-                                    discordMessage = await discordChannel.SendMessageAsync(rolesMention + birthday.Content);
-                                }
-
-                                // If message was sent add info to database
-                                // For now just add everytime
-                                // TODO: check error with task cancel during image posting
-                                //if (discordMessage != null)
-                                {
-                                    PostedBirthday postedInformation = new PostedBirthday();
-                                    postedInformation.Day = todayJapan.Day;
-                                    postedInformation.Month = todayJapan.Month;
-                                    postedInformation.Year = todayJapan.Year;
-                                    postedInformation.BirthdayID = birthday.ID;
-                                    postedInformation.BirthdayChannelID = channel.ID;
-
-                                    databaseContext.PostedBirthdays.Add(postedInformation);
-                                    databaseContext.SaveChanges();
-                                }
-
-                            }
-                            catch (Exception ie)
-                            {
-                                Console.WriteLine("Error: Cannot post planned message.");
-                                Console.WriteLine("Exception: " + ie.Message);
-                                Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
-                                Console.WriteLine("Stack trace: " + ie.StackTrace);
+                                discordMessage = await discordChannel.SendFileAsync(name, memStream, brithdayRolesMention + channel.Content);
                             }
                         }
+                        catch (FileNotFoundException)
+                        {
+                            discordMessage = await discordChannel.SendMessageAsync(brithdayRolesMention + channel.Content);
+                        }
+                        catch (DirectoryNotFoundException)
+                        {
+                            discordMessage = await discordChannel.SendMessageAsync(brithdayRolesMention + channel.Content);
+                        }
                     }
+                    else
+                    {
+                        discordMessage = await discordChannel.SendMessageAsync(brithdayRolesMention + channel.Content);
+                    }
+
+                    // If message was sent add info to database
+                    // For now just add everytime
+                    // INFO: check error with task cancel during image posting
+                    // This was about size of image. Problalby bigger image caused timeout
+                    //if (discordMessage != null)
+                    {
+                        _birthdaysService.AcknowledgementForPostingBirthdays(channel.BirthdayId, channel.BirthdayChannelId);
+                    }
+
+                }
+                catch (Exception ie)
+                {
+                    Console.WriteLine("Error: Cannot post planned message.");
+                    Console.WriteLine("Exception: " + ie.Message);
+                    Console.WriteLine("Inner Exception: " + ie?.InnerException?.Message);
+                    Console.WriteLine("Stack trace: " + ie.StackTrace);
                 }
             }
 
@@ -193,142 +127,61 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [Command("wlaczTematUrodzin")]
         [Description("Włącza temat urodzin dla danego kanału.")]
         [RequirePermissions(Permissions.ManageGuild)]
-        public async Task TurnOnBirthdayTopic(CommandContext ctx, [Description("Temat.")] params string[] name)
+        public async Task TurnOnBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
         {
-            string channelId;
-            channelId = ctx.Channel.Id.ToString();
-            string topicName = ctx.RawArgumentString;
+            var result = _birthdaysService.TurnOnBirthdayTopic(ctx.Guild.Id, ctx.Channel.Id, topicName);
 
-
-            using (var databaseContext = new DynamicDBContext())
+            switch(result)
             {
-                // Check if topic exist
-                Topic topic = databaseContext.Topics.Where(p => p.Name == topicName).FirstOrDefault();
-                if (topic == null)
-                {
+                case BirthdaysService.TurnOnStatus.TurnedOn:
+                    await ctx.RespondAsync("Temat włączono.");
+                    return;
+                case BirthdaysService.TurnOnStatus.AlreadyTurnedOn:
+                    await ctx.RespondAsync("Podany temat jest włączony.");
+                    return;
+                case BirthdaysService.TurnOnStatus.TopicDoesntExist:
                     await ctx.RespondAsync("Podany temat nie istnieje.");
                     return;
-                }
-
-                // Check if this channel and topic has enter in database
-                BirthdayChannel birthdayChannel = databaseContext.BirthdayChannels.Include(p => p.Topic).Where(p => p.ChannelID == channelId && p.Topic.Name == topicName).FirstOrDefault();
-                if (birthdayChannel != null)
-                {
-                    // Entry exist
-                    if (birthdayChannel.IsEnabled == true)
-                    {
-                        await ctx.RespondAsync("Podany temat jest włączony.");
-                    }
-                    else
-                    {
-                        birthdayChannel.IsEnabled = true;
-                        databaseContext.SaveChanges();
-                        await ctx.RespondAsync("Temat włączono.");
-                    }
-                }
-                else
-                {
-                    //Check if server exist
-                    Server server = databaseContext.Servers.Where(p => p.ServerID == ctx.Guild.Id.ToString()).FirstOrDefault();
-                    if(server == null)
-                    {
-                        server = new Server();
-                        server.ServerID = ctx.Guild.Id.ToString();
-                    }
-
-                    // Create new entry
-                    BirthdayChannel newChannel = new BirthdayChannel();
-                    newChannel.Server = server;
-                    newChannel.ChannelID = channelId;
-                    newChannel.IsEnabled = true;
-                    newChannel.Topic = topic;
-                    databaseContext.Add(newChannel);
-                    databaseContext.SaveChanges();
-                    await ctx.RespondAsync("Temat włączono.");
-                }
-
             }
         }
 
         [Command("wylaczTematUrodzin")]
         [Description("Wyłącza temat urodzin dla danego kanału.")]
         [RequirePermissions(Permissions.ManageGuild)]
-        public async Task TurnOffBirthdayTopic(CommandContext ctx, [Description("Temat.")] params string[] name)
+        public async Task TurnOffBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
         {
-            string channelId;
-            channelId = ctx.Channel.Id.ToString();
-            string topicName = ctx.RawArgumentString;
+            var result = _birthdaysService.TurnOffBirthdayTopic(ctx.Guild.Id, ctx.Channel.Id, topicName);
 
-
-            using (var databaseContext = new DynamicDBContext())
+            switch (result)
             {
-                // Check if topic exist
-                Topic topic = databaseContext.Topics.Where(p => p.Name == topicName).FirstOrDefault();
-                if (topic == null)
-                {
+                case BirthdaysService.TurnOffStatus.TurnedOff:
+                    await ctx.RespondAsync("Temat wyłączono.");
+                    return;
+                case BirthdaysService.TurnOffStatus.AlreadyTurnedOff:
+                    await ctx.RespondAsync("Podany temat jest wyłączony.");
+                    return;
+                case BirthdaysService.TurnOffStatus.TopicDoesntExist:
                     await ctx.RespondAsync("Podany temat nie istnieje.");
                     return;
-                }
-
-                // Check if this channel and topic has enter in database
-                BirthdayChannel birthdayChannel = databaseContext.BirthdayChannels.Include(p => p.Topic).Where(p => p.ChannelID == channelId && p.Topic.Name == topicName).FirstOrDefault();
-                if (birthdayChannel != null)
-                {
-                    // Entry exist
-                    if (birthdayChannel.IsEnabled == false)
-                    {
-                        await ctx.RespondAsync("Podany temat jest wyłączony.");
-                    }
-                    else
-                    {
-                        birthdayChannel.IsEnabled = false;
-                        databaseContext.SaveChanges();
-                        await ctx.RespondAsync("Temat wyłączono.");
-                    }
-                }
-                else
-                {
-                    // Entry doesn't exist
-                    await ctx.RespondAsync("Podany temat jest wyłączony.");
-                }
-
             }
         }
 
-        private DateTime GetCurrentJapanTime()
-        {
-            DateTime todayUTC = DateTime.UtcNow;
-            TimeZoneInfo japanTimeZone;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
-            }
-            else
-            {
-                japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Japan");
-            }
-            return TimeZoneInfo.ConvertTimeFromUtc(todayUTC, japanTimeZone);
-        }
-
-        private string GetRolesMention(string serverID, List<BirthdayRole> birthdayRoles)
+        private string GetRolesMention(ulong serverID, List<ulong> birthdayRoles, bool mentionEveryone)
         {
             StringBuilder roles = new StringBuilder();
-            DiscordGuild server = Bot.DiscordClient.GetGuildAsync(ulong.Parse(serverID)).Result;
+            DiscordGuild server = Bot.DiscordClient.GetGuildAsync(serverID).Result;
             var serverRoles = server.Roles;
-            foreach(var birthdayRole in birthdayRoles)
+            if (mentionEveryone == true)
             {
-                if(birthdayRole.RoleID == "everyone")
+                roles.Append("@everyone ");
+            }
+            foreach (var birthdayRole in birthdayRoles)
+            {
+                DiscordRole role = serverRoles.FirstOrDefault(p => p.Value.Id == birthdayRole).Value;
+                if (role != null)
                 {
-                    roles.Append("@everyone ");
-                }
-                else
-                {
-                    DiscordRole role = serverRoles.FirstOrDefault(p => p.Value.Id.ToString() == birthdayRole.RoleID).Value;
-                    if (role != null)
-                    {
-                        roles.Append(role.Mention);
-                        roles.Append(" ");
-                    }
+                    roles.Append(role.Mention);
+                    roles.Append(" ");
                 }
             }
 

@@ -1,8 +1,11 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using MiraiZuraBot.Attributes;
+using MiraiZuraBot.Containers.Schoolidolu;
 using MiraiZuraBot.Containers.Schoolidolu.Idols;
 using MiraiZuraBot.Helpers;
+using MiraiZuraBot.Helpers.SchoolidoluHelper;
+using MiraiZuraBot.Services.SchoolidoluService;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,31 +13,31 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using static DSharpPlus.Entities.DiscordEmbedBuilder;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {
     [CommandsGroup("SIF")]
     class GetIdolCommand : BaseCommandModule
     {
-        private EmbedFooter footer = new EmbedFooter { Text = "Powered by schoolido.lu", IconUrl = "https://i.schoolido.lu/android/icon.png" };
+        private SchoolidoluService _schoolidoluService;
+
+        public GetIdolCommand(SchoolidoluService schoolidoluService)
+        {
+            _schoolidoluService = schoolidoluService;
+        }
 
         [Command("idolka")]
         [Description("Pokazuje idolkę na bazie jej nazwy.\nnp:\n*idolka Watanabe You \n*idolka Sonoda Umi")]
-        public async Task Idol(CommandContext ctx, [Description("Imie postaci.")] params string[] name)
+        public async Task Idol(CommandContext ctx, [Description("Imie postaci."), RemainingText] string name)
         {
             await ctx.TriggerTypingAsync();
 
-            var client = new HttpClient();
-            IdolObject idolObject;
+            var idolObject = _schoolidoluService.GetIdolByName(name);
 
-            var response = client.GetAsync("http://schoolido.lu/api/idols/" + ctx.RawArgumentString + "/").Result;
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (idolObject.StatusCode == HttpStatusCode.OK)
             {
-                idolObject = JsonConvert.DeserializeObject<IdolObject>(response.Content.ReadAsStringAsync().Result);
-
-                string description = MakeIdolDescription(idolObject);
-                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolObject.Chibi, footer);
+                string description = MakeIdolDescription(idolObject.Data);
+                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolObject.Data.Chibi, SchoolidoluHelper.GetSchoolidoluFotter());
             }
             else
             {
@@ -48,16 +51,12 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         {
             await ctx.TriggerTypingAsync();
 
-            var client = new HttpClient();
-            IdolsResponse idolsResponse;
+            var idolsResponse = _schoolidoluService.GetRandomIdol();
 
-            var response = client.GetAsync("http://schoolido.lu/api/idols/" + ctx.RawArgumentString + "/").Result;
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (idolsResponse.StatusCode == HttpStatusCode.OK)
             {
-                idolsResponse = JsonConvert.DeserializeObject<IdolsResponse>(response.Content.ReadAsStringAsync().Result);
-
-                string description = MakeIdolDescription(idolsResponse.Results[0]);
-                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolsResponse.Results[0].Chibi, footer);
+                string description = MakeIdolDescription(idolsResponse.Data.Results[0]);
+                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolsResponse.Data.Results[0].Chibi, SchoolidoluHelper.GetSchoolidoluFotter());
             }
             else
             {
@@ -65,28 +64,33 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
         }
 
-        public string MakeIdolDescription(IdolObject cardObject)
+        private string MakeIdolDescription(IdolObject cardObject)
         {
             StringBuilder idolDescription = new StringBuilder();
-            idolDescription.Append("**Imie:** ").Append(cardObject.Name).AppendLine();
-            idolDescription.Append("**Japońskie imie:** ").Append(cardObject.Japanese_name).AppendLine();
-            idolDescription.Append("**Wiek:** ").Append(cardObject.Age).AppendLine();
-            idolDescription.Append("**Szkoła:** ").Append(cardObject.School).AppendLine();
-            idolDescription.Append("**Urodziny (MM-dd):** ").Append(cardObject.Birthday).AppendLine();
-            idolDescription.Append("**Znak zodiaku:** ").Append(cardObject.Astrological_sign).AppendLine();
-            idolDescription.Append("**Grupa krwi:** ").Append(cardObject.Blood).AppendLine();
-            idolDescription.Append("**Wzrost:** ").Append(cardObject.Height).AppendLine();
-            idolDescription.Append("**Wymiary: ** ").Append(cardObject.Measurements).AppendLine();
-            idolDescription.Append("**Ulubione jedzenie: ** ").Append(cardObject.Favorite_food).AppendLine();
-            idolDescription.Append("**Nielubiane jedzenie: ** ").Append(cardObject.Least_favorite_food).AppendLine();
-            idolDescription.Append("**Hobby: ** ").Append(cardObject.Hobbies).AppendLine();
-            idolDescription.Append("**Atrybut: ** ").Append(cardObject.Attribute).AppendLine();
-            idolDescription.Append("**Rok: ** ").Append(cardObject.Year).AppendLine();
-            idolDescription.Append("**Main unit: ** ").Append(cardObject.Main_unit).AppendLine();
-            idolDescription.Append("**Sub unit: ** ").Append(cardObject.Sub_unit).AppendLine();
-            idolDescription.Append("**Seiyuu: ** ").Append(cardObject.Cv.Name).AppendLine();
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Imie:** ", cardObject.Name);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Japońskie imie:** ", cardObject.Japanese_name);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Wiek:** ", cardObject.Age);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Szkoła:** ", cardObject.School);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Urodziny (MM-dd):** ", cardObject.Birthday);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Znak zodiaku:** ", cardObject.Astrological_sign);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Grupa krwi:** ", cardObject.Blood);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Wzrost:** ", cardObject.Height);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Wymiary: ** ", cardObject.Measurements);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Ulubione jedzenie: ** ", cardObject.Favorite_food);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Nielubiane jedzenie: ** ", cardObject.Least_favorite_food);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Hobby: ** ", cardObject.Hobbies);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Atrybut: ** ", cardObject.Attribute);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Rok: ** ", cardObject.Year);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Main unit: ** ", cardObject.Main_unit);
+            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Sub unit: ** ", cardObject.Sub_unit);
+            if(cardObject.Cv != null)
+            {
+                SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Seiyuu: ** ", cardObject.Cv.Name);
+            }
 
             return idolDescription.ToString();
         }
+
+        
     }
 }

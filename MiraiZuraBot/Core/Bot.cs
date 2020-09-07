@@ -3,8 +3,14 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Exceptions;
 using DSharpPlus.Net.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using MiraiZuraBot.Attributes;
-using MiraiZuraBot.Services;
+using MiraiZuraBot.Handlers.EmojiHandlers;
+using MiraiZuraBot.Services.AnnouncementService;
+using MiraiZuraBot.Services.EmojiService;
+using MiraiZuraBot.Services.RandomMessagesService;
+using MiraiZuraBot.Services.RolesService;
+using MiraiZuraBot.Services.SchoolidoluService;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -84,7 +90,9 @@ namespace MiraiZuraBot.Core
                 StringPrefixes = new[] { configJson.CommandPrefix },
                 EnableDms = false,
                 EnableMentionPrefix = true,
-                CaseSensitive = false
+                CaseSensitive = false,
+                IgnoreExtraArguments = true,
+                Services = BuildDependencies()
             };
 
             _commands = DiscordClient.UseCommandsNext(commandsConfig);
@@ -96,14 +104,28 @@ namespace MiraiZuraBot.Core
             await DiscordClient.ConnectAsync();
         }
 
+        private ServiceProvider BuildDependencies()
+        {
+            return new ServiceCollection()
+
+            // Services
+            .AddScoped<AssignRolesService>()
+            .AddScoped<BirthdaysService>()
+            .AddScoped<EmojiCounterService>()
+            .AddScoped<RandomMessageService>()
+            .AddScoped<SchoolidoluService>()
+
+            .BuildServiceProvider();
+        }
+
         private async Task DiscordClient_MessageCreatedAsync(DSharpPlus.EventArgs.MessageCreateEventArgs e)
         {
             if (e.Channel.IsPrivate == false)
             {
                 try
                 {
-                    EmojiCounterService emojiCounterService = new EmojiCounterService();
-                    await emojiCounterService.CountEmojiInMessage(e.Message);
+                    EmojiCounterHandler emojiCounterHandler = new EmojiCounterHandler();
+                    await emojiCounterHandler.CountEmojiInMessage(e.Message);
                 }
                 catch (Exception ie)
                 {
@@ -114,8 +136,8 @@ namespace MiraiZuraBot.Core
                 }
                 try
                 {
-                    EmojiAddService emojiAddService = new EmojiAddService();
-                    await emojiAddService.AddEmojiOnServer(e.Guild, e.Message);
+                    EmojiAddHandler emojiAddHanlder = new EmojiAddHandler();
+                    await emojiAddHanlder.AddEmojiOnServer(e.Guild, e.Message);
                 }
                 catch (Exception ie)
                 {
@@ -133,8 +155,8 @@ namespace MiraiZuraBot.Core
             {
                 try
                 {
-                    EmojiCounterService emojiCounterService = new EmojiCounterService();
-                    await emojiCounterService.CountEmojiInMessage(e.Message);
+                    EmojiCounterHandler emojiCounterHandler = new EmojiCounterHandler();
+                    await emojiCounterHandler.CountEmojiInMessage(e.Message);
                 }
                 catch (Exception ie)
                 {
@@ -152,8 +174,8 @@ namespace MiraiZuraBot.Core
             {
                 try
                 {
-                    EmojiCounterService emojiCounterService = new EmojiCounterService();
-                    await emojiCounterService.CountEmojiReaction(e.User, e.Emoji, e.Channel);
+                    EmojiCounterHandler emojiCounterHandler = new EmojiCounterHandler();
+                    await emojiCounterHandler.CountEmojiReaction(e.User, e.Emoji, e.Channel);
                 }
                 catch (Exception ie)
                 {

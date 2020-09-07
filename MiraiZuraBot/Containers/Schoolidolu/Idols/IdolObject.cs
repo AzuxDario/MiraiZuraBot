@@ -8,7 +8,7 @@ namespace MiraiZuraBot.Containers.Schoolidolu.Idols
     {
         public string Name { get; set; }
         public string Japanese_name { get; set; }
-        public string Main { get; set; }
+        public bool Main { get; set; }
         public int? Age { get; set; }
         public string School { get; set; }
         public string Birthday { get; set; }
