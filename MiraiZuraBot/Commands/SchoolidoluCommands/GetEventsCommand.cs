@@ -100,6 +100,82 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
         }
 
+        [Command("nastepnyEventEN")]
+        [Description("Pokazuje następny event na serwerze EN.")]
+        public async Task NextWorldEvent(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { "ordering", "-english_end" },
+                { "page_size", "1" }
+            };
+
+            var eventObject = _schoolidoluService.GetEvent(options);
+
+            if (eventObject.StatusCode == HttpStatusCode.OK)
+            {
+                if (eventObject.Data.Results[0].English_status == "announced")
+                {
+                    if (eventObject.Data.Results[0].English_image != null)
+                    {
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", MakeWorldEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].English_image, SchoolidoluHelper.GetSchoolidoluFotter());
+                    }
+                    else
+                    {
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", MakeWorldEventDescription(eventObject.Data.Results[0]), null, SchoolidoluHelper.GetSchoolidoluFotter());
+                    }
+                }
+                else
+                {
+                    await ctx.RespondAsync("Obecnie na serwerze EN nie ma zapowiedzianego żadnego eventu. Możesz spróbować sprawdzić obecny event.");
+                }
+            }
+            else
+            {
+                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu.");
+            }
+        }
+
+        [Command("nastepnyEventJP")]
+        [Description("Pokazuje następny event na serwerze JP.")]
+        public async Task NextJapanEvent(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { "ordering", "-end" },
+                { "page_size", "1" }
+            };
+
+            var eventObject = _schoolidoluService.GetEvent(options);
+
+            if (eventObject.StatusCode == HttpStatusCode.OK)
+            {
+                if (eventObject.Data.Results[0].Japan_status == "announced")
+                {
+                    if (eventObject.Data.Results[0].Image != null)
+                    {
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", MakeJapanEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].Image, SchoolidoluHelper.GetSchoolidoluFotter());
+                    }
+                    else
+                    {
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", MakeJapanEventDescription(eventObject.Data.Results[0]), null, SchoolidoluHelper.GetSchoolidoluFotter());
+                    }
+                }
+                else
+                {
+                    await ctx.RespondAsync("Obecnie na serwerze JP nie ma zapowiedzianego żadnego eventu. Możesz spróbować sprawdzić obecny event.");
+                }
+            }
+            else
+            {
+                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu.");
+            }
+        }
+
         private string MakeWorldEventDescription(EventObject eventObject)
         {
             StringBuilder eventDescription = new StringBuilder();
