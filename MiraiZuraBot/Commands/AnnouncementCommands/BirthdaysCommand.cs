@@ -71,6 +71,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                     DiscordChannel discordChannel = await Bot.DiscordClient.GetChannelAsync(channel.ChannelId);
                     DiscordMessage discordMessage = null;
 
+                    string brithdayRolesMention = GetRolesMention(channel.ServerId, channel.BirthdayRoles);
 
                     if (channel.Filename != null)
                     {
@@ -83,21 +84,21 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                 reader.BaseStream.Read(buffer, 0, (int)reader.BaseStream.Length);
                                 var memStream = new MemoryStream(buffer);
 
-                                discordMessage = await discordChannel.SendFileAsync(name, memStream, channel.BirthdayRoles + channel.Content);
+                                discordMessage = await discordChannel.SendFileAsync(name, memStream, brithdayRolesMention + channel.Content);
                             }
                         }
                         catch (FileNotFoundException)
                         {
-                            discordMessage = await discordChannel.SendMessageAsync(channel.BirthdayRoles + channel.Content);
+                            discordMessage = await discordChannel.SendMessageAsync(brithdayRolesMention + channel.Content);
                         }
                         catch (DirectoryNotFoundException)
                         {
-                            discordMessage = await discordChannel.SendMessageAsync(channel.BirthdayRoles + channel.Content);
+                            discordMessage = await discordChannel.SendMessageAsync(brithdayRolesMention + channel.Content);
                         }
                     }
                     else
                     {
-                        discordMessage = await discordChannel.SendMessageAsync(channel.BirthdayRoles + channel.Content);
+                        discordMessage = await discordChannel.SendMessageAsync(brithdayRolesMention + channel.Content);
                     }
 
                     // If message was sent add info to database
@@ -165,10 +166,10 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             }
         }
 
-        private string GetRolesMention(string serverID, List<string> birthdayRoles)
+        private string GetRolesMention(ulong serverID, List<string> birthdayRoles)
         {
             StringBuilder roles = new StringBuilder();
-            DiscordGuild server = Bot.DiscordClient.GetGuildAsync(ulong.Parse(serverID)).Result;
+            DiscordGuild server = Bot.DiscordClient.GetGuildAsync(serverID).Result;
             var serverRoles = server.Roles;
             foreach(var birthdayRole in birthdayRoles)
             {
