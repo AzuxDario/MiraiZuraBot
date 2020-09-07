@@ -9,6 +9,7 @@ using MiraiZuraBot.Handlers.EmojiHandlers;
 using MiraiZuraBot.Services.AnnouncementService;
 using MiraiZuraBot.Services.EmojiService;
 using MiraiZuraBot.Services.RandomMessagesService;
+using MiraiZuraBot.Services.RolesService;
 using MiraiZuraBot.Services.SchoolidoluService;
 using Newtonsoft.Json;
 using System;
@@ -108,6 +109,7 @@ namespace MiraiZuraBot.Core
             return new ServiceCollection()
 
             // Services
+            .AddScoped<AssignRolesService>()
             .AddScoped<BirthdaysService>()
             .AddScoped<EmojiCounterService>()
             .AddScoped<RandomMessageService>()

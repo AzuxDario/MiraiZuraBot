@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Database;
 using MiraiZuraBot.Database.Models.DynamicDB;
+using MiraiZuraBot.Helpers;
+using MiraiZuraBot.Services.RolesService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,56 +18,39 @@ namespace MiraiZuraBot.Commands.RolesCommands
     [CommandsGroup("Role")]
     class AssignRolesCommand : BaseCommandModule
     {
+        private AssignRolesService _assignRolesService;
+
+        public AssignRolesCommand(AssignRolesService assignRolesService)
+        {
+            _assignRolesService = assignRolesService;
+        }
+
         [Command("pokazRole")]
         [Description("Pokazuje role, które można przydzielić sobie na tym serwerze.")]
         public async Task ShowRoles(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
 
-            using (var databaseContext = new DynamicDBContext())
-            {
-                Server dbServer = GetServerFromDatabase(databaseContext, ctx.Guild.Id);
+            var assignRoles = _assignRolesService.GetRoles(ctx.Guild.Id);
 
-                // If there's no roles, send message and exit.
-                if (dbServer.AssignRoles.Count == 0)
-                {
-                    await ctx.RespondAsync("Na tym serwerze nie ma ról, które można sobie przypisać.");
-                    return;
-                }
-                // Prepare message.
-                string message = "**Role dostępne na serwerze to:**\n";
+            if(assignRoles.Count == 0)
+            {
+                await ctx.RespondAsync("Na tym serwerze nie ma ról, które można sobie przypisać.");
+            }
+            else
+            {
                 // Get server roles.
                 var serverRoles = ctx.Guild.Roles;
 
                 List<DiscordRole> discordRoles = new List<DiscordRole>();
-                foreach (AssignRole assignRole in dbServer.AssignRoles)
+                foreach (ulong roleId in assignRoles)
                 {
-                    discordRoles.Add(serverRoles.Where(p => p.Value.Id.ToString() == assignRole.RoleID).FirstOrDefault().Value);
-
+                    discordRoles.Add(serverRoles.Where(p => p.Value.Id == roleId).FirstOrDefault().Value);
                 }
 
                 List<DiscordRole> sortedRoles = discordRoles.OrderBy(o => o.Name).ToList();
-                foreach (DiscordRole sortedRole in sortedRoles)
-                {
-                    if (sortedRole != null)
-                    {
-                        if (sortedRole != sortedRoles[0])
-                        {
-                            message += ", ";
-                        }
-                        message += sortedRole.Name;
-                    }
-                    if (message.Length > 1800)
-                    {
-                        await ctx.RespondAsync(message);
-                        message = "";
-                    }
-                }
-                if (message.Length > 0)
-                {
-                    await ctx.RespondAsync(message);
-                }
-            }
+                await PostLongMessageHelper.PostLongMessage(ctx, sortedRoles.Select(p => p.Name).ToList(), "**Role dostępne na serwerze to:**");
+            } 
         }
 
         [Command("nadajRole")]
