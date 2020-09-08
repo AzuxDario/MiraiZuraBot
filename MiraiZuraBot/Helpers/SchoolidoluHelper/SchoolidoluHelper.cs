@@ -16,11 +16,19 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
         {
             if (field != null && field.ToString() != "")
             {
+                builder.Append(description).Append(" (").Append(field).Append(")").AppendLine();
+            }
+        }
+
+        public static void AddTitledLineToStringBuilder<T>(StringBuilder builder, string description, T field)
+        {
+            if (field != null && field.ToString() != "")
+            {
                 builder.Append(description).AppendLine().Append(field).AppendLine();
             }
         }
 
-        public static void AddLineToStringBuilder<T, U>(StringBuilder builder, string description, T field, U field2)
+        public static void AddTitledLineToStringBuilder<T, U>(StringBuilder builder, string description, T field, U field2)
         {
             if (field != null && field.ToString() != "")
             {
@@ -33,7 +41,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             builder.AppendLine();
         }
 
-        public static void AddLineToStringBuilder(StringBuilder builder, string description, DateTime? field)
+        public static void AddDataTimeToStringBuilder(StringBuilder builder, string description, DateTime? field)
         {
             if (field != null)
             {

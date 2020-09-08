@@ -73,25 +73,25 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         private string MakeIdolDescription(IdolObject cardObject)
         {
             StringBuilder idolDescription = new StringBuilder();
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Imie:** ", cardObject.Name);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Japońskie imie:** ", cardObject.Japanese_name);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Wiek:** ", cardObject.Age);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Szkoła:** ", cardObject.School);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Urodziny (MM-dd):** ", cardObject.Birthday);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Znak zodiaku:** ", cardObject.Astrological_sign);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Grupa krwi:** ", cardObject.Blood);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Wzrost:** ", cardObject.Height);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Wymiary: ** ", cardObject.Measurements);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Ulubione jedzenie: ** ", cardObject.Favorite_food);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Nielubiane jedzenie: ** ", cardObject.Least_favorite_food);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Hobby: ** ", cardObject.Hobbies);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Atrybut: ** ", cardObject.Attribute);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Rok: ** ", cardObject.Year);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Main unit: ** ", cardObject.Main_unit);
-            SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Sub unit: ** ", cardObject.Sub_unit);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Imie:** ", cardObject.Name);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Japońskie imie:** ", cardObject.Japanese_name);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Wiek:** ", cardObject.Age);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Szkoła:** ", cardObject.School);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Urodziny (MM-dd):** ", cardObject.Birthday);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Znak zodiaku:** ", cardObject.Astrological_sign);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Grupa krwi:** ", cardObject.Blood);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Wzrost:** ", cardObject.Height);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Wymiary: ** ", cardObject.Measurements);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Ulubione jedzenie: ** ", cardObject.Favorite_food);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Nielubiane jedzenie: ** ", cardObject.Least_favorite_food);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Hobby: ** ", cardObject.Hobbies);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Atrybut: ** ", cardObject.Attribute);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Rok: ** ", cardObject.Year);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Main unit: ** ", cardObject.Main_unit);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Sub unit: ** ", cardObject.Sub_unit);
             if(cardObject.Cv != null)
             {
-                SchoolidoluHelper.AddLineToStringBuilder(idolDescription, "**Seiyuu: ** ", cardObject.Cv.Name);
+                SchoolidoluHelper.AddTitledLineToStringBuilder(idolDescription, "**Seiyuu: ** ", cardObject.Cv.Name);
             }
 
             return idolDescription.ToString();

@@ -1,6 +1,8 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using MiraiZuraBot.Attributes;
+using MiraiZuraBot.Containers.Schoolidolu;
+using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Containers.Schoolidolu.Event;
 using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Helpers.SchoolidoluHelper;
@@ -42,19 +44,15 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             {
                 if (eventObject.Data.Results[0].World_current == true)
                 {
-                    if(eventObject.Data.Results[0].English_image != null)
+                    List<CardObject> eventCards = GetCardsForEvent(eventObject.Data.Results[0], true);
+
+                    if (eventObject.Data.Results[0].English_image != null)
                     {
-                        /*Dictionary<string, string> eventCardsOptions = new Dictionary<string, string>
-                        {
-                            { "event_english_name", eventObject.Data.Results[0].English_name }
-                        };
-                        var eventCards = _schoolidoluService.GetCard(eventCardsOptions);*/
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", MakeWorldEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].English_image, SchoolidoluHelper.GetSchoolidoluFotter());
-                        //await ctx.RespondAsync("There are: " + eventCards.Data.Results.Count + " cards in this event");
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", MakeWorldEventDescription(eventObject.Data.Results[0], eventCards), "https:" + eventObject.Data.Results[0].English_image, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", MakeWorldEventDescription(eventObject.Data.Results[0]), null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", MakeWorldEventDescription(eventObject.Data.Results[0], eventCards), null, SchoolidoluHelper.GetSchoolidoluFotter());
                     } 
                 }
                 else
@@ -86,13 +84,15 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             {
                 if (eventObject.Data.Results[0].Japan_current == true)
                 {
+                    List<CardObject> eventCards = GetCardsForEvent(eventObject.Data.Results[0], false);
+
                     if (eventObject.Data.Results[0].Image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", MakeJapanEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].Image, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", MakeJapanEventDescription(eventObject.Data.Results[0], eventCards), "https:" + eventObject.Data.Results[0].Image, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", MakeJapanEventDescription(eventObject.Data.Results[0]), null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", MakeJapanEventDescription(eventObject.Data.Results[0], eventCards), null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                 }
                 else
@@ -182,28 +182,82 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
         }
 
-        private string MakeWorldEventDescription(EventObject eventObject)
+        private List<CardObject> GetCardsForEvent(EventObject eventObject, bool isWorld)
+        {
+            List<CardObject> eventCards = null;
+            if (isWorld == true)
+            {
+                if (eventObject.English_name != null)
+                {
+                    Dictionary<string, string> eventCardsOptions = new Dictionary<string, string>
+                    {
+                        { "event_english_name", eventObject.English_name }
+                    };
+                    var cards = _schoolidoluService.GetCard(eventCardsOptions);
+                    if (cards.StatusCode == HttpStatusCode.OK)
+                    {
+                        eventCards = cards.Data.Results;
+                    }
+                }
+            }
+            else
+            {
+                Dictionary<string, string> eventCardsOptions = new Dictionary<string, string>
+                {
+                    { "event_japanese_name", eventObject.Japanese_name }
+                };
+                var cards = _schoolidoluService.GetCard(eventCardsOptions);
+                if (cards.StatusCode == HttpStatusCode.OK)
+                {
+                    eventCards = cards.Data.Results;
+                }
+            }
+
+            return eventCards;
+        }
+
+        private string MakeWorldEventDescription(EventObject eventObject, List<CardObject> eventCards = null)
         {
             StringBuilder eventDescription = new StringBuilder();
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":name_badge: **Nazwa** ", eventObject.English_name);            
+            SchoolidoluHelper.AddTitledLineToStringBuilder(eventDescription, ":name_badge: **Nazwa** ", eventObject.English_name);            
             SchoolidoluHelper.AddDateTimeToStringBuilder(eventDescription, ":clock2: **Czas trwania** ", ConvertToPolandTimeFromUtc(eventObject.English_beginning), ConvertToPolandTimeFromUtc(eventObject.English_end));
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":timer: **Pozostały czas** ", GetTimeToEventEnd(ConvertToPolandTimeFromUtc(eventObject.English_end)));
+            SchoolidoluHelper.AddTitledLineToStringBuilder(eventDescription, ":timer: **Pozostały czas** ", GetTimeToEventEnd(ConvertToPolandTimeFromUtc(eventObject.English_end)));
             SchoolidoluHelper.AddDateTimeToStringBuilder(eventDescription, ":clock12: **Czas trwania (UTC)** ", eventObject.English_beginning, eventObject.English_end);
             SchoolidoluHelper.AddUrlToStringBuilder(eventDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", eventObject.Website_url);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":notepad_spiral: **Dodatkowe informacje** ", eventObject.Note);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(eventDescription, ":notepad_spiral: **Dodatkowe informacje** ", eventObject.Note);
+
+            if(eventCards != null)
+            {
+                SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":microphone: **Liczba kart w evencie** ", eventCards.Count);
+                foreach(CardObject eventCard in eventCards)
+                {
+                    SchoolidoluHelper.AddLineToStringBuilder(eventDescription, eventCard.Idol.Name, eventCard.Id);
+                }
+                eventDescription.Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
+            }
 
             return eventDescription.ToString();
         }
 
-        private string MakeJapanEventDescription(EventObject eventObject)
+        private string MakeJapanEventDescription(EventObject eventObject, List<CardObject> eventCards = null)
         {
             StringBuilder eventDescription = new StringBuilder();
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":name_badge: **Nazwa** ", eventObject.Japanese_name, eventObject.Romaji_name);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(eventDescription, ":name_badge: **Nazwa** ", eventObject.Japanese_name, eventObject.Romaji_name);
             SchoolidoluHelper.AddDateTimeToStringBuilder(eventDescription, ":clock2: **Czas trwania** ", eventObject.Beginning, eventObject.End);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":timer: **Pozostały czas** ", GetTimeToEventEnd(eventObject.End));
+            SchoolidoluHelper.AddTitledLineToStringBuilder(eventDescription, ":timer: **Pozostały czas** ", GetTimeToEventEnd(eventObject.End));
             SchoolidoluHelper.AddDateTimeToStringBuilder(eventDescription, ":clock9: **Czas trwania (JST)** ", ConvertToJapanTimeFromPoland(eventObject.Beginning), ConvertToJapanTimeFromPoland(eventObject.End));
             SchoolidoluHelper.AddUrlToStringBuilder(eventDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", eventObject.Website_url);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":notepad_spiral: **Dodatkowe informacje** ", eventObject.Note);
+            SchoolidoluHelper.AddTitledLineToStringBuilder(eventDescription, ":notepad_spiral: **Dodatkowe informacje** ", eventObject.Note);
+
+            if (eventCards != null)
+            {
+                SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":microphone: **Liczba kart w evencie** ", eventCards.Count);
+                foreach (CardObject eventCard in eventCards)
+                {
+                    SchoolidoluHelper.AddLineToStringBuilder(eventDescription, eventCard.Idol.Name, eventCard.Id);
+                }
+                eventDescription.Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
+            }
 
             return eventDescription.ToString();
         }
