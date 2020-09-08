@@ -56,7 +56,6 @@ namespace MiraiZuraBot.Commands.RolesCommands
         [Command("nadajRole")]
         [Description("Dodaje role z listy ról.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
-        [RequireUserPermissions(DSharpPlus.Permissions.None)]
         public async Task GiveRole(CommandContext ctx, [RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
@@ -96,7 +95,6 @@ namespace MiraiZuraBot.Commands.RolesCommands
         [Command("odbierzRole")]
         [Description("Odbiera role z listy ról.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
-        [RequireUserPermissions(DSharpPlus.Permissions.None)]
         public async Task RemoveRole(CommandContext ctx, [RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();

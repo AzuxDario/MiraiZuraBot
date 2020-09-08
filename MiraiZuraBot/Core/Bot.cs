@@ -1,11 +1,13 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Exceptions;
 using DSharpPlus.Net.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Handlers.EmojiHandlers;
+using MiraiZuraBot.Helpers.SchoolidoluHelper;
 using MiraiZuraBot.Services.AnnouncementService;
 using MiraiZuraBot.Services.EmojiService;
 using MiraiZuraBot.Services.RandomMessagesService;
@@ -107,6 +109,9 @@ namespace MiraiZuraBot.Core
         private ServiceProvider BuildDependencies()
         {
             return new ServiceCollection()
+
+            // Helpers
+            .AddScoped<SchoolidoluHelper>()
 
             // Services
             .AddScoped<AssignRolesService>()
@@ -220,13 +225,38 @@ namespace MiraiZuraBot.Core
 
         private async Task Commands_CommandErrored(CommandErrorEventArgs e)
         {
-            e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, botname, $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}", DateTime.Now);
+            e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, botname, $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}.", DateTime.Now);
 
             switch (e.Exception)
             {
-                case Checks​Failed​Exception _:
+                case Checks​Failed​Exception ex:
                     {
-                        await e.Context.Channel.SendMessageAsync("Brak wystarczających uprawnień aby dokończyć akcje.");
+                        StringBuilder messageToSend = new StringBuilder();
+                        messageToSend.Append("Brak wystarczających uprawnień aby dokończyć akcje.").AppendLine();
+
+                        var failedChecks = ex.FailedChecks;
+                        foreach(var failedCheck in failedChecks)
+                        {
+                            if (failedCheck is RequireBotPermissionsAttribute failBot)
+                            {
+                                messageToSend.Append("Ja potrzebuje: ");
+                                messageToSend.Append(failBot.Permissions.ToPermissionString());
+                                messageToSend.AppendLine();
+                            }
+                            else if (failedCheck is RequireUserPermissionsAttribute failUser)
+                            {
+                                messageToSend.Append("Ty potrzebujesz: ");
+                                messageToSend.Append(failUser.Permissions.ToPermissionString());
+                                messageToSend.AppendLine();
+                            }
+                            else if (failedCheck is RequireOwnerAttribute)
+                            {
+                                messageToSend.Append("Tej komendy może użyć tylko mój twórca.");
+                                messageToSend.AppendLine();
+                            }
+                        }
+
+                        await e.Context.Channel.SendMessageAsync(messageToSend.ToString());
                         break;
                     }
                 case UnauthorizedException _:

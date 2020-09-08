@@ -82,7 +82,18 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         {
             await ctx.TriggerTypingAsync();
 
-            var cardsResponse = _schoolidoluService.GetRandomCard(name);
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { "ordering", "random" },
+                { "page_size", "1" }
+            };
+
+            if (name != "")
+            {
+                options.Add("name", name);
+            }
+
+            var cardsResponse = _schoolidoluService.GetCard(options);
 
             if (cardsResponse.StatusCode == HttpStatusCode.OK)
             {

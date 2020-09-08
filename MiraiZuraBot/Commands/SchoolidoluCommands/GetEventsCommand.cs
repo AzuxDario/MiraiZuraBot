@@ -1,6 +1,8 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using MiraiZuraBot.Attributes;
+using MiraiZuraBot.Containers.Schoolidolu;
+using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Containers.Schoolidolu.Event;
 using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Helpers.SchoolidoluHelper;
@@ -18,10 +20,12 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
     class GetEventsCommand : BaseCommandModule
     {
         private SchoolidoluService _schoolidoluService;
+        private SchoolidoluHelper _schoolidoluHelper;
 
-        public GetEventsCommand(SchoolidoluService schoolidoluService)
+        public GetEventsCommand(SchoolidoluService schoolidoluService, SchoolidoluHelper schoolidoluHelper)
         {
             _schoolidoluService = schoolidoluService;
+            _schoolidoluHelper = schoolidoluHelper;
         }
 
         [Command("obecnyEventEN")]
@@ -42,13 +46,15 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             {
                 if (eventObject.Data.Results[0].World_current == true)
                 {
-                    if(eventObject.Data.Results[0].English_image != null)
+                    List<CardObject> eventCards = GetCardsForEvent(eventObject.Data.Results[0], true);
+
+                    if (eventObject.Data.Results[0].English_image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", MakeWorldEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].English_image, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", _schoolidoluHelper.MakeWorldEventDescription(eventObject.Data.Results[0], eventCards), "https:" + eventObject.Data.Results[0].English_image, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", MakeWorldEventDescription(eventObject.Data.Results[0]), null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", _schoolidoluHelper.MakeWorldEventDescription(eventObject.Data.Results[0], eventCards), null, SchoolidoluHelper.GetSchoolidoluFotter());
                     } 
                 }
                 else
@@ -80,13 +86,15 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             {
                 if (eventObject.Data.Results[0].Japan_current == true)
                 {
+                    List<CardObject> eventCards = GetCardsForEvent(eventObject.Data.Results[0], false);
+
                     if (eventObject.Data.Results[0].Image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", MakeJapanEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].Image, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", _schoolidoluHelper.MakeJapanEventDescription(eventObject.Data.Results[0], eventCards), "https:" + eventObject.Data.Results[0].Image, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", MakeJapanEventDescription(eventObject.Data.Results[0]), null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", _schoolidoluHelper.MakeJapanEventDescription(eventObject.Data.Results[0], eventCards), null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                 }
                 else
@@ -120,11 +128,11 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 {
                     if (eventObject.Data.Results[0].English_image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", MakeWorldEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].English_image, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", _schoolidoluHelper.MakeWorldEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].English_image, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", MakeWorldEventDescription(eventObject.Data.Results[0]), null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", _schoolidoluHelper.MakeWorldEventDescription(eventObject.Data.Results[0]), null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                 }
                 else
@@ -158,11 +166,11 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 {
                     if (eventObject.Data.Results[0].Image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", MakeJapanEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].Image, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", _schoolidoluHelper.MakeJapanEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].Image, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", MakeJapanEventDescription(eventObject.Data.Results[0]), null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", _schoolidoluHelper.MakeJapanEventDescription(eventObject.Data.Results[0]), null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                 }
                 else
@@ -176,102 +184,38 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
         }
 
-        private string MakeWorldEventDescription(EventObject eventObject)
+        private List<CardObject> GetCardsForEvent(EventObject eventObject, bool isWorld)
         {
-            StringBuilder eventDescription = new StringBuilder();
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Nazwa:** ", eventObject.English_name);            
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Początek:** ", ConvertToPolandTimeFromUtc(eventObject.English_beginning));
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Koniec** ", ConvertToPolandTimeFromUtc(eventObject.English_end));
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Pozostały czas** ", GetTimeToEventEnd(ConvertToPolandTimeFromUtc(eventObject.English_end)));
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Początek (UTC):** ", eventObject.English_beginning);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Koniec (UTC):** ", eventObject.English_end);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**URL:** ", eventObject.Website_url);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Dodatkowe informacje:** ", eventObject.Note);
-
-            return eventDescription.ToString();
-        }
-
-        private string MakeJapanEventDescription(EventObject eventObject)
-        {
-            StringBuilder eventDescription = new StringBuilder();
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Nazwa:** ", eventObject.Japanese_name);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Romaji:** ", eventObject.Romaji_name);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Początek:** ", eventObject.Beginning);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Koniec** ", eventObject.End);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Pozostały czas** ", GetTimeToEventEnd(eventObject.End));
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Początek (JST):** ", ConvertToJapanTimeFromPoland(eventObject.Beginning));
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Koniec (JST):** ", ConvertToJapanTimeFromPoland(eventObject.End));
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**URL:** ", eventObject.Website_url);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, "**Dodatkowe informacje:** ", eventObject.Note);
-
-            return eventDescription.ToString();
-        }
-
-        private DateTime? ConvertToPolandTimeFromUtc(DateTime? time)
-        {
-            if (time == null)
+            List<CardObject> eventCards = null;
+            if (isWorld == true)
             {
-                return null;
+                if (eventObject.English_name != null)
+                {
+                    Dictionary<string, string> eventCardsOptions = new Dictionary<string, string>
+                    {
+                        { "event_english_name", eventObject.English_name }
+                    };
+                    var cards = _schoolidoluService.GetCard(eventCardsOptions);
+                    if (cards.StatusCode == HttpStatusCode.OK)
+                    {
+                        eventCards = cards.Data.Results;
+                    }
+                }
             }
             else
             {
-                TimeZoneInfo polandTimeZone;
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                Dictionary<string, string> eventCardsOptions = new Dictionary<string, string>
                 {
-                    polandTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-                }
-                else
+                    { "event_japanese_name", eventObject.Japanese_name }
+                };
+                var cards = _schoolidoluService.GetCard(eventCardsOptions);
+                if (cards.StatusCode == HttpStatusCode.OK)
                 {
-                    polandTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Warsaw");
+                    eventCards = cards.Data.Results;
                 }
-                return TimeZoneInfo.ConvertTimeFromUtc(time.Value, polandTimeZone);
             }
-        }
 
-        // Because .NET auto convert Japan Time to Poland Time during DateTime parsing so this is needed
-        private DateTime? ConvertToJapanTimeFromPoland(DateTime? time)
-        {
-            if (time == null)
-            {
-                return null;
-            }
-            else
-            {
-                TimeZoneInfo japanTimeZone;
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
-                }
-                else
-                {
-                    japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Japan");
-                }
-                return TimeZoneInfo.ConvertTimeFromUtc(time.Value.ToUniversalTime(), japanTimeZone);
-            }
-        }
-
-        private string GetTimeToEventEnd(DateTime? time)
-        {
-            if (time == null)
-            {
-                return null;
-            }
-            else
-            {
-                var difference = time - DateTime.Now;
-
-                StringBuilder result = new StringBuilder();
-                result.Append(difference.Value.Days)
-                      .Append(" dni ")
-                      .Append(difference.Value.Hours)
-                      .Append(" godzin ")
-                      .Append(difference.Value.Minutes)
-                      .Append(" minut ")
-                      .Append(difference.Value.Seconds)
-                      .Append(" sekund ");
-
-                return result.ToString();
-            }
+            return eventCards;
         }
     }
 }

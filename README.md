@@ -30,6 +30,10 @@ Since it's polish bot, most commands are in polish.
   * karta - Shows SIF card based on id and information about idolisation.
   * losowaIdolka - Shows random idol.
   * losowaKarta - Shows random card.
+  * obecnyEventEN - Shows info about current event in SIF EN.
+  * obecnyEventJP - Shows info about current event in SIF JP.
+  * nastepnyEventEN - Shows info about next event in SIF EN.
+  * nastepnyEventJP - Shows info about next event in SIF JP.
 ## Roles
   * pokazRole - Shows the roles that you can assign yourself on server.
   * nadajRole - Assign role to you from the role list.

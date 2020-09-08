@@ -6,13 +6,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MiraiZuraBot.Commands.ManagementCommands
+namespace MiraiZuraBot.Commands.StatisticsCommands
 {
-    [CommandsGroup("Management")]
+    [CommandsGroup("Statystyka")]
     class PingCommand : BaseCommandModule
     {
         [Command("ping")]
-        [Description("Show ping.")]
+        [Description("Sprawdź ping.")]
         public async Task Ping(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
