@@ -185,14 +185,12 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         private string MakeWorldEventDescription(EventObject eventObject)
         {
             StringBuilder eventDescription = new StringBuilder();
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":name_badge: **Nazwa:** ", eventObject.English_name);            
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":clock1: **Początek:** ", ConvertToPolandTimeFromUtc(eventObject.English_beginning));
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":clock1: **Koniec** ", ConvertToPolandTimeFromUtc(eventObject.English_end));
+            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":name_badge: **Nazwa** ", eventObject.English_name);            
+            SchoolidoluHelper.AddDateTimeToStringBuilder(eventDescription, ":clock2: **Czas trwania** ", ConvertToPolandTimeFromUtc(eventObject.English_beginning), ConvertToPolandTimeFromUtc(eventObject.English_end));
             SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":timer: **Pozostały czas** ", GetTimeToEventEnd(ConvertToPolandTimeFromUtc(eventObject.English_end)));
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":clock1: **Początek (UTC):** ", eventObject.English_beginning);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":clock1: **Koniec (UTC):** ", eventObject.English_end);
-            SchoolidoluHelper.AddUrlToStringBuilder(eventDescription, ":globe_with_meridians: **URL:** ", "schoolido.lu", eventObject.Website_url);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":notepad_spiral: **Dodatkowe informacje:** ", eventObject.Note);
+            SchoolidoluHelper.AddDateTimeToStringBuilder(eventDescription, ":clock12: **Czas trwania (UTC)** ", eventObject.English_beginning, eventObject.English_end);
+            SchoolidoluHelper.AddUrlToStringBuilder(eventDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", eventObject.Website_url);
+            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":notepad_spiral: **Dodatkowe informacje** ", eventObject.Note);
 
             return eventDescription.ToString();
         }
@@ -200,15 +198,12 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         private string MakeJapanEventDescription(EventObject eventObject)
         {
             StringBuilder eventDescription = new StringBuilder();
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":name_badge: **Nazwa:** ", eventObject.Japanese_name);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":name_badge: **Romaji:** ", eventObject.Romaji_name);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":clock1: **Początek:** ", eventObject.Beginning);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":clock1: **Koniec** ", eventObject.End);
+            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":name_badge: **Nazwa** ", eventObject.Japanese_name, eventObject.Romaji_name);
+            SchoolidoluHelper.AddDateTimeToStringBuilder(eventDescription, ":clock2: **Czas trwania** ", eventObject.Beginning, eventObject.End);
             SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":timer: **Pozostały czas** ", GetTimeToEventEnd(eventObject.End));
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":clock1: **Początek (JST):** ", ConvertToJapanTimeFromPoland(eventObject.Beginning));
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":clock1: **Koniec (JST):** ", ConvertToJapanTimeFromPoland(eventObject.End));
-            SchoolidoluHelper.AddUrlToStringBuilder(eventDescription, ":globe_with_meridians: **URL:** ", "schoolido.lu", eventObject.Website_url);
-            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":notepad_spiral: **Dodatkowe informacje:** ", eventObject.Note);
+            SchoolidoluHelper.AddDateTimeToStringBuilder(eventDescription, ":clock9: **Czas trwania (JST)** ", ConvertToJapanTimeFromPoland(eventObject.Beginning), ConvertToJapanTimeFromPoland(eventObject.End));
+            SchoolidoluHelper.AddUrlToStringBuilder(eventDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", eventObject.Website_url);
+            SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":notepad_spiral: **Dodatkowe informacje** ", eventObject.Note);
 
             return eventDescription.ToString();
         }
