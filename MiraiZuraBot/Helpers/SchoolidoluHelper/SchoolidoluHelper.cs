@@ -27,5 +27,13 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                 builder.Append(description).Append(field.Value.ToString("HH:mm dd.MM.yyyy")).AppendLine();
             }
         }
+
+        public static void AddUrlToStringBuilder(StringBuilder builder, string description, string linkName, string url)
+        {
+            if (url != null && url.ToString() != "")
+            {
+                builder.Append(description).Append("[").Append(linkName).Append("](").Append(url).Append(")").AppendLine();
+            }
+        }
     }
 }
