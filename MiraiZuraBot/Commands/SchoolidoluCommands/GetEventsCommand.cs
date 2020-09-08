@@ -233,7 +233,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 {
                     SchoolidoluHelper.AddLineToStringBuilder(eventDescription, eventCard.Idol.Name, eventCard.Id);
                 }
-                eventDescription.Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
+                eventDescription.AppendLine().Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
             }
 
             return eventDescription.ToString();
@@ -256,7 +256,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 {
                     SchoolidoluHelper.AddLineToStringBuilder(eventDescription, eventCard.Idol.Name, eventCard.Id);
                 }
-                eventDescription.Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
+                eventDescription.AppendLine().Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
             }
 
             return eventDescription.ToString();
