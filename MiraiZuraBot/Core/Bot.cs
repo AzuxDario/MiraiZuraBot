@@ -7,6 +7,7 @@ using DSharpPlus.Net.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Handlers.EmojiHandlers;
+using MiraiZuraBot.Helpers.SchoolidoluHelper;
 using MiraiZuraBot.Services.AnnouncementService;
 using MiraiZuraBot.Services.EmojiService;
 using MiraiZuraBot.Services.RandomMessagesService;
@@ -108,6 +109,9 @@ namespace MiraiZuraBot.Core
         private ServiceProvider BuildDependencies()
         {
             return new ServiceCollection()
+
+            // Helpers
+            .AddScoped<SchoolidoluHelper>()
 
             // Services
             .AddScoped<AssignRolesService>()
