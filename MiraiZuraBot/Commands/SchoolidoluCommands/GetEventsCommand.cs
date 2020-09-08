@@ -228,7 +228,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if(eventCards != null)
             {
-                SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":microphone: **Liczba kart w evencie** ", eventCards.Count);
+                SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":microphone: **Karty** ", eventCards.Count);
                 foreach(CardObject eventCard in eventCards)
                 {
                     SchoolidoluHelper.AddLineToStringBuilder(eventDescription, eventCard.Idol.Name, eventCard.Id);
@@ -251,7 +251,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if (eventCards != null)
             {
-                SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":microphone: **Liczba kart w evencie** ", eventCards.Count);
+                SchoolidoluHelper.AddLineToStringBuilder(eventDescription, ":microphone: **Karty** ", eventCards.Count);
                 foreach (CardObject eventCard in eventCards)
                 {
                     SchoolidoluHelper.AddLineToStringBuilder(eventDescription, eventCard.Idol.Name, eventCard.Id);
