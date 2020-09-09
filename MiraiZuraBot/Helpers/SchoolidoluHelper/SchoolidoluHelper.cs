@@ -53,6 +53,25 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             cardDescription.Append(":japan: **Tylko na serwerze JP** ").AppendLine();
             cardDescription.Append(cardObject.Japan_only.Value ? "Tak" : "Nie" ?? "brak danych").AppendLine();
 
+            if(cardObject.Rarity == "UR")
+            {
+                cardDescription.Append(":handshake: **Para** ").AppendLine();
+                {
+                    if(cardObject.Ur_pair != null)
+                    {
+                        cardDescription.Append(cardObject.Ur_pair.Card?.Name ?? "brak danych").Append(" (").Append(cardObject.Ur_pair.Card?.Id ?? "brak danych").Append(")").AppendLine();
+                        if(cardObject.Ur_pair.Card != null && cardObject.Ur_pair.Card.Id != null)
+                        {
+                            cardDescription.Append("*Możesz zobaczyć tę kartę komendą `karta " + cardObject.Ur_pair.Card.Id + "`.*").AppendLine();
+                        }
+                    }
+                    else
+                    {
+                        cardDescription.Append("Karta nie ma pary.").AppendLine();
+                    }
+                }
+            }
+
             cardDescription.Append(":stadium: **Event** ").AppendLine();
             if (cardObject.Event == null)
             {
