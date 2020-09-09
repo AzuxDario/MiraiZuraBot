@@ -73,7 +73,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             }
         }
 
-        public string MakeWorldEventDescription(EventObject eventObject, List<CardObject> eventCards = null)
+        public string MakeCurrentWorldEventDescription(EventObject eventObject, List<CardObject> eventCards = null)
         {
             StringBuilder eventDescription = new StringBuilder();
             eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
@@ -111,7 +111,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return eventDescription.ToString();
         }
 
-        public string MakeJapanEventDescription(EventObject eventObject, List<CardObject> eventCards = null)
+        public string MakeCurrentJapanEventDescription(EventObject eventObject, List<CardObject> eventCards = null)
         {
             StringBuilder eventDescription = new StringBuilder();
             eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
