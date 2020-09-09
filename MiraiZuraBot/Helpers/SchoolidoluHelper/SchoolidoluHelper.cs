@@ -86,6 +86,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             idolDescription.Append(idolObject.Attribute ?? "brak danych").AppendLine();
             idolDescription.Append(":microphone2: **Saiyuu** ").AppendLine();
             idolDescription.Append(idolObject.Cv?.Name ?? "brak danych").AppendLine();
+            AddUrlToStringBuilder(idolDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", idolObject.Website_url);
 
             return idolDescription.ToString();
         }
