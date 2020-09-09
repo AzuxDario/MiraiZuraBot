@@ -38,7 +38,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if (idolObject.StatusCode == HttpStatusCode.OK)
             {
-                string description = MakeIdolDescription(idolObject.Data);
+                string description = _schoolidoluHelper.MakeIdolDescription(idolObject.Data);
                 await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolObject.Data.Chibi, SchoolidoluHelper.GetSchoolidoluFotter());
             }
             else
@@ -63,7 +63,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if (idolsResponse.StatusCode == HttpStatusCode.OK)
             {
-                string description = MakeIdolDescription(idolsResponse.Data.Results[0]);
+                string description = _schoolidoluHelper.MakeIdolDescription(idolsResponse.Data.Results[0]);
                 await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolsResponse.Data.Results[0].Chibi, SchoolidoluHelper.GetSchoolidoluFotter());
             }
             else

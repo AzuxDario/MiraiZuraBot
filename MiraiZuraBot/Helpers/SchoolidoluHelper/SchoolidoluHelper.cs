@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.Entities;
 using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Containers.Schoolidolu.Event;
+using MiraiZuraBot.Containers.Schoolidolu.Idols;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -71,6 +72,43 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             {
                 builder.Append(description).AppendLine().Append("[").Append(linkName).Append("](").Append(url).Append(")").AppendLine();
             }
+        }
+
+        public string MakeIdolDescription(IdolObject idolObject)
+        {
+            StringBuilder idolDescription = new StringBuilder();
+            idolDescription.Append(":name_badge: **Imie** ").AppendLine();
+            idolDescription.Append(idolObject.Name ?? "brak danych").Append(" (").Append(idolObject.Japanese_name ?? "brak kanji").Append(")").AppendLine();
+            idolDescription.Append(":school: **Szkoła** ").AppendLine();
+            idolDescription.Append(idolObject.School ?? "brak danych").AppendLine();
+            idolDescription.Append(":microphone: **Main unit** ").AppendLine();
+            idolDescription.Append(idolObject.Main_unit ?? "brak danych").AppendLine();
+            idolDescription.Append(":notes: **Sub unit** ").AppendLine();
+            idolDescription.Append(idolObject.Sub_unit ?? "brak danych").AppendLine();
+            idolDescription.Append(GetEmojiForYear(idolObject.Year)).Append(" **Rok** ").AppendLine();
+            idolDescription.Append(idolObject.Year ?? "brak danych").AppendLine();
+            idolDescription.Append(":calendar: **Wiek** ").AppendLine();
+            idolDescription.Append(idolObject.Age?.ToString() ?? "brak danych").AppendLine();
+            idolDescription.Append(":birthday: **Urodziny (MM-dd)** ").AppendLine();
+            idolDescription.Append(idolObject.Birthday ?? "brak danych").AppendLine();
+            idolDescription.Append(GetEmojiForZodiacSign(idolObject.Astrological_sign)).Append(" **Znak zodiaku** ").AppendLine();
+            idolDescription.Append(idolObject.Astrological_sign ?? "brak danych").AppendLine();
+            idolDescription.Append(GetEmojiForBloodType(idolObject.Blood)).Append(" **Grupa krwi** ").AppendLine();
+            idolDescription.Append(idolObject.Blood ?? "brak danych").AppendLine();
+            idolDescription.Append(":straight_ruler: **Wzrost** ").AppendLine();
+            idolDescription.Append(idolObject.Height?.ToString() ?? "brak danych").AppendLine();
+            idolDescription.Append(":ramen: **Ulubione jedzenie** ").AppendLine();
+            idolDescription.Append(idolObject.Favorite_food ?? "brak danych").AppendLine();
+            idolDescription.Append(":broccoli: **Nielubiane jedzenie** ").AppendLine();
+            idolDescription.Append(idolObject.Least_favorite_food ?? "brak danych").AppendLine();
+            idolDescription.Append(":ping_pong: **Hobby** ").AppendLine();
+            idolDescription.Append(idolObject.Hobbies ?? "brak danych").AppendLine();
+            idolDescription.Append(GetEmojiForAttribute(idolObject.Attribute)).Append(" **Atrybut** ").AppendLine();
+            idolDescription.Append(idolObject.Attribute ?? "brak danych").AppendLine();
+            idolDescription.Append(":microphone2: **Saiyuu** ").AppendLine();
+            idolDescription.Append(idolObject.Cv?.Name ?? "brak danych").AppendLine();
+
+            return idolDescription.ToString();
         }
 
         public string MakeCurrentWorldEventDescription(EventObject eventObject, List<CardObject> eventCards = null)
@@ -146,6 +184,88 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             }
 
             return eventDescription.ToString();
+        }
+
+        private string GetEmojiForYear(string year)
+        {
+            switch (year)
+            {
+                case "First":
+                    return ":one:";
+                case "Second":
+                    return ":two:";
+                case "Third":
+                    return ":three:";
+                default:
+                    return ":1234:";
+            }
+        }
+
+        private string GetEmojiForZodiacSign(string zodiac)
+        {
+            switch(zodiac)
+            {
+                case "Aries":
+                    return ":aries:";
+                case "Taurus":
+                    return ":taurus:";
+                case "Gemini":
+                    return ":gemini:";
+                case "Cancer":
+                    return ":cancer:";
+                case "Leo":
+                    return ":leo:";
+                case "Virgo":
+                    return ":virgo:";
+                case "Libra":
+                    return ":libra:";
+                case "Scorpio":
+                    return ":scorpio:";
+                case "Sagittarius":
+                    return ":sagittarius:";
+                case "Capricorn":
+                    return ":capricorn:";
+                case "Aquarius":
+                    return ":aquarius:";
+                case "Pisces":
+                    return ":pisces:";
+                default:
+                    return ":milky_way:";
+            }
+        }
+
+        private string GetEmojiForBloodType(string bloodType)
+        {
+            switch (bloodType)
+            {
+                case "A":
+                    return ":a:";
+                case "B":
+                    return ":b:";
+                case "AB":
+                    return ":ab:";
+                case "O":
+                    return ":o2:";
+                default:
+                    return ":drop_of_blood:";
+            }
+        }
+        
+        private string GetEmojiForAttribute(string attribute)
+        {
+            switch (attribute)
+            {
+                case "Smile":
+                    return ":red_circle:";
+                case "Pure":
+                    return ":green_circle:";
+                case "Cool":
+                    return ":blue_circle:";
+                case "All":
+                    return ":purple_circle:";
+                default:
+                    return ":white_circle:";
+            }
         }
 
         private DateTime? ConvertToPolandTimeFromUtc(DateTime? time)
