@@ -37,7 +37,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             cardDescription.Append(cardObject.Center_skill_details ?? "brak danych").AppendLine();
             cardDescription.Append(":heart: **HP** ").AppendLine();
             cardDescription.Append(cardObject.Hp?.ToString() ?? "brak danych").AppendLine();
-            AddUrlToStringBuilder(cardDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", cardObject.Website_url);
+            cardDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(cardObject.Website_url).Append(")").AppendLine();
 
             cardDescription.Append(":notepad_spiral: **Statystyki** ").AppendLine();
             cardDescription.Append(":red_circle: Smile: ").Append(cardObject.Minimum_statistics_smile ?? "brak danych")
@@ -49,6 +49,33 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             cardDescription.Append(":blue_circle: Cool: ").Append(cardObject.Minimum_statistics_cool ?? "brak danych")
                            .Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_cool ?? "brak danych")
                            .Append(" - ").Append(cardObject.Idolized_maximum_statistics_cool ?? "brak danych").AppendLine();
+
+            cardDescription.Append(":japan: **Tylko na serwerze JP** ").AppendLine();
+            cardDescription.Append(cardObject.Japan_only.Value ? "Tak" : "Nie" ?? "brak danych").AppendLine();
+
+            cardDescription.Append(":stadium: **Event** ").AppendLine();
+            if (cardObject.Event == null)
+            {
+                cardDescription.Append("Karta nie pochodzi z eventu.").AppendLine();
+            }
+            else
+            {
+                if(cardObject.Other_event == null)
+                {
+                    cardDescription.Append(":name_badge: **Japońska nazwa** ").AppendLine();
+                    cardDescription.Append(cardObject.Event.Japanese_name).AppendLine();
+                    cardDescription.Append(":name_badge: **Angielska nazwa** ").AppendLine();
+                    cardDescription.Append(cardObject.Event.English_name ?? "brak danych").AppendLine();
+                }
+                else
+                {
+                    cardDescription.Append("Karta na EN była w innym evencie niż na JP.").AppendLine();
+                    cardDescription.Append(":name_badge: **Event JP** ").AppendLine();
+                    cardDescription.Append(cardObject.Event.Japanese_name).AppendLine();
+                    cardDescription.Append(":name_badge: **Event EN** ").AppendLine();
+                    cardDescription.Append(cardObject.Other_event.English_name ?? "brak danych").AppendLine();
+                }
+            }
 
             return cardDescription.ToString();
         }
@@ -86,7 +113,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             idolDescription.Append(idolObject.Attribute ?? "brak danych").AppendLine();
             idolDescription.Append(":microphone2: **Saiyuu** ").AppendLine();
             idolDescription.Append(idolObject.Cv?.Name ?? "brak danych").AppendLine();
-            AddUrlToStringBuilder(idolDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", idolObject.Website_url);
+            idolDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(idolObject.Website_url).Append(")").AppendLine();
 
             return idolDescription.ToString();
         }
@@ -104,7 +131,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             eventDescription.Append(":clock9: **Czas trwania (UTC)** ").AppendLine();
             eventDescription.Append(eventObject.English_beginning?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append("-")
                             .Append(eventObject.English_end?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty zakończenia").AppendLine();
-            AddUrlToStringBuilder(eventDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", eventObject.Website_url);
+            eventDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(eventObject.Website_url).Append(")").AppendLine();
             eventDescription.Append(":notepad_spiral: **Dodatkowe informacje** ").AppendLine();
             eventDescription.Append(eventObject.Note ?? "brak").AppendLine();
 
@@ -133,7 +160,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
         {
             StringBuilder eventDescription = new StringBuilder();
             eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
-            eventDescription.Append(eventObject.Japanese_name ?? "brak danych").Append(" (").Append(eventObject.Romaji_name ?? "brak romaji").Append(")").AppendLine();
+            eventDescription.Append(eventObject.Japanese_name).Append(" (").Append(eventObject.Romaji_name ?? "brak romaji").Append(")").AppendLine();
             eventDescription.Append(":clock2: **Czas trwania** ").AppendLine();
             eventDescription.Append(eventObject.Beginning?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append("-").Append(eventObject.End?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty zakończenia").AppendLine();
             eventDescription.Append(":timer: **Pozostały czas** ").AppendLine();
@@ -141,7 +168,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             eventDescription.Append(":clock9: **Czas trwania (JST)** ").AppendLine();
             eventDescription.Append(ConvertToJapanTimeFromPoland(eventObject.Beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append("-")
                             .Append(ConvertToJapanTimeFromPoland(eventObject.End)?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty zakończenia").AppendLine();
-            AddUrlToStringBuilder(eventDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", eventObject.Website_url);
+            eventDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(eventObject.Website_url).Append(")").AppendLine();
             eventDescription.Append(":notepad_spiral: **Dodatkowe informacje** ").AppendLine();
             eventDescription.Append(eventObject.Note ?? "brak").AppendLine();
 
@@ -245,14 +272,6 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                     return ":purple_circle:";
                 default:
                     return ":white_circle:";
-            }
-        }
-
-        public void AddUrlToStringBuilder(StringBuilder builder, string description, string linkName, string url)
-        {
-            if (url != null && url.ToString() != "")
-            {
-                builder.Append(description).AppendLine().Append("[").Append(linkName).Append("](").Append(url).Append(")").AppendLine();
             }
         }
 
