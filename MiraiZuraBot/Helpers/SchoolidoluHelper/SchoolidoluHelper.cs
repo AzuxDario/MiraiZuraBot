@@ -16,6 +16,43 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return new DiscordEmbedBuilder.EmbedFooter { Text = "Powered by schoolido.lu", IconUrl = "https://i.schoolido.lu/android/icon.png" };
         }
 
+        public string MakeCardDescription(CardObject cardObject, bool isIdolised)
+        {
+            StringBuilder cardDescription = new StringBuilder();
+            cardDescription.Append(":name_badge: **Postać** ").AppendLine();
+            cardDescription.Append(cardObject.Idol.Name).AppendLine();
+            cardDescription.Append(":pencil: **ID** ").AppendLine();
+            cardDescription.Append(cardObject.Id).AppendLine();
+            cardDescription.Append(":love_letter: **Rzadkość** ").AppendLine();
+            cardDescription.Append(cardObject.Rarity).AppendLine();
+            cardDescription.Append(GetEmojiForAttribute(cardObject.Attribute)).Append(" **Atrybut** ").AppendLine();
+            cardDescription.Append(cardObject.Attribute).AppendLine();
+            cardDescription.Append(":dress: **Set** ").AppendLine();
+            cardDescription.Append(cardObject.Translated_collection ?? "brak danych").AppendLine();
+            cardDescription.Append(":calendar: **Data wypuszczenia (yyyy-MM-dd)** ").AppendLine();
+            cardDescription.Append(cardObject.Release_date ?? "brak danych").AppendLine();
+            cardDescription.Append(":dizzy: **Skill** ").Append("(").Append(cardObject.Skill ?? "brak danych").Append(")").AppendLine();
+            cardDescription.Append(cardObject.Skill_details ?? "brak danych").AppendLine();
+            cardDescription.Append(":sparkles: **Center skill** ").Append("(").Append(cardObject.Center_skill ?? "brak danych").Append(")").AppendLine();
+            cardDescription.Append(cardObject.Center_skill_details ?? "brak danych").AppendLine();
+            cardDescription.Append(":heart: **HP** ").AppendLine();
+            cardDescription.Append(cardObject.Hp?.ToString() ?? "brak danych").AppendLine();
+            AddUrlToStringBuilder(cardDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", cardObject.Website_url);
+
+            cardDescription.Append(":notepad_spiral: **Statystyki** ").AppendLine();
+            cardDescription.Append(":red_circle: Smile: ").Append(cardObject.Minimum_statistics_smile ?? "brak danych")
+                           .Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_smile ?? "brak danych")
+                           .Append(" - ").Append(cardObject.Idolized_maximum_statistics_smile ?? "brak danych").AppendLine();
+            cardDescription.Append(":green_circle: Pure: ").Append(cardObject.Minimum_statistics_pure ?? "brak danych")
+                           .Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_pure ?? "brak danych")
+                           .Append(" - ").Append(cardObject.Idolized_maximum_statistics_pure ?? "brak danych").AppendLine();
+            cardDescription.Append(":blue_circle: Cool: ").Append(cardObject.Minimum_statistics_cool ?? "brak danych")
+                           .Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_cool ?? "brak danych")
+                           .Append(" - ").Append(cardObject.Idolized_maximum_statistics_cool ?? "brak danych").AppendLine();
+
+            return cardDescription.ToString();
+        }
+
         public string MakeIdolDescription(IdolObject idolObject)
         {
             StringBuilder idolDescription = new StringBuilder();
