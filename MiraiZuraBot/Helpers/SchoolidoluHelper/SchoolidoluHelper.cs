@@ -111,7 +111,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             idolDescription.Append(idolObject.Hobbies ?? "brak danych").AppendLine();
             idolDescription.Append(GetEmojiForAttribute(idolObject.Attribute)).Append(" **Atrybut** ").AppendLine();
             idolDescription.Append(idolObject.Attribute ?? "brak danych").AppendLine();
-            idolDescription.Append(":microphone2: **Saiyuu** ").AppendLine();
+            idolDescription.Append(":microphone2: **Seiyuu** ").AppendLine();
             idolDescription.Append(idolObject.Cv?.Name ?? "brak danych").AppendLine();
             idolDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(idolObject.Website_url).Append(")").AppendLine();
 
