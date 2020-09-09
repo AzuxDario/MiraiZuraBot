@@ -76,21 +76,36 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
         public string MakeWorldEventDescription(EventObject eventObject, List<CardObject> eventCards = null)
         {
             StringBuilder eventDescription = new StringBuilder();
-            AddTitledLineToStringBuilder(eventDescription, ":name_badge: **Nazwa** ", eventObject.English_name);
-            AddDateTimeToStringBuilder(eventDescription, ":clock2: **Czas trwania** ", ConvertToPolandTimeFromUtc(eventObject.English_beginning), ConvertToPolandTimeFromUtc(eventObject.English_end));
-            AddTitledLineToStringBuilder(eventDescription, ":timer: **Pozostały czas** ", GetTimeToEventEnd(ConvertToPolandTimeFromUtc(eventObject.English_end)));
-            AddDateTimeToStringBuilder(eventDescription, ":clock12: **Czas trwania (UTC)** ", eventObject.English_beginning, eventObject.English_end);
+            eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
+            eventDescription.Append(eventObject.English_name ?? "brak danych").AppendLine();
+            eventDescription.Append(":clock2: **Czas trwania** ").AppendLine();
+            eventDescription.Append(ConvertToPolandTimeFromUtc(eventObject.English_beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append("-")
+                            .Append(ConvertToPolandTimeFromUtc(eventObject.English_end)?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty zakończenia").AppendLine();
+            eventDescription.Append(":timer: **Pozostały czas** ").AppendLine();
+            eventDescription.Append(GetTimeToEventEnd(ConvertToPolandTimeFromUtc(eventObject.English_end)) ?? "nie można obliczyć").AppendLine();
+            eventDescription.Append(":clock9: **Czas trwania (UTC)** ").AppendLine();
+            eventDescription.Append(eventObject.English_beginning?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append("-")
+                            .Append(eventObject.English_end?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty zakończenia").AppendLine();
             AddUrlToStringBuilder(eventDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", eventObject.Website_url);
-            AddTitledLineToStringBuilder(eventDescription, ":notepad_spiral: **Dodatkowe informacje** ", eventObject.Note);
+            eventDescription.Append(":notepad_spiral: **Dodatkowe informacje** ").AppendLine();
+            eventDescription.Append(eventObject.Note ?? "brak").AppendLine();
 
             if (eventCards != null)
             {
-                AddLineToStringBuilder(eventDescription, ":microphone: **Karty** ", eventCards.Count);
+                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append(eventCards.Count).Append(")").AppendLine();
                 foreach (CardObject eventCard in eventCards)
                 {
-                    AddLineToStringBuilder(eventDescription, eventCard.Idol.Name, eventCard.Id);
+                    eventDescription.Append(eventCard.Idol.Name).Append(" (").Append(eventCard.Id).Append(")").AppendLine();
+                }
+                if (eventCards.Count == 0)
+                {
+                    eventDescription.Append("Obecnie brak danych o kartach").AppendLine();
                 }
                 eventDescription.AppendLine().Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
+            }
+            else
+            {
+                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append("brak danych").Append(")").AppendLine();
             }
 
             return eventDescription.ToString();
@@ -99,21 +114,35 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
         public string MakeJapanEventDescription(EventObject eventObject, List<CardObject> eventCards = null)
         {
             StringBuilder eventDescription = new StringBuilder();
-            AddTitledLineToStringBuilder(eventDescription, ":name_badge: **Nazwa** ", eventObject.Japanese_name, eventObject.Romaji_name);
-            AddDateTimeToStringBuilder(eventDescription, ":clock2: **Czas trwania** ", eventObject.Beginning, eventObject.End);
-            AddTitledLineToStringBuilder(eventDescription, ":timer: **Pozostały czas** ", GetTimeToEventEnd(eventObject.End));
-            AddDateTimeToStringBuilder(eventDescription, ":clock9: **Czas trwania (JST)** ", ConvertToJapanTimeFromPoland(eventObject.Beginning), ConvertToJapanTimeFromPoland(eventObject.End));
+            eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
+            eventDescription.Append(eventObject.Japanese_name ?? "brak danych").Append(" (").Append(eventObject.Romaji_name ?? "brak romaji").Append(")").AppendLine();
+            eventDescription.Append(":clock2: **Czas trwania** ").AppendLine();
+            eventDescription.Append(eventObject.Beginning?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append("-").Append(eventObject.End?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty zakończenia").AppendLine();
+            eventDescription.Append(":timer: **Pozostały czas** ").AppendLine();
+            eventDescription.Append(GetTimeToEventEnd(eventObject.End) ?? "nie można obliczyć").AppendLine();
+            eventDescription.Append(":clock9: **Czas trwania (JST)** ").AppendLine();
+            eventDescription.Append(ConvertToJapanTimeFromPoland(eventObject.Beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append("-")
+                            .Append(ConvertToJapanTimeFromPoland(eventObject.End)?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty zakończenia").AppendLine();
             AddUrlToStringBuilder(eventDescription, ":globe_with_meridians: **URL** ", "schoolido.lu", eventObject.Website_url);
-            AddTitledLineToStringBuilder(eventDescription, ":notepad_spiral: **Dodatkowe informacje** ", eventObject.Note);
+            eventDescription.Append(":notepad_spiral: **Dodatkowe informacje** ").AppendLine();
+            eventDescription.Append(eventObject.Note ?? "brak").AppendLine();
 
             if (eventCards != null)
             {
-                AddLineToStringBuilder(eventDescription, ":microphone: **Karty** ", eventCards.Count);
+                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append(eventCards.Count).Append(")").AppendLine();
                 foreach (CardObject eventCard in eventCards)
                 {
-                    AddLineToStringBuilder(eventDescription, eventCard.Idol.Name, eventCard.Id);
+                    eventDescription.Append(eventCard.Idol.Name).Append(" (").Append(eventCard.Id).Append(")").AppendLine();
+                }
+                if(eventCards.Count == 0)
+                {
+                    eventDescription.Append("Obecnie brak danych o kartach").AppendLine();
                 }
                 eventDescription.AppendLine().Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
+            }
+            else
+            {
+                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append("brak danych").Append(")").AppendLine();
             }
 
             return eventDescription.ToString();
