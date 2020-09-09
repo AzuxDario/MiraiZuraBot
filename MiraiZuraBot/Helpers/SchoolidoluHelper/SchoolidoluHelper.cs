@@ -62,9 +62,9 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             {
                 if(cardObject.Other_event == null)
                 {
-                    cardDescription.Append(":name_badge: **Japońska nazwa** ").AppendLine();
+                    cardDescription.Append(":name_badge: **Event JP** ").AppendLine();
                     cardDescription.Append(cardObject.Event.Japanese_name).AppendLine();
-                    cardDescription.Append(":name_badge: **Angielska nazwa** ").AppendLine();
+                    cardDescription.Append(":name_badge: **Event EN** ").AppendLine();
                     cardDescription.Append(cardObject.Event.English_name ?? "brak danych").AppendLine();
                 }
                 else
