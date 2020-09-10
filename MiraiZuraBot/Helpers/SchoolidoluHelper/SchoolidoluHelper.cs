@@ -157,6 +157,13 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             eventDescription.Append(":notepad_spiral: **Dodatkowe informacje** ").AppendLine();
             eventDescription.Append(eventObject.Note ?? "brak").AppendLine();
 
+            if (finished == true)
+            {
+                eventDescription.Append(":medal: **Tiery** (punkty)").AppendLine();
+                eventDescription.Append(":first_place: **T1** ").Append(eventObject.English_t1_points?.ToString() ?? "brak danych").AppendLine();
+                eventDescription.Append(":second_place: **T2** ").Append(eventObject.English_t2_points?.ToString() ?? "brak danych").AppendLine();
+            }
+
             if (eventCards != null)
             {
                 eventDescription.Append(":microphone: **Karty** ").Append(" (").Append(eventCards.Count).Append(")").AppendLine();
@@ -196,6 +203,13 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             eventDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(eventObject.Website_url).Append(")").AppendLine();
             eventDescription.Append(":notepad_spiral: **Dodatkowe informacje** ").AppendLine();
             eventDescription.Append(eventObject.Note ?? "brak").AppendLine();
+
+            if (finished == true)
+            {
+                eventDescription.Append(":medal: **Tiery** ").AppendLine();
+                eventDescription.Append(":first_place: **T1** ").Append(eventObject.Japanese_t1_points?.ToString() ?? "brak danych").AppendLine();
+                eventDescription.Append(":second_place: **T2** ").Append(eventObject.Japanese_t2_points?.ToString() ?? "brak danych").AppendLine();
+            }
 
             if (eventCards != null)
             {
