@@ -90,6 +90,21 @@ namespace MiraiZuraBot.Services.SchoolidoluService
             return new SchoolidoluResponse<PaginatedResponse<EventObject>>(null, response.StatusCode);
         }
 
+        public SchoolidoluResponse<EventObject> GetEventByName(string name)
+        {
+            var client = new HttpClient();
+            EventObject eventObject;
+
+            var response = client.GetAsync(apiBase + "events/" + name + "/").Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                eventObject = JsonConvert.DeserializeObject<EventObject>(response.Content.ReadAsStringAsync().Result);
+                return new SchoolidoluResponse<EventObject>(eventObject, response.StatusCode);
+            }
+
+            return new SchoolidoluResponse<EventObject>(null, response.StatusCode);
+        }
+
         private string CombineGetParameters(Dictionary<string, string> options)
         {
             StringBuilder parameters = new StringBuilder();
