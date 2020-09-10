@@ -118,8 +118,12 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             idolDescription.Append(":microphone2: **Seiyuu** ").AppendLine();
             idolDescription.Append(idolObject.Cv?.Name ?? "brak danych").AppendLine();
             idolDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(idolObject.Website_url).Append(")");
-            
-            if(idolObject.Wikia_url != null && idolObject.Wikia_url != "")
+
+            if (idolObject.Wiki_url != null && idolObject.Wiki_url != "")
+            {
+                idolDescription.Append(" [").Append("wiki").Append("](").Append(idolObject.Wiki_url.Replace("%20", "_")).Append(")");
+            }
+            if (idolObject.Wikia_url != null && idolObject.Wikia_url != "")
             {
                 idolDescription.Append(" [").Append("wikia").Append("](").Append(idolObject.Wikia_url).Append(")");
             }
