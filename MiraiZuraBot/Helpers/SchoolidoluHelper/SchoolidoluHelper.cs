@@ -117,7 +117,18 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             
             idolDescription.Append(":microphone2: **Seiyuu** ").AppendLine();
             idolDescription.Append(idolObject.Cv?.Name ?? "brak danych").AppendLine();
-            idolDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(idolObject.Website_url).Append(")").AppendLine();
+            idolDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(idolObject.Website_url).Append(")");
+            
+            if(idolObject.Wikia_url != null && idolObject.Wikia_url != "")
+            {
+                idolDescription.Append(" [").Append("wikia").Append("](").Append(idolObject.Wikia_url).Append(")");
+            }
+            if (idolObject.Official_url != null && idolObject.Official_url != "")
+            {
+                idolDescription.Append(" [").Append("lovelive-anime.jp").Append("](").Append(idolObject.Official_url).Append(")");
+            }
+
+            idolDescription.AppendLine();
 
             return idolDescription.ToString();
         }
