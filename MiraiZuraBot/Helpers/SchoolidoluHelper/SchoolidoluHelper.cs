@@ -128,7 +128,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
             eventDescription.Append(eventObject.English_name ?? "brak danych").AppendLine();
             eventDescription.Append(":clock2: **Czas trwania** ").AppendLine();
-            eventDescription.Append(ConvertToPolandTimeFromUtc(eventObject.English_beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append("-")
+            eventDescription.Append(ConvertToPolandTimeFromUtc(eventObject.English_beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append(" - ")
                             .Append(ConvertToPolandTimeFromUtc(eventObject.English_end)?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty zakończenia").AppendLine();
             if (finished == false)
             {
@@ -136,7 +136,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                 eventDescription.Append(GetTimeToEventEnd(ConvertToPolandTimeFromUtc(eventObject.English_end)) ?? "nie można obliczyć").AppendLine();
             }
             eventDescription.Append(":clock9: **Czas trwania (UTC)** ").AppendLine();
-            eventDescription.Append(eventObject.English_beginning?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append("-")
+            eventDescription.Append(eventObject.English_beginning?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append(" - ")
                             .Append(eventObject.English_end?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty zakończenia").AppendLine();
             eventDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(eventObject.Website_url).Append(")").AppendLine();
             eventDescription.Append(":notepad_spiral: **Dodatkowe informacje** ").AppendLine();
@@ -169,14 +169,14 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
             eventDescription.Append(eventObject.Japanese_name).Append(" (").Append(eventObject.Romaji_name ?? "brak romaji").Append(")").AppendLine();
             eventDescription.Append(":clock2: **Czas trwania** ").AppendLine();
-            eventDescription.Append(eventObject.Beginning?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append("-").Append(eventObject.End?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty zakończenia").AppendLine();
+            eventDescription.Append(eventObject.Beginning?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append(" - ").Append(eventObject.End?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty zakończenia").AppendLine();
             if (finished == false)
             {
                 eventDescription.Append(":timer: **Pozostały czas** ").AppendLine();
                 eventDescription.Append(GetTimeToEventEnd(eventObject.End) ?? "nie można obliczyć").AppendLine();
             }
             eventDescription.Append(":clock9: **Czas trwania (JST)** ").AppendLine();
-            eventDescription.Append(ConvertToJapanTimeFromPoland(eventObject.Beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append("-")
+            eventDescription.Append(ConvertToJapanTimeFromPoland(eventObject.Beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append(" - ")
                             .Append(ConvertToJapanTimeFromPoland(eventObject.End)?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty zakończenia").AppendLine();
             eventDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(eventObject.Website_url).Append(")").AppendLine();
             eventDescription.Append(":notepad_spiral: **Dodatkowe informacje** ").AppendLine();
