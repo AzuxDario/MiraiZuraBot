@@ -399,7 +399,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             List<CardObject> eventCards = null;
             if (isWorld == true)
             {
-                if (eventObject.English_name != null)
+                if (eventObject.English_name != null && eventObject.English_name != "")
                 {
                     Dictionary<string, string> eventCardsOptions = new Dictionary<string, string>
                     {
