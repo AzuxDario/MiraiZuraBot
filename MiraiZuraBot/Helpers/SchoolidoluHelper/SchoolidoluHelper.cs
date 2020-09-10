@@ -132,7 +132,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return idolDescription.ToString();
         }
 
-        public string MakeCurrentWorldEventDescription(EventObject eventObject, List<CardObject> eventCards = null)
+        public string MakeCurrentWorldEventDescription(EventObject eventObject, bool finished, List<CardObject> eventCards = null)
         {
             StringBuilder eventDescription = new StringBuilder();
             eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
@@ -140,8 +140,11 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             eventDescription.Append(":clock2: **Czas trwania** ").AppendLine();
             eventDescription.Append(ConvertToPolandTimeFromUtc(eventObject.English_beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append("-")
                             .Append(ConvertToPolandTimeFromUtc(eventObject.English_end)?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty zakończenia").AppendLine();
-            eventDescription.Append(":timer: **Pozostały czas** ").AppendLine();
-            eventDescription.Append(GetTimeToEventEnd(ConvertToPolandTimeFromUtc(eventObject.English_end)) ?? "nie można obliczyć").AppendLine();
+            if (finished == false)
+            {
+                eventDescription.Append(":timer: **Pozostały czas** ").AppendLine();
+                eventDescription.Append(GetTimeToEventEnd(ConvertToPolandTimeFromUtc(eventObject.English_end)) ?? "nie można obliczyć").AppendLine();
+            }
             eventDescription.Append(":clock9: **Czas trwania (UTC)** ").AppendLine();
             eventDescription.Append(eventObject.English_beginning?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append("-")
                             .Append(eventObject.English_end?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty zakończenia").AppendLine();
@@ -170,15 +173,18 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return eventDescription.ToString();
         }
 
-        public string MakeCurrentJapanEventDescription(EventObject eventObject, List<CardObject> eventCards = null)
+        public string MakeCurrentJapanEventDescription(EventObject eventObject, bool finished, List<CardObject> eventCards = null)
         {
             StringBuilder eventDescription = new StringBuilder();
             eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
             eventDescription.Append(eventObject.Japanese_name).Append(" (").Append(eventObject.Romaji_name ?? "brak romaji").Append(")").AppendLine();
             eventDescription.Append(":clock2: **Czas trwania** ").AppendLine();
             eventDescription.Append(eventObject.Beginning?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append("-").Append(eventObject.End?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty zakończenia").AppendLine();
-            eventDescription.Append(":timer: **Pozostały czas** ").AppendLine();
-            eventDescription.Append(GetTimeToEventEnd(eventObject.End) ?? "nie można obliczyć").AppendLine();
+            if (finished == false)
+            {
+                eventDescription.Append(":timer: **Pozostały czas** ").AppendLine();
+                eventDescription.Append(GetTimeToEventEnd(eventObject.End) ?? "nie można obliczyć").AppendLine();
+            }
             eventDescription.Append(":clock9: **Czas trwania (JST)** ").AppendLine();
             eventDescription.Append(ConvertToJapanTimeFromPoland(eventObject.Beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append("-")
                             .Append(ConvertToJapanTimeFromPoland(eventObject.End)?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty zakończenia").AppendLine();

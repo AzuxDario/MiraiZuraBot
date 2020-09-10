@@ -50,11 +50,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                     if (eventObject.Data.Results[0].English_image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[0], eventCards), "https:" + eventObject.Data.Results[0].English_image, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[0], false, eventCards),
+                            "https:" + eventObject.Data.Results[0].English_image, null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[0], eventCards), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[0], false, eventCards),
+                            null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                     } 
                 }
                 else
@@ -90,11 +92,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                     if (eventObject.Data.Results[0].Image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[0], eventCards), "https:" + eventObject.Data.Results[0].Image, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[0], false, eventCards),
+                            "https:" + eventObject.Data.Results[0].Image, null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[0], eventCards), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[0], false, eventCards),
+                            null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                 }
                 else
@@ -128,11 +132,12 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 {
                     if (eventObject.Data.Results[0].English_image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].English_image, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[0], false),
+                            "https:" + eventObject.Data.Results[0].English_image, null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[0]), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[0], false), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                 }
                 else
@@ -166,16 +171,102 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 {
                     if (eventObject.Data.Results[0].Image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[0]), "https:" + eventObject.Data.Results[0].Image, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[0], false),"https:" + eventObject.Data.Results[0].Image, null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[0]), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                        await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[0], false), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                 }
                 else
                 {
                     await ctx.RespondAsync("Obecnie na serwerze JP nie ma zapowiedzianego żadnego eventu. Możesz spróbować sprawdzić obecny event.");
+                }
+            }
+            else
+            {
+                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu.");
+            }
+        }
+
+        [Command("poprzedniEventEN")]
+        [Description("Pokazuje ostatnio zakończony event na serwerze EN.")]
+        public async Task LastFinishedWorldEvent(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { "ordering", "-english_end" },
+                { "page_size", "3" }
+            };
+
+            var eventObject = _schoolidoluService.GetEvent(options);
+
+            if (eventObject.StatusCode == HttpStatusCode.OK)
+            {
+                int i = 0;
+                for (; i < 3; i++)
+                {
+                    if (eventObject.Data.Results[i].English_status == "finished")
+                    {
+                        break;
+                    }
+                }
+                List<CardObject> eventCards = GetCardsForEvent(eventObject.Data.Results[0], true);
+
+                if (eventObject.Data.Results[i].English_image != null)
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Poprzedni event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[i], true, eventCards),
+                        "https:" + eventObject.Data.Results[i].English_image, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+                else
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Poprzedni event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[i], true, eventCards),
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+            }
+            else
+            {
+                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu.");
+            }
+        }
+
+        [Command("poprzedniEventJP")]
+        [Description("Pokazuje ostatnio zakończony event na serwerze JP.")]
+        public async Task LastFinishedJapanEvent(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { "ordering", "-end" },
+                { "page_size", "3" }
+            };
+
+            var eventObject = _schoolidoluService.GetEvent(options);
+
+            if (eventObject.StatusCode == HttpStatusCode.OK)
+            {
+                int i = 0;
+                for (; i < 3; i++)
+                {
+                    if (eventObject.Data.Results[i].Japan_status == "finished")
+                    {
+                        break;
+                    }
+                }
+                List<CardObject> eventCards = GetCardsForEvent(eventObject.Data.Results[0], false);
+
+                if (eventObject.Data.Results[i].Image != null)
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Poprzedni event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[i], true, eventCards),
+                        "https:" + eventObject.Data.Results[i].Image, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+                else
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Poprzedni event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[i], true, eventCards),
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
             }
             else

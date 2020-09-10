@@ -11,7 +11,14 @@ namespace MiraiZuraBot.Helpers
     {
         public static async Task PostEmbed(CommandContext ctx, string title = null, string description = null, string imageLink = null, string thumbnailLink = null, DiscordEmbedBuilder.EmbedFooter footer = null)
         {
-            imageLink = imageLink.Replace(" ", "%20");
+            if (imageLink != null)
+            {
+                imageLink = imageLink.Replace(" ", "%20");
+            }
+            if(thumbnailLink != null)
+            {
+                thumbnailLink = thumbnailLink.Replace(" ", "%20");
+            }
             var embed = new DiscordEmbedBuilder
             {
                 Color = new DiscordColor("#00a8ff"),
