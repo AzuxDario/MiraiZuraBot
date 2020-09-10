@@ -280,8 +280,16 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("eventEN")]
-        [Description("Pokazuje event na serwerze EN.")]
-        public async Task GetWorldEvent(CommandContext ctx, [Description("Nazwa eventu po japońsku."), RemainingText] string name)
+        [Description("Pokazuje event na serwerze EN.\n------------------------------\nDlaczego nazwa eventu po japońsku?\n" +
+            "Komenda pobiera jeden event korzystając z endpointa który wyszukuje event po jego dokładnej japońskiej nazwie. " +
+            "API Schoolido.lu nie pozwla wyszukiwać po dokłądnej nazwie angielskiej, gdyż część eventów na EN nigdy nie miała miejsca. " +
+            "API Schoolido.lu pozwla przeszukiwać jednocześnie po nazwach japońskiej i angielskiej używając słów kluczowych. " +
+            "Ale tym sposobem nie zwróciłby dokłądnego eventu, a pierwszy dopasowany. " +
+            "Co więcej w przypadku niektórych eventów zwracane byłyby niepoprawne wersje. Na przykład strona zamiast `Round 8 MEDLEY FESTIVAL` który był na EN" +
+            "zwróciłaby najpierw japoński `Medley Festival Round 8`, który na EN nigdy się nie wydarzył, a potem dopiero angielski `Round 8 MEDLEY FESTIVAL`. " +
+            "Zrzuca to odpowiedzialność ponownego przeszukanai wyników na bota, więc zostaje obecnie nazwa japońska." +
+            "\n------------------------------\nSkąd wziąć japońską nazwę?\nKomendą `wyszukajEvent 1 <nazwa japońska bądź angielska>`")]
+        public async Task GetWorldEvent(CommandContext ctx, [Description("Nazwa eventu po **japońsku**."), RemainingText] string name)
         {
             await ctx.TriggerTypingAsync();
 
@@ -322,7 +330,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("eventJP")]
-        [Description("Pokazuje event na serwerze JP.")]
+        [Description("Pokazuje event na serwerze JP.\n------------------------------\nSkąd wziąć japońską nazwę ?\nKomendą `wyszukajEvent 1 < nazwa japońska bądź angielska >`")]
         public async Task GetJapanEvent(CommandContext ctx, [Description("Nazwa eventu po japońsku."), RemainingText] string name)
         {
             await ctx.TriggerTypingAsync();
@@ -359,7 +367,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("wyszukajEvent")]
-        [Description("Wyszukuje nazwy eventów.")]
+        [Description("Wyszukuje nazwy eventów.\nnp:\n`wyszukajEvent 1 Medley`\nPolecam jako początkową stronę podać `1`.")]
         public async Task SearchEvent(CommandContext ctx, [Description("Strona wyników.")] int page, [Description("Słowa kluczowe."), RemainingText] string keywords)
         {
             await ctx.TriggerTypingAsync();
