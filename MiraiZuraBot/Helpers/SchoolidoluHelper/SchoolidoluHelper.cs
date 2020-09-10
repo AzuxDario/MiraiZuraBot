@@ -19,24 +19,20 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
         public string MakeCardDescription(CardObject cardObject, bool isIdolised)
         {
             StringBuilder cardDescription = new StringBuilder();
-            cardDescription.Append(":name_badge: **Postać** ").AppendLine();
-            cardDescription.Append(cardObject.Idol.Name).AppendLine();
-            cardDescription.Append(":pencil: **ID** ").AppendLine();
-            cardDescription.Append(cardObject.Id).AppendLine();
-            cardDescription.Append(":love_letter: **Rzadkość** ").AppendLine();
-            cardDescription.Append(cardObject.Rarity).AppendLine();
-            cardDescription.Append(GetEmojiForAttribute(cardObject.Attribute)).Append(" **Atrybut** ").AppendLine();
-            cardDescription.Append(cardObject.Attribute).AppendLine();
-            cardDescription.Append(":dress: **Set** ").AppendLine();
-            cardDescription.Append(cardObject.Translated_collection ?? "brak danych").AppendLine();
-            cardDescription.Append(":calendar: **Data wypuszczenia (yyyy-MM-dd)** ").AppendLine();
-            cardDescription.Append(cardObject.Release_date ?? "brak danych").AppendLine();
+            cardDescription.Append(":name_badge: **Postać** ").Append("(").Append(cardObject.Idol.Name).Append(")").AppendLine();
+            cardDescription.Append(":pencil: **ID** ").Append("(").Append(cardObject.Id).Append(")").AppendLine();
+            cardDescription.Append(":love_letter: **Rzadkość** ").Append("(").Append(cardObject.Rarity).Append(")").AppendLine();
+            cardDescription.Append(GetEmojiForAttribute(cardObject.Attribute)).Append(" **Atrybut** ").Append("(").Append(cardObject.Attribute).Append(")").AppendLine();
+            cardDescription.Append(":dress: **Set** ").Append("(").Append(cardObject.Translated_collection ?? "brak danych").Append(")").AppendLine();
+            cardDescription.Append(":calendar: **Data wypuszczenia (yyyy-MM-dd)** ").Append("(").Append(cardObject.Release_date ?? "brak danych").Append(")").AppendLine();
+            cardDescription.Append(GetEmojiAvailability(cardObject.Japan_only)).Append("** Dostępność **")
+                           .Append("(").Append(cardObject.Japan_only.Value ? "Dostępne tylko na JP" : "Dostępne na JP i EN" ?? "brak danych").Append(")").AppendLine();
+            cardDescription.Append(":heart: **HP** ").Append("(").Append(cardObject.Hp?.ToString() ?? "brak danych").Append(")").AppendLine();
             cardDescription.Append(":dizzy: **Skill** ").Append("(").Append(cardObject.Skill ?? "brak danych").Append(")").AppendLine();
             cardDescription.Append(cardObject.Skill_details ?? "brak danych").AppendLine();
             cardDescription.Append(":sparkles: **Center skill** ").Append("(").Append(cardObject.Center_skill ?? "brak danych").Append(")").AppendLine();
             cardDescription.Append(cardObject.Center_skill_details ?? "brak danych").AppendLine();
-            cardDescription.Append(":heart: **HP** ").AppendLine();
-            cardDescription.Append(cardObject.Hp?.ToString() ?? "brak danych").AppendLine();
+            
             cardDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(cardObject.Website_url).Append(")").AppendLine();
 
             cardDescription.Append(":notepad_spiral: **Statystyki** ").AppendLine();
@@ -50,8 +46,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                            .Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_cool ?? "brak danych")
                            .Append(" - ").Append(cardObject.Idolized_maximum_statistics_cool ?? "brak danych").AppendLine();
 
-            cardDescription.Append(":japan: **Tylko na serwerze JP** ").AppendLine();
-            cardDescription.Append(cardObject.Japan_only.Value ? "Tak" : "Nie" ?? "brak danych").AppendLine();
+            
 
             if(cardObject.Rarity == "UR")
             {
@@ -210,6 +205,19 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             }
 
             return eventDescription.ToString();
+        }
+
+        private string GetEmojiAvailability(bool? value)
+        {
+            switch (value)
+            {
+                case true:
+                    return ":japan:";
+                case false:
+                    return ":earth_africa:";
+                default:
+                    return ":flag_white:";
+            }
         }
 
         private string GetEmojiForYear(string year)
