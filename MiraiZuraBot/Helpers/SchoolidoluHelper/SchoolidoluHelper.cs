@@ -142,6 +142,8 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             StringBuilder eventDescription = new StringBuilder();
             eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
             eventDescription.Append(eventObject.English_name ?? "brak danych").AppendLine();
+            eventDescription.Append(":name_badge: **Japońska nazwa** ").AppendLine();
+            eventDescription.Append(eventObject.Japanese_name ?? "brak danych").AppendLine();
             eventDescription.Append(":clock2: **Czas trwania** ").AppendLine();
             eventDescription.Append(ConvertToPolandTimeFromUtc(eventObject.English_beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append(" - ")
                             .Append(ConvertToPolandTimeFromUtc(eventObject.English_end)?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty zakończenia").AppendLine();
