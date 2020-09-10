@@ -275,6 +275,76 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
         }
 
+        [Command("eventEN")]
+        [Description("Pokazuje event na serwerze EN.")]
+        public async Task GetWorldEvent(CommandContext ctx, [Description("Nazwa eventu po japońsku."), RemainingText] string name)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var eventObject = _schoolidoluService.GetEventByName(name);
+
+            if (eventObject.StatusCode == HttpStatusCode.OK)
+            {
+                List<CardObject> eventCards = GetCardsForEvent(eventObject.Data, true);
+
+                bool finished = true;
+                if(eventObject.Data.English_status == "announced" || eventObject.Data.English_status == "ongoing")
+                {
+                    finished = false;
+                }
+
+                if (eventObject.Data.English_image != null)
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data, finished, eventCards),
+                        "https:" + eventObject.Data.English_image, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+                else
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data, finished, eventCards),
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+            }
+            else
+            {
+                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu. Sprawdź czy podałeś poprawną nazwę. Pamiętaj aby podać japońską nazwę eventu.");
+            }
+        }
+
+        [Command("eventJP")]
+        [Description("Pokazuje event na serwerze JP.")]
+        public async Task GetJapanEvent(CommandContext ctx, [Description("Nazwa eventu po japońsku."), RemainingText] string name)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var eventObject = _schoolidoluService.GetEventByName(name);
+
+            if (eventObject.StatusCode == HttpStatusCode.OK)
+            {
+                List<CardObject> eventCards = GetCardsForEvent(eventObject.Data, false);
+
+                bool finished = true;
+                if (eventObject.Data.Japan_status == "announced" || eventObject.Data.Japan_status == "ongoing")
+                {
+                    finished = false;
+                }
+
+                if (eventObject.Data.Image != null)
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data, finished, eventCards),
+                        "https:" + eventObject.Data.Image, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+                else
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data, finished, eventCards),
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+            }
+            else
+            {
+                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu. Sprawdź czy podałeś poprawną nazwę. Pamiętaj aby podać japońską nazwę eventu.");
+            }
+        }
+
         private List<CardObject> GetCardsForEvent(EventObject eventObject, bool isWorld)
         {
             List<CardObject> eventCards = null;
