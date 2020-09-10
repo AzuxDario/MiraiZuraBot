@@ -250,7 +250,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                 case "Libra":
                     return ":libra:";
                 case "Scorpio":
-                    return ":scorpio:";
+                    return ":scorpius:";
                 case "Sagittarius":
                     return ":sagittarius:";
                 case "Capricorn":
