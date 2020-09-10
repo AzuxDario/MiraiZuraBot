@@ -324,13 +324,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             else
             {
                 await PostEmbedHelper.PostEmbed(ctx, "Event EN",
-                    "Wystąpił błąd podczas pobierania eventu. Sprawdź czy podałeś poprawną nazwę.Pamiętaj aby podać japońską nazwę eventu.",
+                    "Wystąpił błąd podczas pobierania eventu. Sprawdź czy podałeś poprawną nazwę. Pamiętaj aby podać japońską nazwę eventu.",
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
         [Command("eventJP")]
-        [Description("Pokazuje event na serwerze JP.\n------------------------------\nSkąd wziąć japońską nazwę ?\nKomendą `wyszukajEvent 1 < nazwa japońska bądź angielska >`")]
+        [Description("Pokazuje event na serwerze JP.\n------------------------------\nSkąd wziąć japońską nazwę ?\nKomendą `wyszukajEvent 1 <nazwa japońska bądź angielska>`")]
         public async Task GetJapanEvent(CommandContext ctx, [Description("Nazwa eventu po japońsku."), RemainingText] string name)
         {
             await ctx.TriggerTypingAsync();
@@ -361,7 +361,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             else
             {
                 await PostEmbedHelper.PostEmbed(ctx, "Event JP",
-                    "Wystąpił błąd podczas pobierania eventu. Sprawdź czy podałeś poprawną nazwę.Pamiętaj aby podać japońską nazwę eventu.",
+                    "Wystąpił błąd podczas pobierania eventu. Sprawdź czy podałeś poprawną nazwę. Pamiętaj aby podać japońską nazwę eventu.",
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
