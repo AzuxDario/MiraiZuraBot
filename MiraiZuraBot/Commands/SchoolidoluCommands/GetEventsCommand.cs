@@ -61,12 +61,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 }
                 else
                 {
-                    await ctx.RespondAsync("Obecnie na serwerze EN nie trwa żaden event. Możesz spróbować sprawdzić nadchodzący event");
+                    await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", "Obecnie na serwerze EN nie trwa żaden event. Możesz spróbować sprawdzić nadchodzący event",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
             }
             else
             {
-                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu.");
+                await PostEmbedHelper.PostEmbed(ctx, "Obecny event EN", "Wystąpił błąd podczas pobierania eventu.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -103,12 +104,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 }
                 else
                 {
-                    await ctx.RespondAsync("Obecnie na serwerze JP nie trwa żaden event. Możesz spróbować sprawdzić nadchodzący event");
+                    await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", "Obecnie na serwerze JP nie trwa żaden event. Możesz spróbować sprawdzić nadchodzący event",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
             }
             else
             {
-                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu.");
+                await PostEmbedHelper.PostEmbed(ctx, "Obecny event JP", "Wystąpił błąd podczas pobierania eventu.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -142,12 +144,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 }
                 else
                 {
-                    await ctx.RespondAsync("Obecnie na serwerze EN nie ma zapowiedzianego żadnego eventu. Możesz spróbować sprawdzić obecny event.");
+                    await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", "Obecnie na serwerze EN nie ma zapowiedzianego żadnego eventu. Możesz spróbować sprawdzić obecny event.",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
             }
             else
             {
-                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu.");
+                await PostEmbedHelper.PostEmbed(ctx, "Następny event EN", "Wystąpił błąd podczas pobierania eventu.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -180,12 +183,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 }
                 else
                 {
-                    await ctx.RespondAsync("Obecnie na serwerze JP nie ma zapowiedzianego żadnego eventu. Możesz spróbować sprawdzić obecny event.");
+                    await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", "Obecnie na serwerze JP nie ma zapowiedzianego żadnego eventu. Możesz spróbować sprawdzić obecny event.",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
             }
             else
             {
-                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu.");
+                await PostEmbedHelper.PostEmbed(ctx, "Następny event JP", "Wystąpił błąd podczas pobierania eventu.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -228,7 +232,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
             else
             {
-                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu.");
+                await PostEmbedHelper.PostEmbed(ctx, "Poprzedni event EN", "Wystąpił błąd podczas pobierania eventu.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -271,7 +275,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
             else
             {
-                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu.");
+                await PostEmbedHelper.PostEmbed(ctx, "Poprzedni event JP", "Wystąpił błąd podczas pobierania eventu.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -285,7 +289,12 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if (eventObject.StatusCode == HttpStatusCode.OK)
             {
-                List<CardObject> eventCards = GetCardsForEvent(eventObject.Data, true);
+                List<CardObject> eventCards = null;
+                // The event at EN might not have happened
+                if (eventObject.Data.English_name != null && eventObject.Data.English_name != "")
+                {
+                    eventCards = GetCardsForEvent(eventObject.Data, true);
+                }                
 
                 bool finished = true;
                 if(eventObject.Data.English_status == "announced" || eventObject.Data.English_status == "ongoing")
@@ -306,7 +315,9 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
             else
             {
-                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu. Sprawdź czy podałeś poprawną nazwę. Pamiętaj aby podać japońską nazwę eventu.");
+                await PostEmbedHelper.PostEmbed(ctx, "Event EN",
+                    "Wystąpił błąd podczas pobierania eventu. Sprawdź czy podałeś poprawną nazwę.Pamiętaj aby podać japońską nazwę eventu.",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -341,7 +352,45 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
             else
             {
-                await ctx.RespondAsync("Wystąpił błąd podczas pobierania eventu. Sprawdź czy podałeś poprawną nazwę. Pamiętaj aby podać japońską nazwę eventu.");
+                await PostEmbedHelper.PostEmbed(ctx, "Event JP",
+                    "Wystąpił błąd podczas pobierania eventu. Sprawdź czy podałeś poprawną nazwę.Pamiętaj aby podać japońską nazwę eventu.",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+            }
+        }
+
+        [Command("wyszukajEvent")]
+        [Description("Wyszukuje nazwy eventów.")]
+        public async Task SearchEvent(CommandContext ctx, [Description("Strona wyników.")] int page, [Description("Słowa kluczowe."), RemainingText] string keywords)
+        {
+            await ctx.TriggerTypingAsync();
+
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { "search", keywords },
+                { "page", page.ToString() }
+            };
+
+            var eventObject = _schoolidoluService.GetEvent(options);
+
+            if (eventObject.StatusCode == HttpStatusCode.OK)
+            {
+
+                if (eventObject.Data.Count != 0)
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie eventów", _schoolidoluHelper.MakeSearchEventDescription(eventObject.Data, 10, page),
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+                else
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie eventów", "Brak wyników, spróbuj wyszukać inną frazę.",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+            }
+            else
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie eventów",
+                    "Wystąpił błąd podczas pobierania eventów. Mogło nastąpić odwołanie do nieistniejącej strony. Spróbuj wybrać stronę pierwszą.\n`wyszukajEvent 1 " + keywords + "`",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 

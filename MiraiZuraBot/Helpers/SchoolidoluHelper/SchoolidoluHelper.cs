@@ -1,4 +1,5 @@
 ﻿using DSharpPlus.Entities;
+using MiraiZuraBot.Containers.Schoolidolu;
 using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Containers.Schoolidolu.Event;
 using MiraiZuraBot.Containers.Schoolidolu.Idols;
@@ -230,6 +231,22 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             {
                 eventDescription.Append(":microphone: **Karty** ").Append(" (").Append("brak danych").Append(")").AppendLine();
             }
+
+            return eventDescription.ToString();
+        }
+
+        public string MakeSearchEventDescription(PaginatedResponse<EventObject> eventObjects, int elemPerPage, int page)
+        {
+            StringBuilder eventDescription = new StringBuilder();
+            eventDescription.Append(":notepad_spiral: **Wyników ").Append(eventObjects.Count).Append(". Oto ").Append(eventObjects.Results.Count).Append("**").AppendLine();
+            eventDescription.Append(":japan: ").Append("Nazwa z serwera JP").Append(" - :earth_africa: ").Append("Nazwa z serwera EN").AppendLine();
+            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            foreach (var eventObject in eventObjects.Results)
+            {
+                eventDescription.Append(":japan: ").Append(eventObject.Japanese_name).Append(" - :earth_africa: ").Append(eventObject.English_name ?? "brak angielskiej nazwy").AppendLine();
+            }
+            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            eventDescription.Append("Strona ").Append(page).Append(" z ").Append(eventObjects.Count / elemPerPage + 1);
 
             return eventDescription.ToString();
         }
