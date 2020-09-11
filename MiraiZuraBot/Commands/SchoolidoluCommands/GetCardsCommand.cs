@@ -44,14 +44,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     // Some cards might not have idolised version
                     if (cardData.Data.Card_idolized_image != null)
                     {
-                        string description = _schoolidoluHelper.MakeCardDescription(cardData.Data, true);
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_idolized_image,
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, true),
+                            cardData.Data.Card_idolized_image != null ? "http:" + cardData.Data.Card_idolized_image : null,
                             cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        string description = _schoolidoluHelper.MakeCardDescription(cardData.Data, false);
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_image,
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, false),
+                            cardData.Data.Card_image != null ? "http:" + cardData.Data.Card_image : null,
                             cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                 }
@@ -60,24 +60,24 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     // Some cards are only idolised
                     if (cardData.Data.Card_image != null)
                     {
-                        string description = _schoolidoluHelper.MakeCardDescription(cardData.Data, false);
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_image,
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, false),
+                            cardData.Data.Card_image != null ? "http:" + cardData.Data.Card_image : null,
                             cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                     else
                     {
-                        string description = _schoolidoluHelper.MakeCardDescription(cardData.Data, true);
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, description, "http:" + cardData.Data.Card_idolized_image,
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, true),
+                            cardData.Data.Card_idolized_image != null ? "http:" + cardData.Data.Card_idolized_image : null,
                             cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter());
                     }
                 }
             }
             else
             {
-                await ctx.RespondAsync("Podana karta nie istnieje.");
+                await PostEmbedHelper.PostEmbed(ctx, "Karta", "Podana karta nie istnieje.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
-         
+
         [Command("losowaKarta")]
         [Description("Pokazuje losową karte. Można sprecyzować imie idolki.\nnp:\n*losowaKarta\n*losowaKarta Watanabe You")]
         public async Task RandomCard(CommandContext ctx, [Description("Imie idolki."), RemainingText] string name)
@@ -97,59 +97,111 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             var cardsResponse = _schoolidoluService.GetCard(options);
 
-            if (cardsResponse.StatusCode == HttpStatusCode.OK)
+            if (cardsResponse.StatusCode == HttpStatusCode.OK && cardsResponse.Data.Results.Count > 0)
             {
-                
+
                 // Some cards are only idolised
                 if (cardsResponse.Data.Results[0].Card_image != null)
                 {
-                    string description = _schoolidoluHelper.MakeCardDescription(cardsResponse.Data.Results[0], false);
-                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name, description,
-                            "http:" + cardsResponse.Data.Results[0].Card_image,
+                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name,
+                        _schoolidoluHelper.MakeCardDescription(cardsResponse.Data.Results[0], false),
+                            cardsResponse.Data.Results[0].Card_image != null ? "http:" + cardsResponse.Data.Results[0].Card_image : null,
                             cardsResponse.Data.Results[0].Round_card_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_image) : null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else
                 {
-                    string description = _schoolidoluHelper.MakeCardDescription(cardsResponse.Data.Results[0], true);
-                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name, description,
-                            "http:" + cardsResponse.Data.Results[0].Card_idolized_image,
+                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name,
+                        _schoolidoluHelper.MakeCardDescription(cardsResponse.Data.Results[0], true),
+                            cardsResponse.Data.Results[0].Card_idolized_image != null ? "http:" + cardsResponse.Data.Results[0].Card_idolized_image : null,
                             cardsResponse.Data.Results[0].Round_card_idolized_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_idolized_image) : null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
             }
             else
             {
-                await ctx.RespondAsync("Podana idolka nie istnieje.");
+                await PostEmbedHelper.PostEmbed(ctx, "Karta", "Podana idolka nie istnieje.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
-        public string MakeCardDescription(CardObject cardObject, bool isIdolised)
+        [Command("wyszukajKarte")]
+        [Description("Wyszukuje karty na podstawie fraz oraz rzadkości i atrybutu.\nnp:\n`wyszukajKarte 1 Watanabe You UR cool`\nPolecam jako początkową stronę podać `1`." +
+            "\nDozwolone atrybuty: `Smile`, `Pure`, `Cool`, `All`nDozwolone rzadkości: `N`, `R`, `SR`, `SSR`, `UR`" +
+            "\n Można podać jedną wartośc atrybutu oraz wiele rzadkości w dowolnym miejscu zapytania.")]
+        public async Task SearchCard(CommandContext ctx, [Description("Strona wyników.")] int page, [Description("Słowa kluczowe."), RemainingText] string keywords)
         {
-            StringBuilder cardDescription = new StringBuilder();
-            cardDescription.Append("**ID:** ").Append(cardObject.Id).AppendLine();
-            cardDescription.Append("**Postać:** ").Append(cardObject.Idol.Name).AppendLine();
-            cardDescription.Append("**Rzadkość:** ").Append(cardObject.Rarity).AppendLine();
-            cardDescription.Append("**Atrybut:** ").Append(cardObject.Attribute).AppendLine();
-            cardDescription.Append("**Set:** ").Append(cardObject.Translated_collection).AppendLine();
-            cardDescription.Append("**Data wypuszczenia (yyyy-MM-dd) :** ").Append(cardObject.Release_date).AppendLine();
-            cardDescription.Append("**URL:** ").Append(cardObject.Website_url).AppendLine();
-            cardDescription.Append("**Typ skilla:** ").Append(cardObject.Skill).AppendLine();
-            cardDescription.Append("**Szczegóły skilla:** ").Append(cardObject.Skill_details).AppendLine();
-            cardDescription.Append("**Center skill:** ").Append(cardObject.Center_skill).AppendLine();
-            cardDescription.Append("**Szczegóły centera:** ").Append(cardObject.Center_skill_details).AppendLine();
-            cardDescription.Append("**HP:** ").Append(cardObject.Hp).AppendLine();
-            if (isIdolised)
+            await ctx.TriggerTypingAsync();
+
+            Dictionary<string, string> options = new Dictionary<string, string>
             {
-                cardDescription.Append("**Smile:** ").Append(cardObject.Minimum_statistics_smile).Append(" - ").Append(cardObject.Idolized_maximum_statistics_smile).AppendLine();
-                cardDescription.Append("**Pure:** ").Append(cardObject.Minimum_statistics_pure).Append(" - ").Append(cardObject.Idolized_maximum_statistics_pure).AppendLine();
-                cardDescription.Append("**Cool:** ").Append(cardObject.Minimum_statistics_cool).Append(" - ").Append(cardObject.Idolized_maximum_statistics_cool).AppendLine();
+                { "rarity", FindAndRemoveRarity(keywords, out keywords)},
+                { "attribute", FindAndRemoveAttribute(keywords, out keywords)},
+                { "search", keywords.Trim() },
+                { "page", page.ToString() }
+            };
+
+            var cardObject = _schoolidoluService.GetCard(options);
+
+            if (cardObject.StatusCode == HttpStatusCode.OK)
+            {
+
+                if (cardObject.Data.Count != 0)
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie kart", _schoolidoluHelper.MakeSearchCardDescription(cardObject.Data, 10, page),
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+                else
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie kart", "Brak wyników, spróbuj wyszukać inną frazę. Pamiętaj, że można podać tylko jeden atrybut.",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
             }
             else
             {
-                cardDescription.Append("**Smile:** ").Append(cardObject.Minimum_statistics_smile).Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_smile).AppendLine();
-                cardDescription.Append("**Pure:** ").Append(cardObject.Minimum_statistics_pure).Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_pure).AppendLine();
-                cardDescription.Append("**Cool:** ").Append(cardObject.Minimum_statistics_cool).Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_cool).AppendLine();
+                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie kart",
+                    "Wystąpił błąd podczas pobierania kart. Mogło nastąpić odwołanie do nieistniejącej strony. Spróbuj wybrać stronę pierwszą.\n`wyszukajKarte 1 " + keywords + "`",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
-            return cardDescription.ToString();
+        }
+
+        private string FindAndRemoveRarity(string query, out string newQuery)
+        {
+            List<string> rarityToFind = new List<string>(){ " N ", " R ", " SR ", " SSR ", " UR "};
+            List<string> rarityToAdd = new List<string>() { "N", "R", "SR", "SSR", "UR" };
+
+            List<string> foundRarities = new List<string>();
+
+            query += " ";
+
+            for(int i = 0; i < rarityToFind.Count; i++)
+            {
+                if (query.IndexOf(rarityToFind[i], StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    foundRarities.Add(rarityToAdd[i]);
+                    query = query.Replace(rarityToFind[i], " ", true, null);
+                }
+            }
+            newQuery = query;
+            return string.Join(",", foundRarities);
+        }
+
+        private string FindAndRemoveAttribute(string query, out string newQuery)
+        {
+            List<string> attributeToFind = new List<string>() { " Smile ", " Pure ", " Cool ", " All "};
+            List<string> attributeToAdd = new List<string>() { "Smile", "Pure", "Cool", "All" };
+
+            List<string> foundAttributes = new List<string>();
+
+            query += " ";
+
+            for (int i = 0; i < attributeToFind.Count; i++)
+            {
+                if (query.IndexOf(attributeToFind[i], StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    foundAttributes.Add(attributeToAdd[i]);
+                    query = query.Replace(attributeToFind[i], " ", true, null);
+                }
+            }
+            newQuery = query;
+            return string.Join(",", foundAttributes);
         }
     }
 }

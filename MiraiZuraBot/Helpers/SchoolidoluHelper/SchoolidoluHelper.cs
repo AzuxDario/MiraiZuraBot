@@ -235,6 +235,24 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return eventDescription.ToString();
         }
 
+        public string MakeSearchCardDescription(PaginatedResponse<CardObject> cardObjects, int elemPerPage, int page)
+        {
+            StringBuilder eventDescription = new StringBuilder();
+            eventDescription.Append(":notepad_spiral: **Wyników ").Append(cardObjects.Count).Append(". Oto ").Append(cardObjects.Results.Count).Append("**").AppendLine();
+            eventDescription.Append(":name_badge: ").Append("Imie").Append(" - :pencil: ").Append("ID").Append(" - :love_letter: ").Append("Rzadkość").
+                Append(" - ").Append(GetEmojiForAttribute(null)).Append(" ").Append("Atrybut").AppendLine();
+            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            foreach (var cardObject in cardObjects.Results)
+            {
+                eventDescription.Append(":name_badge: ").Append(cardObject.Idol.Name).Append(" - :pencil: ").Append(cardObject.Id).Append(" - :love_letter: ").Append(cardObject.Rarity).
+                 Append(" - ").Append(GetEmojiForAttribute(cardObject.Attribute)).Append(" ").Append(cardObject.Attribute).AppendLine();
+            }
+            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            eventDescription.Append("Strona ").Append(page).Append(" z ").Append(cardObjects.Count / elemPerPage + 1);
+
+            return eventDescription.ToString();
+        }
+
         public string MakeSearchEventDescription(PaginatedResponse<EventObject> eventObjects, int elemPerPage, int page)
         {
             StringBuilder eventDescription = new StringBuilder();
