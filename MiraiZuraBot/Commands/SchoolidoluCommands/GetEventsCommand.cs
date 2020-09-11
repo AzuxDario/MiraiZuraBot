@@ -282,10 +282,10 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         [Command("eventEN")]
         [Description("Pokazuje event na serwerze EN.\n------------------------------\nDlaczego nazwa eventu po japońsku?\n" +
             "Komenda pobiera jeden event korzystając z endpointa który wyszukuje event po jego dokładnej japońskiej nazwie. " +
-            "API Schoolido.lu nie pozwla wyszukiwać po dokłądnej nazwie angielskiej, gdyż część eventów na EN nigdy nie miała miejsca. " +
-            "API Schoolido.lu pozwla przeszukiwać jednocześnie po nazwach japońskiej i angielskiej używając słów kluczowych. " +
-            "Ale tym sposobem nie zwróciłby dokłądnego eventu, a pierwszy dopasowany. " +
-            "Co więcej w przypadku niektórych eventów zwracane byłyby niepoprawne wersje. Na przykład strona zamiast `Round 8 MEDLEY FESTIVAL` który był na EN" +
+            "API Schoolido.lu nie pozwla wyszukiwać po dokładnej nazwie angielskiej, gdyż część eventów na EN nigdy nie miała miejsca. " +
+            "API Schoolido.lu pozwla jednak przeszukiwać jednocześnie po nazwach japońskiej i angielskiej używając słów kluczowych. " +
+            "Ale tym sposobem nie zwróciłby dokładnego eventu, a pierwszy dopasowany. " +
+            "Co więcej w przypadku niektórych eventów zwracane byłyby niepoprawne wersje. Na przykład strona zamiast `Round 8 MEDLEY FESTIVAL` który był na EN " +
             "zwróciłaby najpierw japoński `Medley Festival Round 8`, który na EN nigdy się nie wydarzył, a potem dopiero angielski `Round 8 MEDLEY FESTIVAL`. " +
             "Zrzuca to odpowiedzialność ponownego przeszukanai wyników na bota, więc zostaje obecnie nazwa japońska." +
             "\n------------------------------\nSkąd wziąć japońską nazwę?\nKomendą `wyszukajEvent 1 <nazwa japońska bądź angielska>`")]
