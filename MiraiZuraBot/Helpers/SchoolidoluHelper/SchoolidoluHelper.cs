@@ -3,6 +3,7 @@ using MiraiZuraBot.Containers.Schoolidolu;
 using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Containers.Schoolidolu.Event;
 using MiraiZuraBot.Containers.Schoolidolu.Idols;
+using MiraiZuraBot.Containers.Schoolidolu.Songs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -24,28 +25,28 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             cardDescription.Append(":pencil: **ID** ").Append("(").Append(cardObject.Id).Append(")").AppendLine();
             cardDescription.Append(":love_letter: **Rzadkość** ").Append("(").Append(cardObject.Rarity).Append(")").AppendLine();
             cardDescription.Append(GetEmojiForAttribute(cardObject.Attribute)).Append(" **Atrybut** ").Append("(").Append(cardObject.Attribute).Append(")").AppendLine();
-            cardDescription.Append(":dress: **Set** ").Append("(").Append(cardObject.Translated_collection ?? "brak danych").Append(")").AppendLine();
-            cardDescription.Append(":calendar: **Data wypuszczenia (yyyy-MM-dd)** ").Append("(").Append(cardObject.Release_date ?? "brak danych").Append(")").AppendLine();
+            cardDescription.Append(":dress: **Set** ").Append("(").Append(cardObject.Translated_collection ?? "brak").Append(")").AppendLine();
+            cardDescription.Append(":calendar: **Data wypuszczenia (yyyy-MM-dd)** ").Append("(").Append(cardObject.Release_date ?? "brak").Append(")").AppendLine();
             cardDescription.Append(GetEmojiAvailability(cardObject.Japan_only)).Append("** Dostępność **")
-                           .Append("(").Append(cardObject.Japan_only.Value ? "Dostępne tylko na JP" : "Dostępne na JP i EN" ?? "brak danych").Append(")").AppendLine();
-            cardDescription.Append(":heart: **HP** ").Append("(").Append(cardObject.Hp?.ToString() ?? "brak danych").Append(")").AppendLine();
-            cardDescription.Append(":dizzy: **Skill** ").Append("(").Append(cardObject.Skill ?? "brak danych").Append(")").AppendLine();
-            cardDescription.Append(cardObject.Skill_details ?? "brak danych").AppendLine();
-            cardDescription.Append(":sparkles: **Center skill** ").Append("(").Append(cardObject.Center_skill ?? "brak danych").Append(")").AppendLine();
-            cardDescription.Append(cardObject.Center_skill_details ?? "brak danych").AppendLine();
+                           .Append("(").Append(cardObject.Japan_only.Value ? "Dostępne tylko na JP" : "Dostępne na JP i EN" ?? "brak").Append(")").AppendLine();
+            cardDescription.Append(":heart: **HP** ").Append("(").Append(cardObject.Hp?.ToString() ?? "brak").Append(")").AppendLine();
+            cardDescription.Append(":dizzy: **Skill** ").Append("(").Append(cardObject.Skill ?? "brak").Append(")").AppendLine();
+            cardDescription.Append(cardObject.Skill_details ?? "brak").AppendLine();
+            cardDescription.Append(":sparkles: **Center skill** ").Append("(").Append(cardObject.Center_skill ?? "brak").Append(")").AppendLine();
+            cardDescription.Append(cardObject.Center_skill_details ?? "brak").AppendLine();
             
             cardDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(cardObject.Website_url).Append(")").AppendLine();
 
             cardDescription.Append(":notepad_spiral: **Statystyki** ").AppendLine();
-            cardDescription.Append(":red_circle: Smile: ").Append(cardObject.Minimum_statistics_smile ?? "brak danych")
-                           .Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_smile ?? "brak danych")
-                           .Append(" - ").Append(cardObject.Idolized_maximum_statistics_smile ?? "brak danych").AppendLine();
-            cardDescription.Append(":green_circle: Pure: ").Append(cardObject.Minimum_statistics_pure ?? "brak danych")
-                           .Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_pure ?? "brak danych")
-                           .Append(" - ").Append(cardObject.Idolized_maximum_statistics_pure ?? "brak danych").AppendLine();
-            cardDescription.Append(":blue_circle: Cool: ").Append(cardObject.Minimum_statistics_cool ?? "brak danych")
-                           .Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_cool ?? "brak danych")
-                           .Append(" - ").Append(cardObject.Idolized_maximum_statistics_cool ?? "brak danych").AppendLine();
+            cardDescription.Append(":red_circle: Smile: ").Append(cardObject.Minimum_statistics_smile ?? "brak")
+                           .Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_smile ?? "brak")
+                           .Append(" - ").Append(cardObject.Idolized_maximum_statistics_smile ?? "brak").AppendLine();
+            cardDescription.Append(":green_circle: Pure: ").Append(cardObject.Minimum_statistics_pure ?? "brak")
+                           .Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_pure ?? "brak")
+                           .Append(" - ").Append(cardObject.Idolized_maximum_statistics_pure ?? "brak").AppendLine();
+            cardDescription.Append(":blue_circle: Cool: ").Append(cardObject.Minimum_statistics_cool ?? "brak")
+                           .Append(" - ").Append(cardObject.Non_idolized_maximum_statistics_cool ?? "brak")
+                           .Append(" - ").Append(cardObject.Idolized_maximum_statistics_cool ?? "brak").AppendLine();
 
             
 
@@ -55,7 +56,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                 {
                     if(cardObject.Ur_pair != null)
                     {
-                        cardDescription.Append(cardObject.Ur_pair.Card?.Name ?? "brak danych").Append(" (").Append(cardObject.Ur_pair.Card?.Id ?? "brak danych").Append(")").AppendLine();
+                        cardDescription.Append(cardObject.Ur_pair.Card?.Name ?? "brak").Append(" (").Append(cardObject.Ur_pair.Card?.Id ?? "brak").Append(")").AppendLine();
                         if(cardObject.Ur_pair.Card != null && cardObject.Ur_pair.Card.Id != null)
                         {
                             cardDescription.Append("*Możesz zobaczyć tę kartę komendą `karta " + cardObject.Ur_pair.Card.Id + "`.*").AppendLine();
@@ -80,7 +81,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                     cardDescription.Append(":name_badge: **Event JP** ").AppendLine();
                     cardDescription.Append(cardObject.Event.Japanese_name).AppendLine();
                     cardDescription.Append(":name_badge: **Event EN** ").AppendLine();
-                    cardDescription.Append(cardObject.Event.English_name ?? "brak danych").AppendLine();
+                    cardDescription.Append(cardObject.Event.English_name ?? "brak").AppendLine();
                 }
                 else
                 {
@@ -88,7 +89,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                     cardDescription.Append(":name_badge: **Event JP** ").AppendLine();
                     cardDescription.Append(cardObject.Event.Japanese_name).AppendLine();
                     cardDescription.Append(":name_badge: **Event EN** ").AppendLine();
-                    cardDescription.Append(cardObject.Other_event.English_name ?? "brak danych").AppendLine();
+                    cardDescription.Append(cardObject.Other_event.English_name ?? "brak").AppendLine();
                 }
             }
 
@@ -99,25 +100,25 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
         {
             StringBuilder idolDescription = new StringBuilder();
             idolDescription.Append(":name_badge: **Imie**").Append(" (").Append(idolObject.Name).Append(" (").Append(idolObject.Japanese_name ?? "brak kanji").Append(")").Append(")").AppendLine();
-            idolDescription.Append(":school: **Szkoła**").Append(" (").Append(idolObject.School ?? "brak danych").Append(")").AppendLine();
-            idolDescription.Append(":microphone: **Main unit**").Append(" (").Append(idolObject.Main_unit ?? "brak danych").Append(")").AppendLine();
-            idolDescription.Append(":notes: **Sub unit**").Append(" (").Append(idolObject.Sub_unit ?? "brak danych").Append(")").AppendLine();
-            idolDescription.Append(GetEmojiForYear(idolObject.Year)).Append(" **Rok**").Append(" (").Append(idolObject.Year ?? "brak danych").Append(")").AppendLine();
-            idolDescription.Append(":calendar: **Wiek**").Append(" (").Append(idolObject.Age?.ToString() ?? "brak danych").Append(")").AppendLine();
-            idolDescription.Append(":birthday: **Urodziny (MM-dd)**").Append(" (").Append(idolObject.Birthday ?? "brak danych").Append(")").AppendLine();
-            idolDescription.Append(GetEmojiForZodiacSign(idolObject.Astrological_sign)).Append(" **Znak zodiaku**").Append(" (").Append(idolObject.Astrological_sign ?? "brak danych").Append(")").AppendLine();
-            idolDescription.Append(GetEmojiForBloodType(idolObject.Blood)).Append(" **Grupa krwi**").Append(" (").Append(idolObject.Blood ?? "brak danych").Append(")").AppendLine();
-            idolDescription.Append(":straight_ruler: **Wzrost**").Append(" (").Append(idolObject.Height?.ToString() ?? "brak danych").Append(")").AppendLine();
-            idolDescription.Append(GetEmojiForAttribute(idolObject.Attribute)).Append(" **Atrybut**").Append(" (").Append(idolObject.Attribute ?? "brak danych").Append(")").AppendLine();
+            idolDescription.Append(":school: **Szkoła**").Append(" (").Append(idolObject.School ?? "brak").Append(")").AppendLine();
+            idolDescription.Append(":microphone: **Main unit**").Append(" (").Append(idolObject.Main_unit ?? "brak").Append(")").AppendLine();
+            idolDescription.Append(":notes: **Sub unit**").Append(" (").Append(idolObject.Sub_unit ?? "brak").Append(")").AppendLine();
+            idolDescription.Append(GetEmojiForYear(idolObject.Year)).Append(" **Rok**").Append(" (").Append(idolObject.Year ?? "brak").Append(")").AppendLine();
+            idolDescription.Append(":calendar: **Wiek**").Append(" (").Append(idolObject.Age?.ToString() ?? "brak").Append(")").AppendLine();
+            idolDescription.Append(":birthday: **Urodziny (MM-dd)**").Append(" (").Append(idolObject.Birthday ?? "brak").Append(")").AppendLine();
+            idolDescription.Append(GetEmojiForZodiacSign(idolObject.Astrological_sign)).Append(" **Znak zodiaku**").Append(" (").Append(idolObject.Astrological_sign ?? "brak").Append(")").AppendLine();
+            idolDescription.Append(GetEmojiForBloodType(idolObject.Blood)).Append(" **Grupa krwi**").Append(" (").Append(idolObject.Blood ?? "brak").Append(")").AppendLine();
+            idolDescription.Append(":straight_ruler: **Wzrost**").Append(" (").Append(idolObject.Height?.ToString() ?? "brak").Append(")").AppendLine();
+            idolDescription.Append(GetEmojiForAttribute(idolObject.Attribute)).Append(" **Atrybut**").Append(" (").Append(idolObject.Attribute ?? "brak").Append(")").AppendLine();
             idolDescription.Append(":ramen: **Ulubione jedzenie** ").AppendLine();
-            idolDescription.Append(idolObject.Favorite_food ?? "brak danych").AppendLine();
+            idolDescription.Append(idolObject.Favorite_food ?? "brak").AppendLine();
             idolDescription.Append(":broccoli: **Nielubiane jedzenie** ").AppendLine();
-            idolDescription.Append(idolObject.Least_favorite_food ?? "brak danych").AppendLine();
+            idolDescription.Append(idolObject.Least_favorite_food ?? "brak").AppendLine();
             idolDescription.Append(":ping_pong: **Hobby** ").AppendLine();
-            idolDescription.Append(idolObject.Hobbies ?? "brak danych").AppendLine();
+            idolDescription.Append(idolObject.Hobbies ?? "brak").AppendLine();
             
             idolDescription.Append(":microphone2: **Seiyuu** ").AppendLine();
-            idolDescription.Append(idolObject.Cv?.Name ?? "brak danych").AppendLine();
+            idolDescription.Append(idolObject.Cv?.Name ?? "brak").AppendLine();
             idolDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(idolObject.Website_url).Append(")");
 
             if (idolObject.Wiki_url != null && idolObject.Wiki_url != "")
@@ -142,7 +143,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
         {
             StringBuilder eventDescription = new StringBuilder();
             eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
-            eventDescription.Append(eventObject.English_name ?? "brak danych").AppendLine();
+            eventDescription.Append(eventObject.English_name ?? "brak").AppendLine();
             eventDescription.Append(":name_badge: **Japońska nazwa** ").AppendLine();
             eventDescription.Append(eventObject.Japanese_name).AppendLine();
             eventDescription.Append(":clock2: **Czas trwania** ").AppendLine();
@@ -163,8 +164,8 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             if (finished == true)
             {
                 eventDescription.Append(":medal: **Tiery** (punkty)").AppendLine();
-                eventDescription.Append(":first_place: **T1** ").Append(eventObject.English_t1_points?.ToString() ?? "brak danych").AppendLine();
-                eventDescription.Append(":second_place: **T2** ").Append(eventObject.English_t2_points?.ToString() ?? "brak danych").AppendLine();
+                eventDescription.Append(":first_place: **T1** ").Append(eventObject.English_t1_points?.ToString() ?? "brak").AppendLine();
+                eventDescription.Append(":second_place: **T2** ").Append(eventObject.English_t2_points?.ToString() ?? "brak").AppendLine();
             }
 
             if (eventCards != null)
@@ -176,13 +177,13 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                 }
                 if (eventCards.Count == 0)
                 {
-                    eventDescription.Append("Obecnie brak danych o kartach").AppendLine();
+                    eventDescription.Append("Obecnie brak o kartach").AppendLine();
                 }
                 eventDescription.AppendLine().Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
             }
             else
             {
-                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append("brak danych").Append(")").AppendLine();
+                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append("brak").Append(")").AppendLine();
             }
 
             return eventDescription.ToString();
@@ -210,8 +211,8 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             if (finished == true)
             {
                 eventDescription.Append(":medal: **Tiery** ").AppendLine();
-                eventDescription.Append(":first_place: **T1** ").Append(eventObject.Japanese_t1_points?.ToString() ?? "brak danych").AppendLine();
-                eventDescription.Append(":second_place: **T2** ").Append(eventObject.Japanese_t2_points?.ToString() ?? "brak danych").AppendLine();
+                eventDescription.Append(":first_place: **T1** ").Append(eventObject.Japanese_t1_points?.ToString() ?? "brak").AppendLine();
+                eventDescription.Append(":second_place: **T2** ").Append(eventObject.Japanese_t2_points?.ToString() ?? "brak").AppendLine();
             }
 
             if (eventCards != null)
@@ -223,14 +224,79 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                 }
                 if(eventCards.Count == 0)
                 {
-                    eventDescription.Append("Obecnie brak danych o kartach").AppendLine();
+                    eventDescription.Append("Obecnie brak o kartach").AppendLine();
                 }
                 eventDescription.AppendLine().Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
             }
             else
             {
-                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append("brak danych").Append(")").AppendLine();
+                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append("brak").Append(")").AppendLine();
             }
+
+            return eventDescription.ToString();
+        }
+
+        public string MakeSongDescription(SongObject songObject, EventObject eventObject = null)
+        {
+            StringBuilder songDescription = new StringBuilder();
+            songDescription.Append(":name_badge: **Tytuł**").Append(" (").Append(songObject.Name);
+            if (songObject.Romaji_name != null)
+            {
+                songDescription.Append(" (").Append(songObject.Romaji_name).Append(")");
+            }
+            songDescription.Append(")").AppendLine();
+            songDescription.Append(":microphone: **Main unit**").Append(" (").Append(songObject.Main_unit ?? "brak").Append(")").AppendLine();
+            songDescription.Append(GetEmojiForAttribute(songObject.Attribute)).Append(" **Atrybut**").Append(" (").Append(songObject.Attribute ?? "brak").Append(")").AppendLine();
+            songDescription.Append(":watch: **Czas**").Append(" (").Append(songObject.Time.ToString() ?? "brak").Append(")").AppendLine();
+            songDescription.Append(":stopwatch: **BPM**").Append(" (").Append(songObject.Bpm.ToString() ?? "brak").Append(")").AppendLine();
+            songDescription.Append(":stadium: **Event** ").AppendLine();
+            if (eventObject == null)
+            {
+                songDescription.Append("Piosenka nie była używana w evencie.").AppendLine();
+            }
+            else
+            {
+                songDescription.Append("Piosenka  używana w evencie: ").Append(eventObject.Japanese_name);
+                if (eventObject.English_name != null)
+                {
+                    songDescription.Append(" (").Append(eventObject.English_name).Append(")");
+                }
+                songDescription.AppendLine().Append("*Możesz użyć komendy `eventJP "+ eventObject.Japanese_name + "` lub `eventEN " + eventObject.Japanese_name + "` aby uzyskać więcej informacji o danym evencie.*").AppendLine();
+            }
+
+            songDescription.Append(":notepad_spiral: **Statystyki** ").AppendLine();
+            songDescription.Append("Easy - :star: Trudność ").Append(songObject.Easy_difficulty.ToString() ?? "brak")
+                           .Append(" - :musical_note: Nutki ").Append(songObject.Easy_notes.ToString() ?? "brak").AppendLine();
+            songDescription.Append("Normal - :star: Trudność ").Append(songObject.Normal_difficulty.ToString() ?? "brak")
+                           .Append(" - :musical_note: Nutki ").Append(songObject.Normal_notes.ToString() ?? "brak").AppendLine();
+            songDescription.Append("Hard - :star: Trudność ").Append(songObject.Hard_difficulty.ToString() ?? "brak")
+                           .Append(" - :musical_note: Nutki ").Append(songObject.Hard_notes.ToString() ?? "brak").AppendLine();
+            songDescription.Append("Expert - :star: Trudność ").Append(songObject.Expert_difficulty.ToString() ?? "brak")
+                           .Append(" - :musical_note: Nutki ").Append(songObject.Expert_notes.ToString() ?? "brak").AppendLine();
+            songDescription.Append("Master - :star: Trudność ").Append(songObject.Master_difficulty.ToString() ?? "brak")
+                           .Append(" - :musical_note: Nutki ").Append(songObject.Master_notes.ToString() ?? "brak").AppendLine();
+
+            songDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(songObject.Website_url).Append(")");
+
+            songDescription.AppendLine();
+
+            return songDescription.ToString();
+        }
+
+        public string MakeSearchCardDescription(PaginatedResponse<CardObject> cardObjects, int elemPerPage, int page)
+        {
+            StringBuilder eventDescription = new StringBuilder();
+            eventDescription.Append(":notepad_spiral: **Wyników ").Append(cardObjects.Count).Append(". Oto ").Append(cardObjects.Results.Count).Append("**").AppendLine();
+            eventDescription.Append(":name_badge: ").Append("Imie").Append(" - :pencil: ").Append("ID").Append(" - :love_letter: ").Append("Rzadkość").
+                Append(" - ").Append(GetEmojiForAttribute(null)).Append(" ").Append("Atrybut").AppendLine();
+            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            foreach (var cardObject in cardObjects.Results)
+            {
+                eventDescription.Append(":name_badge: ").Append(cardObject.Idol.Name).Append(" - :pencil: ").Append(cardObject.Id).Append(" - :love_letter: ").Append(cardObject.Rarity).
+                 Append(" - ").Append(GetEmojiForAttribute(cardObject.Attribute)).Append(" ").Append(cardObject.Attribute).AppendLine();
+            }
+            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            eventDescription.Append("Strona ").Append(page).Append(" z ").Append(cardObjects.Count / elemPerPage + 1);
 
             return eventDescription.ToString();
         }
@@ -249,6 +315,42 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             eventDescription.Append("Strona ").Append(page).Append(" z ").Append(eventObjects.Count / elemPerPage + 1);
 
             return eventDescription.ToString();
+        }
+
+        public string MakeSearchIdolDescription(PaginatedResponse<IdolObject> idolObjects, int elemPerPage, int page)
+        {
+            StringBuilder eventDescription = new StringBuilder();
+            eventDescription.Append(":notepad_spiral: **Wyników ").Append(idolObjects.Count).Append(". Oto ").Append(idolObjects.Results.Count).Append("**").AppendLine();
+            eventDescription.Append(":name_badge: ").Append("Imie").Append(" - :microphone: ").Append("Main unit").Append(" - :school: ").Append("Szkoła").
+                Append(" - ").Append(GetEmojiForAttribute(null)).Append(" ").Append("Atrybut").AppendLine();
+            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            foreach (var idolObject in idolObjects.Results)
+            {
+                eventDescription.Append(":name_badge: ").Append(idolObject.Name).Append(" - :microphone: ").Append(idolObject.Main_unit ?? "brak").Append(" - :school: ").Append(idolObject.School ?? "brak").
+                 Append(" - ").Append(GetEmojiForAttribute(idolObject.Attribute)).Append(" ").Append(idolObject.Attribute ?? "brak").AppendLine();
+            }
+            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            eventDescription.Append("Strona ").Append(page).Append(" z ").Append(idolObjects.Count / elemPerPage + 1);
+
+            return eventDescription.ToString();
+        }
+
+        public string MakeSearchSongDescription(PaginatedResponse<SongObject> songObjects, int elemPerPage, int page)
+        {
+            StringBuilder songDescription = new StringBuilder();
+            songDescription.Append(":notepad_spiral: **Wyników ").Append(songObjects.Count).Append(". Oto ").Append(songObjects.Results.Count).Append("**").AppendLine();
+            songDescription.Append(":name_badge: ").Append("Japońska nazwa").Append(" - :name_badge: ").Append("Romaji").Append(" - :microphone: ").Append("Main unit").
+                Append(" - ").Append(GetEmojiForAttribute(null)).Append(" ").Append("Atrybut").AppendLine();
+            songDescription.Append("---------------------------------------------------------").AppendLine();
+            foreach (var songObject in songObjects.Results)
+            {
+                songDescription.Append(":name_badge: ").Append(songObject.Name).Append(" - :name_badge: ").Append(songObject.Romaji_name ?? "brak").Append(" - :microphone: ").Append(songObject.Main_unit ?? "brak").
+                 Append(" - ").Append(GetEmojiForAttribute(songObject.Attribute)).Append(" ").Append(songObject.Attribute ?? "brak").AppendLine();
+            }
+            songDescription.Append("---------------------------------------------------------").AppendLine();
+            songDescription.Append("Strona ").Append(page).Append(" z ").Append(songObjects.Count / elemPerPage + 1);
+
+            return songDescription.ToString();
         }
 
         private string GetEmojiAvailability(bool? value)

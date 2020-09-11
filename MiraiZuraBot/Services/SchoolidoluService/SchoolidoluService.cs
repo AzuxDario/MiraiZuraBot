@@ -2,6 +2,7 @@
 using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Containers.Schoolidolu.Event;
 using MiraiZuraBot.Containers.Schoolidolu.Idols;
+using MiraiZuraBot.Containers.Schoolidolu.Songs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -103,6 +104,51 @@ namespace MiraiZuraBot.Services.SchoolidoluService
             }
 
             return new SchoolidoluResponse<EventObject>(null, response.StatusCode);
+        }
+
+        public SchoolidoluResponse<PaginatedResponse<SongObject>> GetSong(Dictionary<string, string> options)
+        {
+            var client = new HttpClient();
+            PaginatedResponse<SongObject> songObject;
+
+            var response = client.GetAsync(apiBase + "songs/?" + CombineGetParameters(options)).Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                songObject = JsonConvert.DeserializeObject<PaginatedResponse<SongObject>>(response.Content.ReadAsStringAsync().Result);
+                return new SchoolidoluResponse<PaginatedResponse<SongObject>>(songObject, response.StatusCode);
+            }
+
+            return new SchoolidoluResponse<PaginatedResponse<SongObject>>(null, response.StatusCode);
+        }
+
+        public SchoolidoluResponse<SongObject> GetSongByName(string name)
+        {
+            var client = new HttpClient();
+            SongObject songObject;
+
+            var response = client.GetAsync(apiBase + "songs/" + name + "/").Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                songObject = JsonConvert.DeserializeObject<SongObject>(response.Content.ReadAsStringAsync().Result);
+                return new SchoolidoluResponse<SongObject>(songObject, response.StatusCode);
+            }
+
+            return new SchoolidoluResponse<SongObject>(null, response.StatusCode);
+        }
+
+        public SchoolidoluResponse<SongObjectWithEvent> GetSongByNameWithEvent(string name)
+        {
+            var client = new HttpClient();
+            SongObjectWithEvent songObject;
+
+            var response = client.GetAsync(apiBase + "songs/" + name + "/?expand_event=True/").Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                songObject = JsonConvert.DeserializeObject<SongObjectWithEvent>(response.Content.ReadAsStringAsync().Result);
+                return new SchoolidoluResponse<SongObjectWithEvent>(songObject, response.StatusCode);
+            }
+
+            return new SchoolidoluResponse<SongObjectWithEvent>(null, response.StatusCode);
         }
 
         private string CombineGetParameters(Dictionary<string, string> options)

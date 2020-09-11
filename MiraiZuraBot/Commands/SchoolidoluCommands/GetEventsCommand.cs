@@ -282,10 +282,10 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         [Command("eventEN")]
         [Description("Pokazuje event na serwerze EN.\n------------------------------\nDlaczego nazwa eventu po japońsku?\n" +
             "Komenda pobiera jeden event korzystając z endpointa który wyszukuje event po jego dokładnej japońskiej nazwie. " +
-            "API Schoolido.lu nie pozwla wyszukiwać po dokłądnej nazwie angielskiej, gdyż część eventów na EN nigdy nie miała miejsca. " +
-            "API Schoolido.lu pozwla przeszukiwać jednocześnie po nazwach japońskiej i angielskiej używając słów kluczowych. " +
-            "Ale tym sposobem nie zwróciłby dokłądnego eventu, a pierwszy dopasowany. " +
-            "Co więcej w przypadku niektórych eventów zwracane byłyby niepoprawne wersje. Na przykład strona zamiast `Round 8 MEDLEY FESTIVAL` który był na EN" +
+            "API Schoolido.lu nie pozwla wyszukiwać po dokładnej nazwie angielskiej, gdyż część eventów na EN nigdy nie miała miejsca. " +
+            "API Schoolido.lu pozwla jednak przeszukiwać jednocześnie po nazwach japońskiej i angielskiej używając słów kluczowych. " +
+            "Ale tym sposobem nie zwróciłby dokładnego eventu, a pierwszy dopasowany. " +
+            "Co więcej w przypadku niektórych eventów zwracane byłyby niepoprawne wersje. Na przykład strona zamiast `Round 8 MEDLEY FESTIVAL` który był na EN " +
             "zwróciłaby najpierw japoński `Medley Festival Round 8`, który na EN nigdy się nie wydarzył, a potem dopiero angielski `Round 8 MEDLEY FESTIVAL`. " +
             "Zrzuca to odpowiedzialność ponownego przeszukanai wyników na bota, więc zostaje obecnie nazwa japońska." +
             "\n------------------------------\nSkąd wziąć japońską nazwę?\nKomendą `wyszukajEvent 1 <nazwa japońska bądź angielska>`")]
@@ -366,16 +366,113 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
         }
 
-        [Command("wyszukajEvent")]
-        [Description("Wyszukuje nazwy eventów.\nnp:\n`wyszukajEvent 1 Medley`\nPolecam jako początkową stronę podać `1`.")]
-        public async Task SearchEvent(CommandContext ctx, [Description("Strona wyników.")] int page, [Description("Słowa kluczowe."), RemainingText] string keywords)
+        [Command("losowyEventEN")]
+        [Description("Pokazuje losowy event z serwera EN.")]
+        public async Task GetRandomWorldEvent(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
 
             Dictionary<string, string> options = new Dictionary<string, string>
             {
+                { "ordering", "random" },
+                { "is_english", "True" },
+                { "page_size", "1"}
+            };
+
+            var eventObject = _schoolidoluService.GetEvent(options);
+
+            if (eventObject.StatusCode == HttpStatusCode.OK)
+            {
+                List<CardObject> eventCards = null;
+                // The event at EN might not have happened
+                if (eventObject.Data.Results[0].English_name != null && eventObject.Data.Results[0].English_name != "")
+                {
+                    eventCards = GetCardsForEvent(eventObject.Data.Results[0], true);
+                }
+
+                bool finished = true;
+                if (eventObject.Data.Results[0].English_status == "announced" || eventObject.Data.Results[0].English_status == "ongoing")
+                {
+                    finished = false;
+                }
+
+                if (eventObject.Data.Results[0].English_image != null)
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Losowy event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[0], finished, eventCards),
+                        "https:" + eventObject.Data.Results[0].English_image, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+                else
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Losowy event EN", _schoolidoluHelper.MakeCurrentWorldEventDescription(eventObject.Data.Results[0], finished, eventCards),
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+            }
+            else
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Losowy event EN", "Wystąpił błąd podczas pobierania eventu.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+            }
+        }
+
+        [Command("losowyEventJP")]
+        [Description("Pokazuje losowy event z serwera JP.")]
+        public async Task GetRandomJapanEvent(CommandContext ctx)
+        {
+            await ctx.TriggerTypingAsync();
+
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { "ordering", "random" },
+                { "page_size", "1"}
+            };
+
+            var eventObject = _schoolidoluService.GetEvent(options);
+
+            if (eventObject.StatusCode == HttpStatusCode.OK)
+            {
+                List<CardObject> eventCards = GetCardsForEvent(eventObject.Data.Results[0], false);
+
+                bool finished = true;
+                if (eventObject.Data.Results[0].Japan_status == "announced" || eventObject.Data.Results[0].Japan_status == "ongoing")
+                {
+                    finished = false;
+                }
+
+                if (eventObject.Data.Results[0].Image != null)
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Losowy event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[0], finished, eventCards),
+                        "https:" + eventObject.Data.Results[0].Image, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+                else
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Losowy event JP", _schoolidoluHelper.MakeCurrentJapanEventDescription(eventObject.Data.Results[0], finished, eventCards),
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+            }
+            else
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Losowy event JP", "Wystąpił błąd podczas pobierania eventu.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+            }
+        }
+
+        [Command("wyszukajEvent")]
+        [Description("Wyszukuje nazwy eventów.\nnp:\n`wyszukajEvent 1 Medley`\nPolecam jako początkową stronę podać `1`.")]
+        public async Task SearchEvent(CommandContext ctx, [Description("Strona wyników.")] string page, [Description("Słowa kluczowe."), RemainingText] string keywords)
+        {
+            await ctx.TriggerTypingAsync();
+
+            int intPage;
+
+            if (!int.TryParse(page, out intPage))
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie eventów", "Wystąpił błąd podczas wyszukiwania eventów. Przed zapytaniem podaj numer strony.\nnp. `wyszukajEvent 1 You`",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                return;
+            }
+
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
                 { "search", keywords },
-                { "page", page.ToString() }
+                { "page", intPage.ToString() }
             };
 
             var eventObject = _schoolidoluService.GetEvent(options);
@@ -385,7 +482,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (eventObject.Data.Count != 0)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie eventów", _schoolidoluHelper.MakeSearchEventDescription(eventObject.Data, 10, page),
+                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie eventów", _schoolidoluHelper.MakeSearchEventDescription(eventObject.Data, 10, intPage),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else
