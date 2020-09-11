@@ -3,6 +3,7 @@ using MiraiZuraBot.Containers.Schoolidolu;
 using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Containers.Schoolidolu.Event;
 using MiraiZuraBot.Containers.Schoolidolu.Idols;
+using MiraiZuraBot.Containers.Schoolidolu.Songs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -233,6 +234,49 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             }
 
             return eventDescription.ToString();
+        }
+
+        public string MakeSongDescription(SongObject songObject)
+        {
+            StringBuilder songDescription = new StringBuilder();
+            songDescription.Append(":name_badge: **Tytuł**").Append(" (").Append(songObject.Name);
+            if (songObject.Romaji_name != null)
+            {
+                songDescription.Append(" (").Append(songObject.Romaji_name).Append(")");
+            }
+            songDescription.Append(")").AppendLine();
+            songDescription.Append(":microphone: **Main unit**").Append(" (").Append(songObject.Main_unit ?? "brak danych").Append(")").AppendLine();
+            songDescription.Append(GetEmojiForAttribute(songObject.Attribute)).Append(" **Atrybut**").Append(" (").Append(songObject.Attribute ?? "brak danych").Append(")").AppendLine();
+            songDescription.Append(":watch: **Czas**").Append(" (").Append(songObject.Time.ToString() ?? "brak danych").Append(")").AppendLine();
+            songDescription.Append(":stopwatch: **BPM**").Append(" (").Append(songObject.Bpm.ToString() ?? "brak danych").Append(")").AppendLine();
+            songDescription.Append(":stadium: **Event** ").AppendLine();
+            if (songObject.Event == null)
+            {
+                songDescription.Append("Piosenka nie była używana w evencie.").AppendLine();
+            }
+            else
+            {
+                songDescription.Append("Piosenka  używana w evencie: ").Append(songObject.Event).AppendLine();
+                songDescription.AppendLine().Append("*Możesz użyć komendy `event "+ songObject.Event + "` aby uzyskać więcej informacji o danym evencie*");
+            }
+
+            songDescription.Append(":notepad_spiral: **Statystyki** ").AppendLine();
+            songDescription.Append("Easy - :star: Trudność ").Append(songObject.Easy_difficulty.ToString() ?? "brak danych")
+                           .Append(" - :musical_note: Nutki ").Append(songObject.Easy_notes.ToString() ?? "brak danych").AppendLine();
+            songDescription.Append("Normal - :star: Trudność ").Append(songObject.Normal_difficulty.ToString() ?? "brak danych")
+                           .Append(" - :musical_note: Nutki ").Append(songObject.Normal_notes.ToString() ?? "brak danych").AppendLine();
+            songDescription.Append("Hard - :star: Trudność ").Append(songObject.Hard_difficulty.ToString() ?? "brak danych")
+                           .Append(" - :musical_note: Nutki ").Append(songObject.Hard_notes.ToString() ?? "brak danych").AppendLine();
+            songDescription.Append("Expert - :star: Trudność ").Append(songObject.Expert_difficulty.ToString() ?? "brak danych")
+                           .Append(" - :musical_note: Nutki ").Append(songObject.Expert_notes.ToString() ?? "brak danych").AppendLine();
+            songDescription.Append("Master - :star: Trudność ").Append(songObject.Master_difficulty.ToString() ?? "brak danych")
+                           .Append(" - :musical_note: Nutki ").Append(songObject.Master_notes.ToString() ?? "brak danych").AppendLine();
+
+            songDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(songObject.Website_url).Append(")");
+
+            songDescription.AppendLine();
+
+            return songDescription.ToString();
         }
 
         public string MakeSearchCardDescription(PaginatedResponse<CardObject> cardObjects, int elemPerPage, int page)
