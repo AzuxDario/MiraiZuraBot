@@ -39,11 +39,11 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             if (idolObject.StatusCode == HttpStatusCode.OK)
             {
                 string description = _schoolidoluHelper.MakeIdolDescription(idolObject.Data);
-                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolObject.Data.Chibi, idolObject.Data.Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter());
+                await PostEmbedHelper.PostEmbed(ctx, "Idolka", description, idolObject.Data.Chibi, idolObject.Data.Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter());
             }
             else
             {
-                await ctx.RespondAsync("Podana idolka nie istnieje.");
+                await PostEmbedHelper.PostEmbed(ctx, "Idolka", "Podana idolka nie istnieje.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -64,11 +64,11 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             if (idolsResponse.StatusCode == HttpStatusCode.OK)
             {
                 string description = _schoolidoluHelper.MakeIdolDescription(idolsResponse.Data.Results[0]);
-                await PostEmbedHelper.PostEmbed(ctx, ctx.RawArgumentString, description, idolsResponse.Data.Results[0].Chibi, idolsResponse.Data.Results[0].Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter());
+                await PostEmbedHelper.PostEmbed(ctx, "Losowa idolka", description, idolsResponse.Data.Results[0].Chibi, idolsResponse.Data.Results[0].Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter());
             }
             else
             {
-                await ctx.RespondAsync("Wystąpił błąd.");
+                await PostEmbedHelper.PostEmbed(ctx, "Losowa idolka", "Wystąpił błąd.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
