@@ -269,6 +269,24 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return eventDescription.ToString();
         }
 
+        public string MakeSearchIdolDescription(PaginatedResponse<IdolObject> idolObjects, int elemPerPage, int page)
+        {
+            StringBuilder eventDescription = new StringBuilder();
+            eventDescription.Append(":notepad_spiral: **Wyników ").Append(idolObjects.Count).Append(". Oto ").Append(idolObjects.Results.Count).Append("**").AppendLine();
+            eventDescription.Append(":name_badge: ").Append("Imie").Append(" - :microphone: ").Append("Main unit").Append(" - :school: ").Append("Szkoła").
+                Append(" - ").Append(GetEmojiForAttribute(null)).Append(" ").Append("Atrybut").AppendLine();
+            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            foreach (var idolObject in idolObjects.Results)
+            {
+                eventDescription.Append(":name_badge: ").Append(idolObject.Name).Append(" - :microphone: ").Append(idolObject.Main_unit ?? "brak danych").Append(" - :school: ").Append(idolObject.School ?? "brak danych").
+                 Append(" - ").Append(GetEmojiForAttribute(idolObject.Attribute)).Append(" ").Append(idolObject.Attribute ?? "brak danych").AppendLine();
+            }
+            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            eventDescription.Append("Strona ").Append(page).Append(" z ").Append(idolObjects.Count / elemPerPage + 1);
+
+            return eventDescription.ToString();
+        }
+
         private string GetEmojiAvailability(bool? value)
         {
             switch (value)
