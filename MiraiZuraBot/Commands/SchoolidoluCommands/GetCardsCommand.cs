@@ -125,7 +125,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         [Command("wyszukajKarte")]
         [Description("Wyszukuje karty na podstawie fraz oraz rzadkości i atrybutu.\nnp:\n`wyszukajKarte 1 Watanabe You UR cool`\nPolecam jako początkową stronę podać `1`." +
             "\nDozwolone atrybuty: `Smile`, `Pure`, `Cool`, `All`nDozwolone rzadkości: `N`, `R`, `SR`, `SSR`, `UR`" +
-            "\n Można podać jedną wartośc atrybutu oraz wiele rzadkości w dowolnym miejscu zapytania.")]
+            "\n Można podać jedną wartość atrybutu oraz wiele rzadkości w dowolnym miejscu zapytania." +
+            "\nWyszukiwanie odbywa się po imionach, skillach oraz eventach.")]
         public async Task SearchCard(CommandContext ctx, [Description("Strona wyników.")] int page, [Description("Słowa kluczowe."), RemainingText] string keywords)
         {
             await ctx.TriggerTypingAsync();
