@@ -136,6 +136,21 @@ namespace MiraiZuraBot.Services.SchoolidoluService
             return new SchoolidoluResponse<SongObject>(null, response.StatusCode);
         }
 
+        public SchoolidoluResponse<SongObjectWithEvent> GetSongByNameWithEvent(string name)
+        {
+            var client = new HttpClient();
+            SongObjectWithEvent songObject;
+
+            var response = client.GetAsync(apiBase + "songs/" + name + "/?expand_event=True/").Result;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                songObject = JsonConvert.DeserializeObject<SongObjectWithEvent>(response.Content.ReadAsStringAsync().Result);
+                return new SchoolidoluResponse<SongObjectWithEvent>(songObject, response.StatusCode);
+            }
+
+            return new SchoolidoluResponse<SongObjectWithEvent>(null, response.StatusCode);
+        }
+
         private string CombineGetParameters(Dictionary<string, string> options)
         {
             StringBuilder parameters = new StringBuilder();

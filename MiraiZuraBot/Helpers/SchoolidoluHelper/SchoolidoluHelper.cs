@@ -236,7 +236,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return eventDescription.ToString();
         }
 
-        public string MakeSongDescription(SongObject songObject)
+        public string MakeSongDescription(SongObject songObject, EventObject eventObject = null)
         {
             StringBuilder songDescription = new StringBuilder();
             songDescription.Append(":name_badge: **Tytuł**").Append(" (").Append(songObject.Name);
@@ -250,14 +250,18 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             songDescription.Append(":watch: **Czas**").Append(" (").Append(songObject.Time.ToString() ?? "brak danych").Append(")").AppendLine();
             songDescription.Append(":stopwatch: **BPM**").Append(" (").Append(songObject.Bpm.ToString() ?? "brak danych").Append(")").AppendLine();
             songDescription.Append(":stadium: **Event** ").AppendLine();
-            if (songObject.Event == null)
+            if (eventObject == null)
             {
                 songDescription.Append("Piosenka nie była używana w evencie.").AppendLine();
             }
             else
             {
-                songDescription.Append("Piosenka  używana w evencie: ").Append(songObject.Event).AppendLine();
-                songDescription.AppendLine().Append("*Możesz użyć komendy `event "+ songObject.Event + "` aby uzyskać więcej informacji o danym evencie*");
+                songDescription.Append("Piosenka  używana w evencie: ").Append(eventObject.Japanese_name);
+                if (eventObject.English_name != null)
+                {
+                    songDescription.Append(" (").Append(eventObject.English_name).Append(")");
+                }
+                songDescription.AppendLine().Append("*Możesz użyć komendy `eventJP "+ eventObject.Japanese_name + "` lub `eventEN " + eventObject.Japanese_name + "` aby uzyskać więcej informacji o danym evencie*").AppendLine();
             }
 
             songDescription.Append(":notepad_spiral: **Statystyki** ").AppendLine();

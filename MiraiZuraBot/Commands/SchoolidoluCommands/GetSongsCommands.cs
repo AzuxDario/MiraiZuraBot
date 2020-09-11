@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using MiraiZuraBot.Attributes;
+using MiraiZuraBot.Containers.Schoolidolu.Event;
 using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Helpers.SchoolidoluHelper;
 using MiraiZuraBot.Services.SchoolidoluService;
@@ -46,6 +47,33 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             else
             {
                 await ctx.RespondAsync("Wystąpił błąd.");
+            }
+        }
+
+        [Command("piosenka")]
+        [Description("Pokazuje piosenkę.\n------------------------------\nSkąd wziąć japońską nazwę ?\nKomendą `wyszukajEvent 1 <nazwa japońska bądź angielska>`")]
+        public async Task GetJapanEvent(CommandContext ctx, [Description("Nazwa piosenki po japońsku."), RemainingText] string name)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var songObject = _schoolidoluService.GetSongByName(name);
+
+            if (songObject.StatusCode == HttpStatusCode.OK)
+            {
+                EventObject eventObject = null;
+                if(songObject.Data.Event != null)
+                {
+                    var songObjectwithEvent = _schoolidoluService.GetSongByNameWithEvent(name);
+                    eventObject = songObjectwithEvent.Data.Event;
+                }
+                await PostEmbedHelper.PostEmbed(ctx, "Piosenka", _schoolidoluHelper.MakeSongDescription(songObject.Data, eventObject),
+                    songObject.Data.Image != null ? "https:" + songObject.Data.Image : null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+            }
+            else
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Piosenka",
+                    "Wystąpił błąd podczas pobierania piosnki. Sprawdź czy podałeś poprawną nazwę. Pamiętaj aby podać japońską nazwę piosenki.",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
     }
