@@ -456,14 +456,23 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
         [Command("wyszukajEvent")]
         [Description("Wyszukuje nazwy eventów.\nnp:\n`wyszukajEvent 1 Medley`\nPolecam jako początkową stronę podać `1`.")]
-        public async Task SearchEvent(CommandContext ctx, [Description("Strona wyników.")] int page, [Description("Słowa kluczowe."), RemainingText] string keywords)
+        public async Task SearchEvent(CommandContext ctx, [Description("Strona wyników.")] string page, [Description("Słowa kluczowe."), RemainingText] string keywords)
         {
             await ctx.TriggerTypingAsync();
+
+            int intPage;
+
+            if (!int.TryParse(page, out intPage))
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie eventów", "Wystąpił błąd podczas wyszukiwania eventów. Przed zapytaniem podaj numer strony.\nnp. `wyszukajEvent 1 You`",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                return;
+            }
 
             Dictionary<string, string> options = new Dictionary<string, string>
             {
                 { "search", keywords },
-                { "page", page.ToString() }
+                { "page", intPage.ToString() }
             };
 
             var eventObject = _schoolidoluService.GetEvent(options);
@@ -473,7 +482,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (eventObject.Data.Count != 0)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie eventów", _schoolidoluHelper.MakeSearchEventDescription(eventObject.Data, 10, page),
+                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie eventów", _schoolidoluHelper.MakeSearchEventDescription(eventObject.Data, 10, intPage),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else

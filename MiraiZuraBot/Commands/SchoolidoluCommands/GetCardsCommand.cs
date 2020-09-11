@@ -127,16 +127,25 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             "\nDozwolone atrybuty: `Smile`, `Pure`, `Cool`, `All`nDozwolone rzadkości: `N`, `R`, `SR`, `SSR`, `UR`" +
             "\n Można podać jedną wartość atrybutu oraz wiele rzadkości w dowolnym miejscu zapytania." +
             "\nWyszukiwanie odbywa się po imionach, skillach oraz eventach.")]
-        public async Task SearchCard(CommandContext ctx, [Description("Strona wyników.")] int page, [Description("Słowa kluczowe."), RemainingText] string keywords)
+        public async Task SearchCard(CommandContext ctx, [Description("Strona wyników.")] string page, [Description("Słowa kluczowe."), RemainingText] string keywords)
         {
             await ctx.TriggerTypingAsync();
+
+            int intPage;
+
+            if(!int.TryParse(page, out intPage))
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie kart", "Wystąpił błąd podczas wyszukiwania kart. Przed zapytaniem podaj numer strony.\nnp. `wyszukajKarte 1 You`",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                return;
+            }
 
             Dictionary<string, string> options = new Dictionary<string, string>
             {
                 { "rarity", FindAndRemoveRarity(keywords, out keywords)},
                 { "attribute", FindAndRemoveAttribute(keywords, out keywords)},
                 { "search", keywords.Trim() },
-                { "page", page.ToString() }
+                { "page", intPage.ToString() }
             };
 
             var cardObject = _schoolidoluService.GetCard(options);
@@ -146,7 +155,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (cardObject.Data.Count != 0)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie kart", _schoolidoluHelper.MakeSearchCardDescription(cardObject.Data, 10, page),
+                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie kart", _schoolidoluHelper.MakeSearchCardDescription(cardObject.Data, 10, intPage),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else
