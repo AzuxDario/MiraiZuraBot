@@ -335,6 +335,24 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return eventDescription.ToString();
         }
 
+        public string MakeSearchSongDescription(PaginatedResponse<SongObject> songObjects, int elemPerPage, int page)
+        {
+            StringBuilder songDescription = new StringBuilder();
+            songDescription.Append(":notepad_spiral: **Wyników ").Append(songObjects.Count).Append(". Oto ").Append(songObjects.Results.Count).Append("**").AppendLine();
+            songDescription.Append(":name_badge: ").Append("Japońska nazwa").Append(" - :name_badge: ").Append("Romaji").Append(" - :microphone: ").Append("Main unit").
+                Append(" - ").Append(GetEmojiForAttribute(null)).Append(" ").Append("Atrybut").AppendLine();
+            songDescription.Append("---------------------------------------------------------").AppendLine();
+            foreach (var songObject in songObjects.Results)
+            {
+                songDescription.Append(":name_badge: ").Append(songObject.Name).Append(" - :name_badge: ").Append(songObject.Romaji_name ?? "brak danych").Append(" - :microphone: ").Append(songObject.Main_unit ?? "brak danych").
+                 Append(" - ").Append(GetEmojiForAttribute(songObject.Attribute)).Append(" ").Append(songObject.Attribute ?? "brak danych").AppendLine();
+            }
+            songDescription.Append("---------------------------------------------------------").AppendLine();
+            songDescription.Append("Strona ").Append(page).Append(" z ").Append(songObjects.Count / elemPerPage + 1);
+
+            return songDescription.ToString();
+        }
+
         private string GetEmojiAvailability(bool? value)
         {
             switch (value)

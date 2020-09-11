@@ -76,5 +76,51 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
+
+        [Command("wyszukajPiosenke")]
+        [Description("Wyszukuje piosenki.\nnp:\n`wyszukajPiosenke 1 Snow`\nPolecam jako początkową stronę podać `1`." +
+            "\nWyszukiwanie odbywa się po nazwach.")]
+        public async Task SearchIdol(CommandContext ctx, [Description("Strona wyników.")] string page, [Description("Słowa kluczowe."), RemainingText] string keywords)
+        {
+            await ctx.TriggerTypingAsync();
+
+            int intPage;
+
+            if (!int.TryParse(page, out intPage))
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie piosenek", "Wystąpił błąd podczas wyszukiwania piosenek. Przed zapytaniem podaj numer strony.\nnp. `wyszukajPiosenke 1 Snow`",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                return;
+            }
+
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { "search", keywords },
+                { "page", intPage.ToString() }
+            };
+
+            var songObject = _schoolidoluService.GetSong(options);
+
+            if (songObject.StatusCode == HttpStatusCode.OK)
+            {
+
+                if (songObject.Data.Count != 0)
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie piosenek", _schoolidoluHelper.MakeSearchSongDescription(songObject.Data, 10, intPage),
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+                else
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie piosenek", "Brak wyników, spróbuj wyszukać inną frazę.",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                }
+            }
+            else
+            {
+                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie piosenek",
+                    "Wystąpił błąd podczas pobierania piosenek. Mogło nastąpić odwołanie do nieistniejącej strony. Spróbuj wybrać stronę pierwszą.\n`wyszukajPiosenke 1 " + keywords + "`",
+                        null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+            }
+        }
     }
 }
