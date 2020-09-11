@@ -177,20 +177,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             List<string> rarityToFind = new List<string>(){ " N ", " R ", " SR ", " SSR ", " UR "};
             List<string> rarityToAdd = new List<string>() { "N", "R", "SR", "SSR", "UR" };
 
-            List<string> foundRarities = new List<string>();
-
-            query += " ";
-
-            for(int i = 0; i < rarityToFind.Count; i++)
-            {
-                if (query.IndexOf(rarityToFind[i], StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    foundRarities.Add(rarityToAdd[i]);
-                    query = query.Replace(rarityToFind[i], " ", true, null);
-                }
-            }
-            newQuery = query;
-            return string.Join(",", foundRarities);
+            return FindAndRemove(rarityToFind, rarityToAdd, query, out newQuery);
         }
 
         private string FindAndRemoveAttribute(string query, out string newQuery)
@@ -198,20 +185,25 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             List<string> attributeToFind = new List<string>() { " Smile ", " Pure ", " Cool ", " All "};
             List<string> attributeToAdd = new List<string>() { "Smile", "Pure", "Cool", "All" };
 
-            List<string> foundAttributes = new List<string>();
+            return FindAndRemove(attributeToFind, attributeToAdd, query, out newQuery);
+        }
+
+        private string FindAndRemove(List<string> thingsToFind, List<string> thingsToAdd, string query, out string newQuery)
+        {
+            List<string> foundThings = new List<string>();
 
             query += " ";
 
-            for (int i = 0; i < attributeToFind.Count; i++)
+            for (int i = 0; i < thingsToFind.Count; i++)
             {
-                if (query.IndexOf(attributeToFind[i], StringComparison.OrdinalIgnoreCase) >= 0)
+                if (query.IndexOf(thingsToFind[i], StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    foundAttributes.Add(attributeToAdd[i]);
-                    query = query.Replace(attributeToFind[i], " ", true, null);
+                    foundThings.Add(thingsToAdd[i]);
+                    query = query.Replace(thingsToFind[i], " ", true, null);
                 }
             }
             newQuery = query;
-            return string.Join(",", foundAttributes);
+            return string.Join(",", foundThings);
         }
     }
 }
