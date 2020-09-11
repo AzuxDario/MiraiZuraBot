@@ -261,7 +261,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                 {
                     songDescription.Append(" (").Append(eventObject.English_name).Append(")");
                 }
-                songDescription.AppendLine().Append("*Możesz użyć komendy `eventJP "+ eventObject.Japanese_name + "` lub `eventEN " + eventObject.Japanese_name + "` aby uzyskać więcej informacji o danym evencie*").AppendLine();
+                songDescription.AppendLine().Append("*Możesz użyć komendy `eventJP "+ eventObject.Japanese_name + "` lub `eventEN " + eventObject.Japanese_name + "` aby uzyskać więcej informacji o danym evencie.*").AppendLine();
             }
 
             songDescription.Append(":notepad_spiral: **Statystyki** ").AppendLine();
