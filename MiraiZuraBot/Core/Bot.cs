@@ -14,6 +14,7 @@ using MiraiZuraBot.Services.EmojiService;
 using MiraiZuraBot.Services.RandomMessagesService;
 using MiraiZuraBot.Services.RolesService;
 using MiraiZuraBot.Services.SchoolidoluService;
+using MiraiZuraBot.Services.TriviaService;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -121,6 +122,7 @@ namespace MiraiZuraBot.Core
             .AddScoped<EmojiCounterService>()
             .AddScoped<RandomMessageService>()
             .AddScoped<SchoolidoluService>()
+            .AddScoped<TriviaService>()
 
             .BuildServiceProvider();
         }
