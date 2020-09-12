@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MiraiZuraBot.Database.Models.DynamicDB;
+using MiraiZuraBot.Database.Models.DynamicDB.Trivia;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,9 @@ namespace MiraiZuraBot.Database
         public virtual DbSet<PostedBirthday> PostedBirthdays { get; set; }
         public virtual DbSet<BirthdayRole> BirthdayRoles { get; set; }
         public virtual DbSet<RandomMessage> RandomMessages { get; set; }
+        public virtual DbSet<TriviaContent> TriviaContents { get; set; }
+        public virtual DbSet<TriviaTopic> TriviaTopics { get; set; }
+        public virtual DbSet<TriviaTopicContent> TriviaTopicContents { get; set; }
         public DynamicDBContext() : base(GetOptions("Data Source=DynamicDatabase.sqlite"))
         {
 
