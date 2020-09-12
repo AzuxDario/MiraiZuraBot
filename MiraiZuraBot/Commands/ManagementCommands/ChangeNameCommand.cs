@@ -29,7 +29,7 @@ namespace MiraiZuraBot.Commands.ManagementCommands
             await ctx.Guild.CurrentMember.ModifyAsync(p => p.Nickname = name);
         }
 
-        [Command("UsunPseudonim")]
+        [Command("usunPseudonim")]
         [Description("Usuń pseudonim bota.")]
         [RequireOwner]
         public async Task RemoveNick(CommandContext ctx)
