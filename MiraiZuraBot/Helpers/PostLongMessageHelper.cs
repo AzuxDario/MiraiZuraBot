@@ -11,24 +11,14 @@ namespace MiraiZuraBot.Helpers
         public static async Task PostLongMessage(CommandContext ctx, List<string> strings, string header = null)
         {
             StringBuilder response = new StringBuilder(2000);
-            if(header != null)
-            {
-                response.Append(header);
-                response.AppendLine();
-            }
             foreach (string s in strings)
             {
                 response.Append(s);
 
                 if (response.Length > 1800)
                 {
-                    await ctx.RespondAsync(response.ToString());
+                    await PostEmbedHelper.PostEmbed(ctx, header, response.ToString());
                     response.Clear();
-                    if (header != null)
-                    {
-                        response.Append(header);
-                        response.AppendLine();
-                    }
                     continue;
                 }
                 if (strings.IndexOf(s) != strings.Count - 1)
@@ -38,7 +28,7 @@ namespace MiraiZuraBot.Helpers
             }
             if (response.Length > 0)
             {
-                await ctx.RespondAsync(response.ToString());
+                await PostEmbedHelper.PostEmbed(ctx, header, response.ToString());
                 return;
             }
         }
