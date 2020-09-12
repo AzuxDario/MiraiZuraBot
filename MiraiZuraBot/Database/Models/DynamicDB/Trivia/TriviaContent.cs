@@ -8,6 +8,7 @@ namespace MiraiZuraBot.Database.Models.DynamicDB.Trivia
     {
         public int ID { get; set; }
         public string Content { get; set; }
+        public string Source { get; set; }
 
         public virtual List<TriviaTopicContent> TriviaTopicContents { get; set; }
     }
