@@ -46,13 +46,15 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     {
                         await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, true),
                             cardData.Data.Card_idolized_image != null ? "http:" + cardData.Data.Card_idolized_image : null,
-                            cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter());
+                            cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
+                            _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
                     }
                     else
                     {
                         await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, false),
                             cardData.Data.Card_image != null ? "http:" + cardData.Data.Card_image : null,
-                            cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter());
+                            cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
+                            _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
                     }
                 }
                 else
@@ -62,13 +64,15 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     {
                         await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, false),
                             cardData.Data.Card_image != null ? "http:" + cardData.Data.Card_image : null,
-                            cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter());
+                            cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
+                            _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
                     }
                     else
                     {
                         await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, true),
                             cardData.Data.Card_idolized_image != null ? "http:" + cardData.Data.Card_idolized_image : null,
-                            cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter());
+                            cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
+                            _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
                     }
                 }
             }
@@ -106,14 +110,16 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name,
                         _schoolidoluHelper.MakeCardDescription(cardsResponse.Data.Results[0], false),
                             cardsResponse.Data.Results[0].Card_image != null ? "http:" + cardsResponse.Data.Results[0].Card_image : null,
-                            cardsResponse.Data.Results[0].Round_card_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_image) : null, SchoolidoluHelper.GetSchoolidoluFotter());
+                            cardsResponse.Data.Results[0].Round_card_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_image) : null, SchoolidoluHelper.GetSchoolidoluFotter(),
+                            _schoolidoluHelper.GetColorForAttribute(cardsResponse.Data.Results[0].Attribute));
                 }
                 else
                 {
                     await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name,
                         _schoolidoluHelper.MakeCardDescription(cardsResponse.Data.Results[0], true),
                             cardsResponse.Data.Results[0].Card_idolized_image != null ? "http:" + cardsResponse.Data.Results[0].Card_idolized_image : null,
-                            cardsResponse.Data.Results[0].Round_card_idolized_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_idolized_image) : null, SchoolidoluHelper.GetSchoolidoluFotter());
+                            cardsResponse.Data.Results[0].Round_card_idolized_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_idolized_image) : null, SchoolidoluHelper.GetSchoolidoluFotter(),
+                            _schoolidoluHelper.GetColorForAttribute(cardsResponse.Data.Results[0].Attribute));
                 }
             }
             else

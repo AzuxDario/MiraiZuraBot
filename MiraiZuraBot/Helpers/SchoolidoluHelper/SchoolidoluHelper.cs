@@ -448,6 +448,23 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             }
         }
 
+        public string GetColorForAttribute(string attribute)
+        {
+            switch (attribute)
+            {
+                case "Smile":
+                    return "#e91a8b";
+                case "Pure":
+                    return "#00bb44";
+                case "Cool":
+                    return "#03bbfe";
+                case "All":
+                    return "#c958f6";
+                default:
+                    return "#ffffff";
+            }
+        }
+
         private DateTime? ConvertToPolandTimeFromUtc(DateTime? time)
         {
             if (time == null)

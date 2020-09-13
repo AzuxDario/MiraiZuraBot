@@ -39,7 +39,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             if (idolObject.StatusCode == HttpStatusCode.OK)
             {
                 string description = _schoolidoluHelper.MakeIdolDescription(idolObject.Data);
-                await PostEmbedHelper.PostEmbed(ctx, "Idolka", description, idolObject.Data.Chibi, idolObject.Data.Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter());
+                await PostEmbedHelper.PostEmbed(ctx, "Idolka", description, idolObject.Data.Chibi, idolObject.Data.Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter(),
+                    _schoolidoluHelper.GetColorForAttribute(idolObject.Data.Attribute));
             }
             else
             {
@@ -64,7 +65,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             if (idolsResponse.StatusCode == HttpStatusCode.OK)
             {
                 string description = _schoolidoluHelper.MakeIdolDescription(idolsResponse.Data.Results[0]);
-                await PostEmbedHelper.PostEmbed(ctx, "Losowa idolka", description, idolsResponse.Data.Results[0].Chibi, idolsResponse.Data.Results[0].Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter());
+                await PostEmbedHelper.PostEmbed(ctx, "Losowa idolka", description, idolsResponse.Data.Results[0].Chibi, idolsResponse.Data.Results[0].Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter(),
+                    _schoolidoluHelper.GetColorForAttribute(idolsResponse.Data.Results[0].Attribute));
             }
             else
             {

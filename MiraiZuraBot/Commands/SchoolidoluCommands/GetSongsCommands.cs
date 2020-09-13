@@ -42,7 +42,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             if (songsResponse.StatusCode == HttpStatusCode.OK)
             {
                 await PostEmbedHelper.PostEmbed(ctx, "Losowa piosenka", _schoolidoluHelper.MakeSongDescription(songsResponse.Data.Results[0]),
-                    songsResponse.Data.Results[0].Image != null ? "https:" + songsResponse.Data.Results[0].Image : null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                    songsResponse.Data.Results[0].Image != null ? "https:" + songsResponse.Data.Results[0].Image : null, null, SchoolidoluHelper.GetSchoolidoluFotter(),
+                    _schoolidoluHelper.GetColorForAttribute(songsResponse.Data.Results[0].Attribute));
             }
             else
             {
@@ -67,7 +68,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     eventObject = songObjectwithEvent.Data.Event;
                 }
                 await PostEmbedHelper.PostEmbed(ctx, "Piosenka", _schoolidoluHelper.MakeSongDescription(songObject.Data, eventObject),
-                    songObject.Data.Image != null ? "https:" + songObject.Data.Image : null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                    songObject.Data.Image != null ? "https:" + songObject.Data.Image : null, null, SchoolidoluHelper.GetSchoolidoluFotter(),
+                    _schoolidoluHelper.GetColorForAttribute(songObject.Data.Attribute));
             }
             else
             {
