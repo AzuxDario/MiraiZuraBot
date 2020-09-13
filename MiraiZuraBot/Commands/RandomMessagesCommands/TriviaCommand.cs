@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Services.TriviaService;
@@ -39,18 +40,11 @@ namespace MiraiZuraBot.Commands.RandomMessagesCommands
                 if(!topics.Contains(topic))
                 {
                     await PostEmbedHelper.PostEmbed(ctx, "Ciekawostka", "Brak podanego tematu. Sprawdź listę tematów komendą `tematyCiekawostek`");
-                }
-                else
-                {
-                    var trivia = _triviaService.GetTrivia(topic);
-                    await PostEmbedHelper.PostEmbed(ctx, "Ciekawostka", trivia.Content, null, null, null);
+                    return;
                 }
             }
-            else
-            {
-                var trivia = _triviaService.GetTrivia();                
-                await PostEmbedHelper.PostEmbed(ctx, "Ciekawostka", trivia.Content, null, null, null);
-            }
+            var trivia = _triviaService.GetTrivia(topic);                
+            await PostEmbedHelper.PostEmbed(ctx, "Ciekawostka", trivia.Content + "\nŹródło: " + trivia.Source, null, null, null);
         }
     }
 }
