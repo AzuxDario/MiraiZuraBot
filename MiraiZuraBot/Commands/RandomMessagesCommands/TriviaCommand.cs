@@ -28,5 +28,29 @@ namespace MiraiZuraBot.Commands.RandomMessagesCommands
             List<string> topics = _triviaService.GetTopics();
             await PostLongMessageHelper.PostLongMessage(ctx, topics, "Tematy ciekawostek");
         }
+
+        [Command("ciekawostka")]
+        [Description("Pokazuje ciekawostkę")]
+        public async Task GetTrivia(CommandContext ctx, [Description("Temat z listy tematów.")] [RemainingText] string topic = null)
+        {
+            if(topic != null)
+            {
+                List<string> topics = _triviaService.GetTopics();
+                if(!topics.Contains(topic))
+                {
+                    await PostEmbedHelper.PostEmbed(ctx, "Ciekawostka", "Brak podanego tematu. Sprawdź listę tematów komendą `tematyCiekawostek`");
+                }
+                else
+                {
+                    var trivia = _triviaService.GetTrivia(topic);
+                    await PostEmbedHelper.PostEmbed(ctx, "Ciekawostka", trivia.Content, null, null, null);
+                }
+            }
+            else
+            {
+                var trivia = _triviaService.GetTrivia();                
+                await PostEmbedHelper.PostEmbed(ctx, "Ciekawostka", trivia.Content, null, null, null);
+            }
+        }
     }
 }
