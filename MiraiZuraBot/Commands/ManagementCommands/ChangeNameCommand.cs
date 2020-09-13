@@ -1,5 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Net.Models;
 using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Core;
 using System;
@@ -15,12 +16,25 @@ namespace MiraiZuraBot.Commands.ManagementCommands
         [Command("zmienNazwe")]
         [Description("Zmień imię bota.")]
         [RequireOwner]
-        public async Task ChangeName(CommandContext ctx, [Description("New name.")] [RemainingText] string name)
+        public async Task ChangeName(CommandContext ctx, [Description("Nowe imię.")] [RemainingText] string name)
         {
-            if (ctx.Member.Id == Bot.configJson.Developer)
-            {
-                await Bot.DiscordClient.UpdateCurrentUserAsync(name);
-            }
+            await Bot.DiscordClient.UpdateCurrentUserAsync(name);
+        }
+
+        [Command("zmienPseudonim")]
+        [Description("Zmień pseudonim bota.")]
+        [RequireOwner]
+        public async Task ChangeNick(CommandContext ctx, [Description("Nowy pseudonim.")] [RemainingText] string name)
+        {
+            await ctx.Guild.CurrentMember.ModifyAsync(p => p.Nickname = name);
+        }
+
+        [Command("usunPseudonim")]
+        [Description("Usuń pseudonim bota.")]
+        [RequireOwner]
+        public async Task RemoveNick(CommandContext ctx)
+        {
+            await ctx.Guild.CurrentMember.ModifyAsync(p => p.Nickname = null);
         }
     }
 }

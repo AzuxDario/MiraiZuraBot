@@ -8,11 +8,13 @@ using Microsoft.Extensions.DependencyInjection;
 using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Handlers.EmojiHandlers;
 using MiraiZuraBot.Helpers.SchoolidoluHelper;
+using MiraiZuraBot.Helpers.TimeHelper;
 using MiraiZuraBot.Services.AnnouncementService;
 using MiraiZuraBot.Services.EmojiService;
 using MiraiZuraBot.Services.RandomMessagesService;
 using MiraiZuraBot.Services.RolesService;
 using MiraiZuraBot.Services.SchoolidoluService;
+using MiraiZuraBot.Services.TriviaService;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -112,6 +114,7 @@ namespace MiraiZuraBot.Core
 
             // Helpers
             .AddScoped<SchoolidoluHelper>()
+            .AddScoped<TimeHelper>()
 
             // Services
             .AddScoped<AssignRolesService>()
@@ -119,6 +122,7 @@ namespace MiraiZuraBot.Core
             .AddScoped<EmojiCounterService>()
             .AddScoped<RandomMessageService>()
             .AddScoped<SchoolidoluService>()
+            .AddScoped<TriviaService>()
 
             .BuildServiceProvider();
         }

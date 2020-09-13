@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MiraiZuraBot.Database;
 using MiraiZuraBot.Database.Models.DynamicDB;
+using MiraiZuraBot.Helpers.TimeHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,13 @@ namespace MiraiZuraBot.Services.AnnouncementService
     {
         public enum TurnOnStatus { TurnedOn, AlreadyTurnedOn, TopicDoesntExist };
         public enum TurnOffStatus { TurnedOff, AlreadyTurnedOff, TopicDoesntExist };
+
+        private TimeHelper _timeHelper;
+
+        public BirthdaysService(TimeHelper timeHelper)
+        {
+            _timeHelper = timeHelper;
+        }
 
         public List<string> GetBirthdayTopics()
         {
@@ -139,7 +147,7 @@ namespace MiraiZuraBot.Services.AnnouncementService
                         continue;
                     }
 
-                    DateTime todayJapan = GetCurrentJapanTime();
+                    DateTime todayJapan = _timeHelper.GetCurrentJapanTime();
                     bool mentionEveryone = false;
 
                     // Get topic id for this channel
@@ -185,7 +193,7 @@ namespace MiraiZuraBot.Services.AnnouncementService
 
         public void AcknowledgementForPostingBirthdays(int birthdayId, int birthdayChannelId)
         {
-            DateTime todayJapan = GetCurrentJapanTime();
+            DateTime todayJapan = _timeHelper.GetCurrentJapanTime();
             using (var databaseContext = new DynamicDBContext())
             {
                 PostedBirthday postedInformation = new PostedBirthday
@@ -200,21 +208,6 @@ namespace MiraiZuraBot.Services.AnnouncementService
                 databaseContext.PostedBirthdays.Add(postedInformation);
                 databaseContext.SaveChanges();
             }
-        }
-
-        public DateTime GetCurrentJapanTime()
-        {
-            DateTime todayUTC = DateTime.UtcNow;
-            TimeZoneInfo japanTimeZone;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
-            }
-            else
-            {
-                japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Japan");
-            }
-            return TimeZoneInfo.ConvertTimeFromUtc(todayUTC, japanTimeZone);
         }
     }
 }
