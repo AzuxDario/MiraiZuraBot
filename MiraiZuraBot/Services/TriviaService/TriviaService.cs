@@ -1,6 +1,5 @@
 ﻿using MiraiZuraBot.Database;
 using MiraiZuraBot.Database.Models.DynamicDB.Trivia;
-using MiraiZuraBot.Helpers.DatabaseHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
