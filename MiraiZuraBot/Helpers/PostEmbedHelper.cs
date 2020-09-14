@@ -10,7 +10,8 @@ namespace MiraiZuraBot.Helpers
 {
     class PostEmbedHelper
     {
-        public static async Task PostEmbed(CommandContext ctx, string title = null, string description = null, string imageLink = null, string thumbnailLink = null, DiscordEmbedBuilder.EmbedFooter footer = null)
+        public static async Task PostEmbed(CommandContext ctx, string title = null, string description = null, string imageLink = null, string thumbnailLink = null, DiscordEmbedBuilder.EmbedFooter footer = null,
+            string color = null)
         {
             // Discord can't handle links with japanese characters
             if (imageLink != null)
@@ -32,15 +33,26 @@ namespace MiraiZuraBot.Helpers
                 thumbnailLink += changedThumbnail;
             }
 
+            
+
             var embed = new DiscordEmbedBuilder
             {
-                Color = new DiscordColor("#00a8ff"),
                 ImageUrl = imageLink,
                 ThumbnailUrl = thumbnailLink,
                 Description = description,
                 Title = title,
                 Footer = footer
             };
+
+            if (color == null)
+            {
+                embed.Color = new DiscordColor("#00a8ff");
+            }
+            else
+            {
+                embed.Color = new DiscordColor(color);
+            }
+
             await ctx.RespondAsync(null, false, embed);
         }
     }
