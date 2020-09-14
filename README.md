@@ -18,6 +18,8 @@ Bot has advertising feature, which allows to auto post messages every year on ce
 
 # Commands
 Since it's polish bot, most commands are in polish.
+## Time
+  * jst - Shows time in Japan.
 ## Emoji
   * policzEmoji - Show emoji usage counters.
 ## Advertising
@@ -26,14 +28,26 @@ Since it's polish bot, most commands are in polish.
   * wlaczTematUrodzin - Enable birthday topic.
   * wylaczTematUrodzin - Disable birthday topic.
 ## SIF (School Idol Festival)
+  * eventEN - Shows info about event on EN server based on event name.
+  * eventJP - Shows info about event on JP server based on event name.
   * idolka - Shows idol informations based on her name.
   * karta - Shows SIF card based on id and information about idolisation.
   * losowaIdolka - Shows random idol.
   * losowaKarta - Shows random card.
-  * obecnyEventEN - Shows info about current event in SIF EN.
-  * obecnyEventJP - Shows info about current event in SIF JP.
+  * losowaPiosenka  Shows random song.
+  * losowyEventEN - Shows random event in SIF EN.
+  * losowyEventJP - Shows random event in SIF JP.
   * nastepnyEventEN - Shows info about next event in SIF EN.
   * nastepnyEventJP - Shows info about next event in SIF JP.
+  * obecnyEventEN - Shows info about current event in SIF EN.
+  * obecnyEventJP - Shows info about current event in SIF JP.
+  * piosenka - Shows info about song based on name.
+  * poprzedniEventEN - Shows info about previous event in SIF EN.
+  * poprzenidEventJP - Shows info about previous event in SIF JP.
+  * wyszukajEvent - Search for events.
+  * wyszukajIdolke - Search for idols.
+  * wyszukajKarte - Search for cards.
+  * wyszukajPiosenke - Search for songs.
 ## Roles
   * pokazRole - Shows the roles that you can assign yourself on server.
   * nadajRole - Assign role to you from the role list.
@@ -42,8 +56,13 @@ Since it's polish bot, most commands are in polish.
   * usunRole - Removes a role from the role list that can be assigned by server members.
 ## Help
   * help - Shows help.
-## Special
-  * ping - Check ping
+## Stats
+  * github - Shows repository link.
+  * ping - Check ping.
+## Text
+  * AqoursNews - Fake news about Aqours.
+  * ciekawostka - Random trivia.
+  * tematyCiekawostek - Trivia topics.
  
 # Used libraries
   * [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus)
