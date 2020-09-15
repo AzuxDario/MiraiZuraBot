@@ -29,89 +29,85 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
         public string MakeCardDescription(Translator.Language lang, CardObject cardObject, bool isIdolised)
         {
             StringBuilder cardDescription = new StringBuilder();
-            cardDescription.AppendFormat(":name_badge: **{0}** ({1})", tr.GetString(lang, "cardCharacter"), cardObject.Idol.Name).AppendLine();
-
-            cardDescription.Append(":pencil: ").AppendFormat("**ID** ({0})", cardObject.Id).AppendLine();
-
-            cardDescription.Append(":love_letter: ").AppendFormat("**Rzadkość** ({0})", cardObject.Rarity).AppendLine();
-
-            cardDescription.Append(GetEmojiForAttribute(cardObject.Attribute)).Append(" ").AppendFormat("**Atrybut** ({0})", cardObject.Attribute).AppendLine();
-
-            cardDescription.Append(":dress: ").AppendFormat("**Set** ({0})", cardObject.Translated_collection ?? "brak").AppendLine();
-
-            cardDescription.Append(":calendar: ").AppendFormat("**Data wypuszczenia (yyyy-MM-dd)** ({0})", cardObject.Release_date ?? "brak").AppendLine();   
-            
-            cardDescription.Append(GetEmojiAvailability(cardObject.Japan_only)).Append(" ")
-                .AppendFormat("** Dostępność ** ({0})", cardObject.Japan_only.Value ? "Dostępne tylko na JP" : "Dostępne na JP i EN" ?? "brak").AppendLine();
-
-            cardDescription.Append(":heart: ").AppendFormat("**HP** ({0})", cardObject.Hp?.ToString() ?? "brak").AppendLine();
-
-            cardDescription.Append(":dizzy: ").AppendFormat("**Skill** ({0})", cardObject.Skill ?? "brak").AppendLine();
-
-            cardDescription.Append(cardObject.Skill_details ?? "brak").AppendLine();
-
-            cardDescription.Append(":sparkles: ").AppendFormat("**Center skill** ({0})", cardObject.Center_skill ?? "brak").AppendLine();
-
-            cardDescription.Append(cardObject.Center_skill_details ?? "brak").AppendLine();
-            
-            cardDescription.Append(":globe_with_meridians: ").AppendFormat("**URL** [{0}]({1})", "schoolido.lu", cardObject.Website_url).AppendLine();
-
-            cardDescription.Append(":notepad_spiral: **Statystyki** ").AppendLine();
-            cardDescription.Append(":red_circle: ").AppendFormat("Smile: {0} - {1} - {2}",
-                cardObject.Minimum_statistics_smile ?? "brak",
-                cardObject.Non_idolized_maximum_statistics_smile ?? "brak",
-                cardObject.Idolized_maximum_statistics_smile ?? "brak").AppendLine();
-            cardDescription.Append(":green_circle: ").AppendFormat("Pure: {0} - {1} - {2}",
-                cardObject.Minimum_statistics_pure ?? "brak",
-                cardObject.Non_idolized_maximum_statistics_pure ?? "brak",
-                cardObject.Idolized_maximum_statistics_pure ?? "brak").AppendLine();
-            cardDescription.Append(":blue_circle: ").AppendFormat("Cool: {0} - {1} - {2}",
-                cardObject.Minimum_statistics_cool ?? "brak",
-                cardObject.Non_idolized_maximum_statistics_cool ?? "brak",
-                cardObject.Idolized_maximum_statistics_cool ?? "brak").AppendLine();
-
-            
+            cardDescription.AppendFormat(":name_badge: **{0}** ({1})\n" +
+                ":pencil: **{2}** ({3})\n" +
+                ":love_letter: **{4}** ({5})\n" +
+                "{6} **{7}** ({8})\n" +
+                ":dress: **{9}** ({10})\n" +
+                ":calendar: **{11}** ({12})\n" +
+                "{13} **{14}** ({15})\n" +
+                ":heart: **{16}** ({17})\n" +
+                ":dizzy: **{18}** ({19})\n" +
+                "{20}\n" +
+                ":sparkles: **{21}** ({22})\n" +
+                "{23}\n" +
+                ":globe_with_meridians: **{24}** [schoolido.lu]({25})\n" +
+                ":notepad_spiral: **{26}**\n" +
+                ":red_circle: {27}: {28} - {29} - {30}\n" +
+                ":green_circle: {31}: {32} - {33} - {34}\n" +
+                ":blue_circle: {35}: {36} - {37} - {38}\n",
+                tr.GetString(lang, "cardCharacter"), cardObject.Idol.Name,
+                tr.GetString(lang, "cardID"), cardObject.Id,
+                tr.GetString(lang, "cardRarity"), cardObject.Rarity,
+                GetEmojiForAttribute(cardObject.Attribute), tr.GetString(lang, "cardAttribute"), cardObject.Attribute,
+                tr.GetString(lang, "cardSet"), cardObject.Translated_collection ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "cardRelease"), cardObject.Release_date ?? tr.GetString(lang, "noData"),
+                GetEmojiAvailability(cardObject.Japan_only), tr.GetString(lang, "cardAvailability"),
+                cardObject.Japan_only.Value ? tr.GetString(lang, "cardOnlyJP") : tr.GetString(lang, "cardJPandEN") ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "cardHP"), cardObject.Hp?.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "cardSkill"), cardObject.Skill ?? tr.GetString(lang, "noData"),
+                cardObject.Skill_details ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "cardCenterSkill"), cardObject.Center_skill ?? tr.GetString(lang, "noData"),
+                cardObject.Center_skill_details ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "cardURL"), cardObject.Website_url,
+                tr.GetString(lang, "cardStats"),
+                tr.GetString(lang, "smile"), cardObject.Minimum_statistics_smile ?? tr.GetString(lang, "noData"),
+                cardObject.Non_idolized_maximum_statistics_smile ?? tr.GetString(lang, "noData"), cardObject.Idolized_maximum_statistics_smile ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "pure"), cardObject.Minimum_statistics_pure ?? tr.GetString(lang, "noData"),
+                cardObject.Non_idolized_maximum_statistics_pure ?? tr.GetString(lang, "noData"), cardObject.Idolized_maximum_statistics_pure ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "cool"), cardObject.Minimum_statistics_cool ?? tr.GetString(lang, "noData"),
+                cardObject.Non_idolized_maximum_statistics_cool ?? tr.GetString(lang, "noData"), cardObject.Idolized_maximum_statistics_cool ?? tr.GetString(lang, "noData"));           
 
             if(cardObject.Rarity == "UR")
             {
-                cardDescription.Append(":handshake: ").Append("**Para** ").AppendLine();
+                cardDescription.AppendFormat(":handshake: **{0}**\n", tr.GetString(lang, "cardPair"));
                 {
                     if(cardObject.Ur_pair != null)
                     {
-                        cardDescription.AppendFormat("{0} ({1})", cardObject.Ur_pair.Card?.Name ?? "brak", cardObject.Ur_pair.Card?.Id ?? "brak").AppendLine();
+                        cardDescription.AppendFormat("{0} ({1})\n", cardObject.Ur_pair.Card?.Name ?? tr.GetString(lang, "noData"), cardObject.Ur_pair.Card?.Id ?? tr.GetString(lang, "noData"));
                         if(cardObject.Ur_pair.Card != null && cardObject.Ur_pair.Card.Id != null)
                         {
-                            cardDescription.AppendFormat("*Możesz zobaczyć tę kartę komendą `karta {0}`.*", cardObject.Ur_pair.Card.Id).AppendLine();
+                            cardDescription.Append("*").AppendFormat(tr.GetString(lang, "cardPairDetail"), cardObject.Ur_pair.Card.Id).Append("*\n");
                         }
                     }
                     else
                     {
-                        cardDescription.Append("Karta nie ma pary.").AppendLine();
+                        cardDescription.Append(tr.GetString(lang, "cardNoPair")).AppendLine();
                     }
                 }
             }
 
-            cardDescription.Append(":stadium: ").Append("**Event**").Append(" ").AppendLine();
+            cardDescription.AppendFormat(":stadium: **{0}**\n", tr.GetString(lang, "cardEvent"));
             if (cardObject.Event == null)
             {
-                cardDescription.Append("Karta nie pochodzi z eventu.").AppendLine();
+                cardDescription.Append(tr.GetString(lang, "cardNoEvent")).AppendLine();
             }
             else
             {
                 if(cardObject.Other_event == null)
                 {
-                    cardDescription.Append(":name_badge: ").Append("**Event JP**").AppendLine();
+                    cardDescription.AppendFormat(":name_badge: **{0}**\n", tr.GetString(lang, "cardEventJP"));
                     cardDescription.Append(cardObject.Event.Japanese_name).AppendLine();
-                    cardDescription.Append(":name_badge: ").Append("**Event EN** ").AppendLine();
-                    cardDescription.Append(cardObject.Event.English_name ?? "brak").AppendLine();
+                    cardDescription.AppendFormat(":name_badge: **{0}**\n", tr.GetString(lang, "cardEventEN"));
+                    cardDescription.Append(cardObject.Event.English_name ?? tr.GetString(lang, "noData")).AppendLine();
                 }
                 else
                 {
-                    cardDescription.Append("Karta na EN była w innym evencie niż na JP.").AppendLine();
-                    cardDescription.Append(":name_badge: ").Append("**Event JP**").AppendLine();
+                    cardDescription.Append(tr.GetString(lang, "cardEventDifferent")).AppendLine();
+                    cardDescription.AppendFormat(":name_badge: **{0}**\n", tr.GetString(lang, "cardEventJP"));
                     cardDescription.Append(cardObject.Event.Japanese_name).AppendLine();
-                    cardDescription.Append(":name_badge: ").Append("**Event EN** ").AppendLine();
-                    cardDescription.Append(cardObject.Other_event.English_name ?? "brak").AppendLine();
+                    cardDescription.AppendFormat(":name_badge: **{0}**\n", tr.GetString(lang, "cardEventEN"));
+                    cardDescription.Append(cardObject.Other_event.English_name ?? tr.GetString(lang, "noData")).AppendLine();
                 }
             }
 
