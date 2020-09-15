@@ -274,49 +274,56 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return eventDescription.ToString();
         }
 
-        public string MakeSongDescription(SongObject songObject, EventObject eventObject = null)
+        public string MakeSongDescription(Translator.Language lang, SongObject songObject, EventObject eventObject = null)
         {
             StringBuilder songDescription = new StringBuilder();
-            songDescription.Append(":name_badge: **Tytuł**").Append(" (").Append(songObject.Name);
-            if (songObject.Romaji_name != null)
-            {
-                songDescription.Append(" (").Append(songObject.Romaji_name).Append(")");
-            }
-            songDescription.Append(")").AppendLine();
-            songDescription.Append(":microphone: **Main unit**").Append(" (").Append(songObject.Main_unit ?? "brak").Append(")").AppendLine();
-            songDescription.Append(GetEmojiForAttribute(songObject.Attribute)).Append(" **Atrybut**").Append(" (").Append(songObject.Attribute ?? "brak").Append(")").AppendLine();
-            songDescription.Append(":watch: **Czas**").Append(" (").Append(songObject.Time.ToString() ?? "brak").Append(")").AppendLine();
-            songDescription.Append(":stopwatch: **BPM**").Append(" (").Append(songObject.Bpm.ToString() ?? "brak").Append(")").AppendLine();
-            songDescription.Append(":stadium: **Event** ").AppendLine();
+            songDescription.AppendFormat(":name_badge: **{0}** ({1} ({2}))\n" +
+                ":microphone: **{3}** ({4})\n" +
+                "{5} **{6}** ({7})\n" +
+                ":watch: **{8}** {9}\n" +
+                ":stopwatch: **{10}** {11}\n" +
+                ":stadium: **{12}**\n",
+                tr.GetString(lang, "songTitle"), songObject.Name, songObject.Romaji_name ?? "",
+                tr.GetString(lang, "songMainUnit"), songObject.Main_unit ?? tr.GetString(lang, "noData"),
+                GetEmojiForAttribute(songObject.Attribute), tr.GetString(lang, "songAttribute"), songObject.Attribute ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songTime"), songObject.Time.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songBpm"), songObject.Bpm.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songEvent"));
+
             if (eventObject == null)
             {
-                songDescription.Append("Piosenka nie była używana w evencie.").AppendLine();
+                songDescription.Append(tr.GetString(lang, "songNotInEvent")).AppendLine();
             }
             else
             {
-                songDescription.Append("Piosenka  używana w evencie: ").Append(eventObject.Japanese_name);
+                songDescription.Append(tr.GetString(lang, "songInEvent")).Append(eventObject.Japanese_name);
                 if (eventObject.English_name != null)
                 {
                     songDescription.Append(" (").Append(eventObject.English_name).Append(")");
                 }
-                songDescription.AppendLine().Append("*Możesz użyć komendy `eventJP "+ eventObject.Japanese_name + "` lub `eventEN " + eventObject.Japanese_name + "` aby uzyskać więcej informacji o danym evencie.*").AppendLine();
+                songDescription.AppendLine().Append("*").AppendFormat(tr.GetString(lang, "songEventDetail"), eventObject.Japanese_name).Append("*").AppendLine();
             }
 
-            songDescription.Append(":notepad_spiral: **Statystyki** ").AppendLine();
-            songDescription.Append("Easy - :star: Trudność ").Append(songObject.Easy_difficulty.ToString() ?? "brak")
-                           .Append(" - :musical_note: Nutki ").Append(songObject.Easy_notes.ToString() ?? "brak").AppendLine();
-            songDescription.Append("Normal - :star: Trudność ").Append(songObject.Normal_difficulty.ToString() ?? "brak")
-                           .Append(" - :musical_note: Nutki ").Append(songObject.Normal_notes.ToString() ?? "brak").AppendLine();
-            songDescription.Append("Hard - :star: Trudność ").Append(songObject.Hard_difficulty.ToString() ?? "brak")
-                           .Append(" - :musical_note: Nutki ").Append(songObject.Hard_notes.ToString() ?? "brak").AppendLine();
-            songDescription.Append("Expert - :star: Trudność ").Append(songObject.Expert_difficulty.ToString() ?? "brak")
-                           .Append(" - :musical_note: Nutki ").Append(songObject.Expert_notes.ToString() ?? "brak").AppendLine();
-            songDescription.Append("Master - :star: Trudność ").Append(songObject.Master_difficulty.ToString() ?? "brak")
-                           .Append(" - :musical_note: Nutki ").Append(songObject.Master_notes.ToString() ?? "brak").AppendLine();
-
-            songDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(songObject.Website_url).Append(")");
-
-            songDescription.AppendLine();
+            songDescription.AppendFormat(":notepad_spiral: **{0}**\n" +
+                "{1} - :star: {2} {3} - :musical_note: {4} {5}\n" +
+                "{6} - :star: {7} {8} - :musical_note: {9} {10}\n" +
+                "{11} - :star: {12} {13} - :musical_note: {14} {15}\n" +
+                "{16} - :star: {17} {18} - :musical_note: {19} {20}\n" +
+                "{21} - :star: {22} {23} - :musical_note: {24} {25}\n" +
+                ":globe_with_meridians: **{26}**\n" +
+                "[schoolido.lu]({27})",
+                tr.GetString(lang, "songStats"),
+                tr.GetString(lang, "songEasy"), tr.GetString(lang, "songDifficulty"), songObject.Easy_difficulty.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songNotes"), songObject.Easy_notes.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songNormal"), tr.GetString(lang, "songDifficulty"), songObject.Normal_difficulty.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songNotes"), songObject.Normal_notes.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songHard"), tr.GetString(lang, "songDifficulty"), songObject.Hard_difficulty.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songNotes"), songObject.Hard_notes.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songExpert"), tr.GetString(lang, "songDifficulty"), songObject.Expert_difficulty.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songNotes"), songObject.Expert_notes.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songMaster"), tr.GetString(lang, "songDifficulty"), songObject.Master_difficulty.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songNotes"), songObject.Master_notes.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "songURL"), songObject.Website_url);
 
             return songDescription.ToString();
         }

@@ -5,11 +5,13 @@ using MiraiZuraBot.Containers.Schoolidolu.Event;
 using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Helpers.SchoolidoluHelper;
 using MiraiZuraBot.Services.SchoolidoluService;
+using MiraiZuraBot.Translators;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static MiraiZuraBot.Translators.Translator;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {
@@ -18,11 +20,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
     {
         private SchoolidoluService _schoolidoluService;
         private SchoolidoluHelper _schoolidoluHelper;
+        private Translator _translator;
 
-        public GetSongsCommands(SchoolidoluService schoolidoluService, SchoolidoluHelper schoolidoluHelper)
+        public GetSongsCommands(SchoolidoluService schoolidoluService, SchoolidoluHelper schoolidoluHelper, Translator translator)
         {
             _schoolidoluService = schoolidoluService;
             _schoolidoluHelper = schoolidoluHelper;
+            _translator = translator;
         }
 
         [Command("losowaPiosenka")]
@@ -41,13 +45,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if (songsResponse.StatusCode == HttpStatusCode.OK)
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Losowa piosenka", _schoolidoluHelper.MakeSongDescription(songsResponse.Data.Results[0]),
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "songRandom"), _schoolidoluHelper.MakeSongDescription(Language.Polish, songsResponse.Data.Results[0]),
                     songsResponse.Data.Results[0].Image != null ? "https:" + songsResponse.Data.Results[0].Image : null, null, SchoolidoluHelper.GetSchoolidoluFotter(),
                     _schoolidoluHelper.GetColorForAttribute(songsResponse.Data.Results[0].Attribute));
             }
             else
             {
-                await ctx.RespondAsync("Wystąpił błąd.");
+                await ctx.RespondAsync(_translator.GetString(Language.Polish, "songRandomError"));
             }
         }
 
@@ -67,14 +71,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     var songObjectwithEvent = _schoolidoluService.GetSongByNameWithEvent(name);
                     eventObject = songObjectwithEvent.Data.Event;
                 }
-                await PostEmbedHelper.PostEmbed(ctx, "Piosenka", _schoolidoluHelper.MakeSongDescription(songObject.Data, eventObject),
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "song"), _schoolidoluHelper.MakeSongDescription(Language.Polish, songObject.Data, eventObject),
                     songObject.Data.Image != null ? "https:" + songObject.Data.Image : null, null, SchoolidoluHelper.GetSchoolidoluFotter(),
                     _schoolidoluHelper.GetColorForAttribute(songObject.Data.Attribute));
             }
             else
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Piosenka",
-                    "Wystąpił błąd podczas pobierania piosnki. Sprawdź czy podałeś poprawną nazwę. Pamiętaj aby podać japońską nazwę piosenki.",
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "song"),
+                    _translator.GetString(Language.Polish, "songError"),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
@@ -90,7 +94,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if (!int.TryParse(page, out intPage))
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie piosenek", "Wystąpił błąd podczas wyszukiwania piosenek. Przed zapytaniem podaj numer strony.\nnp. `wyszukajPiosenke 1 Snow`",
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "songSearch"), _translator.GetString(Language.Polish, "songSearchNoPage"),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 return;
             }
@@ -108,19 +112,19 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (songObject.Data.Count != 0)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie piosenek", _schoolidoluHelper.MakeSearchSongDescription(songObject.Data, 10, intPage),
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "songSearch"), _schoolidoluHelper.MakeSearchSongDescription(songObject.Data, 10, intPage),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie piosenek", "Brak wyników, spróbuj wyszukać inną frazę.",
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "songSearch"), _translator.GetString(Language.Polish, "songSearchNoResult"),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
             }
             else
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie piosenek",
-                    "Wystąpił błąd podczas pobierania piosenek. Mogło nastąpić odwołanie do nieistniejącej strony. Spróbuj wybrać stronę pierwszą.\n`wyszukajPiosenke 1 " + keywords + "`",
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "songSearch"),
+                    string.Format(_translator.GetString(Language.Polish, "songSearchError"), keywords.Trim()),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
