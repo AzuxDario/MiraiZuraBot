@@ -43,24 +43,24 @@ namespace MiraiZuraBot.Translators
                 Dictionary<string, string> dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(file);
                 languageStrings.Add(lang, dict);
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException ex)
             {
-                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Can't find language file: " + filename, DateTime.Now);
+                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Can't find language file: " + filename + " Errored: " + ex.Message, DateTime.Now);
                 Environment.Exit(-1);
             } 
-            catch (DirectoryNotFoundException)
+            catch (DirectoryNotFoundException ex)
             {
-                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Can't find directory: " + translationsDirectory, DateTime.Now);
+                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Can't find directory: " + translationsDirectory + " Errored: " + ex.Message, DateTime.Now);
                 Environment.Exit(-1);
             }
-            catch (JsonSerializationException)
+            catch (JsonSerializationException ex)
             {
-                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Problem in JSON file: " + filename, DateTime.Now);
+                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Problem in JSON file: " + filename + " Errored: " + ex.Message, DateTime.Now);
                 Environment.Exit(-1);
             }
-            catch
+            catch (Exception ex)
             {
-                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Problem during reading: " + filename, DateTime.Now);
+                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Problem during reading: " + filename + " Errored: " + ex.Message, DateTime.Now);
                 Environment.Exit(-1);
             }
         }
