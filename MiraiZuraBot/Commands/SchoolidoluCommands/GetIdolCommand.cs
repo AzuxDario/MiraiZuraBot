@@ -6,6 +6,7 @@ using MiraiZuraBot.Containers.Schoolidolu.Idols;
 using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Helpers.SchoolidoluHelper;
 using MiraiZuraBot.Services.SchoolidoluService;
+using MiraiZuraBot.Translators;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using static MiraiZuraBot.Translators.Translator;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {
@@ -21,11 +23,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
     {
         private SchoolidoluService _schoolidoluService;
         private SchoolidoluHelper _schoolidoluHelper;
+        private Translator _translator;
 
-        public GetIdolCommand(SchoolidoluService schoolidoluService, SchoolidoluHelper schoolidoluHelper)
+        public GetIdolCommand(SchoolidoluService schoolidoluService, SchoolidoluHelper schoolidoluHelper, Translator translator)
         {
             _schoolidoluService = schoolidoluService;
             _schoolidoluHelper = schoolidoluHelper;
+            _translator = translator;
     }
 
         [Command("idolka")]
@@ -38,7 +42,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if (idolObject.StatusCode == HttpStatusCode.OK)
             {
-                string description = _schoolidoluHelper.MakeIdolDescription(idolObject.Data);
+                string description = _schoolidoluHelper.MakeIdolDescription(Language.Polish, idolObject.Data);
                 await PostEmbedHelper.PostEmbed(ctx, "Idolka", description, idolObject.Data.Chibi, idolObject.Data.Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter(),
                     _schoolidoluHelper.GetColorForAttribute(idolObject.Data.Attribute));
             }
@@ -64,7 +68,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if (idolsResponse.StatusCode == HttpStatusCode.OK)
             {
-                string description = _schoolidoluHelper.MakeIdolDescription(idolsResponse.Data.Results[0]);
+                string description = _schoolidoluHelper.MakeIdolDescription(Language.Polish, idolsResponse.Data.Results[0]);
                 await PostEmbedHelper.PostEmbed(ctx, "Losowa idolka", description, idolsResponse.Data.Results[0].Chibi, idolsResponse.Data.Results[0].Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter(),
                     _schoolidoluHelper.GetColorForAttribute(idolsResponse.Data.Results[0].Attribute));
             }

@@ -114,55 +114,62 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return cardDescription.ToString();
         }
 
-        public string MakeIdolDescription(IdolObject idolObject)
+        public string MakeIdolDescription(Translator.Language lang, IdolObject idolObject)
         {
             StringBuilder idolDescription = new StringBuilder();
-            idolDescription.Append(":name_badge: ").AppendFormat("**Imie** ({0} ({1}))", idolObject.Name, idolObject.Japanese_name ?? "brak kanji").AppendLine();
-
-            idolDescription.Append(":school: ").AppendFormat("**Szkoła** ({0})", idolObject.School ?? "brak").AppendLine();
-
-            idolDescription.Append(":microphone: ").AppendFormat("**Main unit** ({0})", idolObject.Main_unit ?? "brak").AppendLine();
-
-            idolDescription.Append(":notes: ").AppendFormat("**Sub unit** ({0})", idolObject.Sub_unit ?? "brak").AppendLine();
-
-            idolDescription.Append(GetEmojiForYear(idolObject.Year)).Append(" ").AppendFormat("**Rok** ({0})", idolObject.Year ?? "brak").AppendLine();
-
-            idolDescription.Append(":notes: ").AppendFormat("**Sub unit** ({0})", idolObject.Sub_unit ?? "brak").AppendLine();
-
-            idolDescription.Append(":calendar: ").AppendFormat("**Wiek** ({0})", idolObject.Age?.ToString() ?? "brak").AppendLine();
-
-            idolDescription.Append(":birthday: ").AppendFormat("**Urodziny (MM-dd)** ({0})", idolObject.Birthday ?? "brak").AppendLine();
-
-            idolDescription.Append(GetEmojiForZodiacSign(idolObject.Astrological_sign)).Append(" ").AppendFormat("**Znak zodiaku** ({0})", idolObject.Astrological_sign ?? "brak").AppendLine();
-
-            idolDescription.Append(GetEmojiForBloodType(idolObject.Blood)).Append(" ").AppendFormat("**Grupa krwi** ({0})", idolObject.Blood ?? "brak").AppendLine();
-
-            idolDescription.Append(":straight_ruler: ").AppendFormat("**Wzrost** ({0})", idolObject.Height?.ToString() ?? "brak").AppendLine();
-
-            idolDescription.Append(GetEmojiForAttribute(idolObject.Attribute)).Append(" ").AppendFormat("**Atrybut** ({0})", idolObject.Attribute ?? "brak").AppendLine();
-            
-            idolDescription.Append(":ramen: ").Append("**Ulubione jedzenie**").Append(" ").AppendLine();
-            idolDescription.Append(idolObject.Favorite_food ?? "brak").AppendLine();
-            idolDescription.Append(":broccoli: ").Append("**Nielubiane jedzenie**").Append(" ").AppendLine();
-            idolDescription.Append(idolObject.Least_favorite_food ?? "brak").AppendLine();
-            idolDescription.Append(":ping_pong: ").Append("**Hobby**").Append(" ").AppendLine();
-            idolDescription.Append(idolObject.Hobbies ?? "brak").AppendLine();
-            
-            idolDescription.Append(":microphone2: **Seiyuu** ").AppendLine();
-            idolDescription.Append(idolObject.Cv?.Name ?? "brak").AppendLine();
-            idolDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(idolObject.Website_url).Append(")");
+            idolDescription.AppendFormat(":name_badge: **{0}** ({1}({2}))\n" +
+                ":school: **{3}** ({4})\n" +
+                ":microphone: **{5}** ({6})\n" +
+                ":notes: **{7}** ({8})\n" +
+                "{9} **{10}** ({11})\n" +
+                ":calendar: **{12}** ({13})\n" +
+                ":birthday: **{14}** ({15})\n" +
+                "{16} **{17}** ({18})\n" + 
+                "{19} **{20}** ({21})\n" +
+                ":straight_ruler: **{22}** ({23})\n" +
+                "{24} **{25}** ({2})\n" + 
+                ":ramen: **{27}**\n" +
+                "{28}\n" +
+                ":broccoli: **{29}**\n" +
+                "{30}\n" +
+                ":ping_pong: **{31}**\n" +
+                "{32}\n" +
+                ":microphone2: **{33}**\n" +
+                "{34}\n" +
+                ":globe_with_meridians: **{35}**\n" +
+                "[schoolido.lu]({36})",
+                tr.GetString(lang, "characterName"), idolObject.Name, idolObject.Japanese_name ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "characterSchool"), idolObject.School ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "characterMainUnit"), idolObject.Main_unit ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "characterSubUnit"), idolObject.Sub_unit ?? tr.GetString(lang, "noData"),
+                GetEmojiForYear(idolObject.Year), tr.GetString(lang, "characterYear"), idolObject.Year ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "characterAge"), idolObject.Age?.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "characterBirthday"), idolObject.Birthday ?? tr.GetString(lang, "noData"),
+                GetEmojiForZodiacSign(idolObject.Astrological_sign), tr.GetString(lang, "characterZodiac"), idolObject.Astrological_sign ?? tr.GetString(lang, "noData"),
+                GetEmojiForBloodType(idolObject.Blood), tr.GetString(lang, "characterBloodType"), idolObject.Blood ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "characterHeight"), idolObject.Height?.ToString() ?? tr.GetString(lang, "noData"),
+                GetEmojiForAttribute(idolObject.Attribute), tr.GetString(lang, "characterAttribute"), idolObject.Attribute ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "characterFavoriteFood"),
+                idolObject.Favorite_food ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "characterDislikedFood"),
+                idolObject.Least_favorite_food ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "characterHobby"),
+                idolObject.Hobbies ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "characterSeiyuu"),
+                idolObject.Cv?.Name ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "characterURL"), idolObject.Website_url);
 
             if (idolObject.Wiki_url != null && idolObject.Wiki_url != "")
             {
-                idolDescription.Append(" [").Append("wiki").Append("](").Append(idolObject.Wiki_url.Replace("%20", "_")).Append(")");
+                idolDescription.Append(" [wiki](").Append(idolObject.Wiki_url.Replace("%20", "_")).Append(")");
             }
             if (idolObject.Wikia_url != null && idolObject.Wikia_url != "")
             {
-                idolDescription.Append(" [").Append("wikia").Append("](").Append(idolObject.Wikia_url).Append(")");
+                idolDescription.Append(" [wikia](").Append(idolObject.Wikia_url).Append(")");
             }
             if (idolObject.Official_url != null && idolObject.Official_url != "")
             {
-                idolDescription.Append(" [").Append("lovelive-anime.jp").Append("](").Append(idolObject.Official_url).Append(")");
+                idolDescription.Append(" [lovelive-anime.jp](").Append(idolObject.Official_url).Append(")");
             }
 
             idolDescription.AppendLine();
