@@ -45,12 +45,12 @@ namespace MiraiZuraBot.Translators
             }
             catch (FileNotFoundException)
             {
-                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Cant find langauage file: " + filename, DateTime.Now);
+                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Can't find langauage file: " + filename, DateTime.Now);
                 
             } 
             catch (DirectoryNotFoundException)
             {
-                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Cant find directory: " + translationsDirectory, DateTime.Now);
+                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Can't find directory: " + translationsDirectory, DateTime.Now);
             }
         }
     }
