@@ -53,8 +53,14 @@ namespace MiraiZuraBot.Translators
                 Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Can't find directory: " + translationsDirectory, DateTime.Now);
                 Environment.Exit(-1);
             }
+            catch (JsonSerializationException)
+            {
+                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Problem in JSON file: " + filename, DateTime.Now);
+                Environment.Exit(-1);
+            }
             catch
             {
+                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Problem during reading: " + filename, DateTime.Now);
                 Environment.Exit(-1);
             }
         }
