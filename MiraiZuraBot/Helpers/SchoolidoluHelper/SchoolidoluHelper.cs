@@ -113,22 +113,35 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
         public string MakeIdolDescription(IdolObject idolObject)
         {
             StringBuilder idolDescription = new StringBuilder();
-            idolDescription.Append(":name_badge: **Imie**").Append(" (").Append(idolObject.Name).Append(" (").Append(idolObject.Japanese_name ?? "brak kanji").Append(")").Append(")").AppendLine();
-            idolDescription.Append(":school: **Szkoła**").Append(" (").Append(idolObject.School ?? "brak").Append(")").AppendLine();
-            idolDescription.Append(":microphone: **Main unit**").Append(" (").Append(idolObject.Main_unit ?? "brak").Append(")").AppendLine();
-            idolDescription.Append(":notes: **Sub unit**").Append(" (").Append(idolObject.Sub_unit ?? "brak").Append(")").AppendLine();
-            idolDescription.Append(GetEmojiForYear(idolObject.Year)).Append(" **Rok**").Append(" (").Append(idolObject.Year ?? "brak").Append(")").AppendLine();
-            idolDescription.Append(":calendar: **Wiek**").Append(" (").Append(idolObject.Age?.ToString() ?? "brak").Append(")").AppendLine();
-            idolDescription.Append(":birthday: **Urodziny (MM-dd)**").Append(" (").Append(idolObject.Birthday ?? "brak").Append(")").AppendLine();
-            idolDescription.Append(GetEmojiForZodiacSign(idolObject.Astrological_sign)).Append(" **Znak zodiaku**").Append(" (").Append(idolObject.Astrological_sign ?? "brak").Append(")").AppendLine();
-            idolDescription.Append(GetEmojiForBloodType(idolObject.Blood)).Append(" **Grupa krwi**").Append(" (").Append(idolObject.Blood ?? "brak").Append(")").AppendLine();
-            idolDescription.Append(":straight_ruler: **Wzrost**").Append(" (").Append(idolObject.Height?.ToString() ?? "brak").Append(")").AppendLine();
-            idolDescription.Append(GetEmojiForAttribute(idolObject.Attribute)).Append(" **Atrybut**").Append(" (").Append(idolObject.Attribute ?? "brak").Append(")").AppendLine();
-            idolDescription.Append(":ramen: **Ulubione jedzenie** ").AppendLine();
+            idolDescription.Append(":name_badge: ").AppendFormat("**Imie** ({0} ({1}))", idolObject.Name, idolObject.Japanese_name ?? "brak kanji").AppendLine();
+
+            idolDescription.Append(":school: ").AppendFormat("**Szkoła** ({0})", idolObject.School ?? "brak").AppendLine();
+
+            idolDescription.Append(":microphone: ").AppendFormat("**Main unit** ({0})", idolObject.Main_unit ?? "brak").AppendLine();
+
+            idolDescription.Append(":notes: ").AppendFormat("**Sub unit** ({0})", idolObject.Sub_unit ?? "brak").AppendLine();
+
+            idolDescription.Append(GetEmojiForYear(idolObject.Year)).Append(" ").AppendFormat("**Rok** ({0})", idolObject.Year ?? "brak").AppendLine();
+
+            idolDescription.Append(":notes: ").AppendFormat("**Sub unit** ({0})", idolObject.Sub_unit ?? "brak").AppendLine();
+
+            idolDescription.Append(":calendar: ").AppendFormat("**Wiek** ({0})", idolObject.Age?.ToString() ?? "brak").AppendLine();
+
+            idolDescription.Append(":birthday: ").AppendFormat("**Urodziny (MM-dd)** ({0})", idolObject.Birthday ?? "brak").AppendLine();
+
+            idolDescription.Append(GetEmojiForZodiacSign(idolObject.Astrological_sign)).Append(" ").AppendFormat("**Znak zodiaku** ({0})", idolObject.Astrological_sign ?? "brak").AppendLine();
+
+            idolDescription.Append(GetEmojiForBloodType(idolObject.Blood)).Append(" ").AppendFormat("**Grupa krwi** ({0})", idolObject.Blood ?? "brak").AppendLine();
+
+            idolDescription.Append(":straight_ruler: ").AppendFormat("**Wzrost** ({0})", idolObject.Height?.ToString() ?? "brak").AppendLine();
+
+            idolDescription.Append(GetEmojiForAttribute(idolObject.Attribute)).Append(" ").AppendFormat("**Atrybut** ({0})", idolObject.Attribute ?? "brak").AppendLine();
+            
+            idolDescription.Append(":ramen: ").Append("**Ulubione jedzenie**").Append(" ").AppendLine();
             idolDescription.Append(idolObject.Favorite_food ?? "brak").AppendLine();
-            idolDescription.Append(":broccoli: **Nielubiane jedzenie** ").AppendLine();
+            idolDescription.Append(":broccoli: ").Append("**Nielubiane jedzenie**").Append(" ").AppendLine();
             idolDescription.Append(idolObject.Least_favorite_food ?? "brak").AppendLine();
-            idolDescription.Append(":ping_pong: **Hobby** ").AppendLine();
+            idolDescription.Append(":ping_pong: ").Append("**Hobby**").Append(" ").AppendLine()
             idolDescription.Append(idolObject.Hobbies ?? "brak").AppendLine();
             
             idolDescription.Append(":microphone2: **Seiyuu** ").AppendLine();
