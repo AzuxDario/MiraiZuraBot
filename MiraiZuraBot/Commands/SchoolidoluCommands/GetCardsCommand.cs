@@ -6,6 +6,7 @@ using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Helpers.SchoolidoluHelper;
 using MiraiZuraBot.Services.SchoolidoluService;
+using MiraiZuraBot.Translators;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using static MiraiZuraBot.Translators.Translator;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {
@@ -21,11 +23,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
     {
         private SchoolidoluService _schoolidoluService;
         private SchoolidoluHelper _schoolidoluHelper;
+        private Translator _translator;
 
-        public GetCardsCommand(SchoolidoluService schoolidoluService, SchoolidoluHelper schoolidoluHelper)
+        public GetCardsCommand(SchoolidoluService schoolidoluService, SchoolidoluHelper schoolidoluHelper, Translator translator)
         {
             _schoolidoluService = schoolidoluService;
             _schoolidoluHelper = schoolidoluHelper;
+            _translator = translator;
         }
 
 
@@ -44,14 +48,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     // Some cards might not have idolised version
                     if (cardData.Data.Card_idolized_image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, true),
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, true),
                             cardData.Data.Card_idolized_image != null ? "http:" + cardData.Data.Card_idolized_image : null,
                             cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, false),
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, false),
                             cardData.Data.Card_image != null ? "http:" + cardData.Data.Card_image : null,
                             cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
@@ -62,14 +66,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     // Some cards are only idolised
                     if (cardData.Data.Card_image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, false),
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, false),
                             cardData.Data.Card_image != null ? "http:" + cardData.Data.Card_image : null,
                             cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(cardData.Data, true),
+                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, true),
                             cardData.Data.Card_idolized_image != null ? "http:" + cardData.Data.Card_idolized_image : null,
                             cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
@@ -108,7 +112,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 if (cardsResponse.Data.Results[0].Card_image != null)
                 {
                     await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name,
-                        _schoolidoluHelper.MakeCardDescription(cardsResponse.Data.Results[0], false),
+                        _schoolidoluHelper.MakeCardDescription(Language.Polish, cardsResponse.Data.Results[0], false),
                             cardsResponse.Data.Results[0].Card_image != null ? "http:" + cardsResponse.Data.Results[0].Card_image : null,
                             cardsResponse.Data.Results[0].Round_card_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_image) : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardsResponse.Data.Results[0].Attribute));
@@ -116,7 +120,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 else
                 {
                     await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name,
-                        _schoolidoluHelper.MakeCardDescription(cardsResponse.Data.Results[0], true),
+                        _schoolidoluHelper.MakeCardDescription(Language.Polish, cardsResponse.Data.Results[0], true),
                             cardsResponse.Data.Results[0].Card_idolized_image != null ? "http:" + cardsResponse.Data.Results[0].Card_idolized_image : null,
                             cardsResponse.Data.Results[0].Round_card_idolized_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_idolized_image) : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardsResponse.Data.Results[0].Attribute));

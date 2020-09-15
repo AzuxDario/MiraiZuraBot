@@ -4,6 +4,7 @@ using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Containers.Schoolidolu.Event;
 using MiraiZuraBot.Containers.Schoolidolu.Idols;
 using MiraiZuraBot.Containers.Schoolidolu.Songs;
+using MiraiZuraBot.Translators;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -13,15 +14,22 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
 {
     class SchoolidoluHelper
     {
+        private Translator tr;
+
+        public SchoolidoluHelper(Translator translator)
+        {
+            tr = translator;
+        }
+
         public static DiscordEmbedBuilder.EmbedFooter GetSchoolidoluFotter()
         {
             return new DiscordEmbedBuilder.EmbedFooter { Text = "Powered by schoolido.lu", IconUrl = "https://i.schoolido.lu/android/icon.png" };
         }
 
-        public string MakeCardDescription(CardObject cardObject, bool isIdolised)
+        public string MakeCardDescription(Translator.Language lang, CardObject cardObject, bool isIdolised)
         {
             StringBuilder cardDescription = new StringBuilder();
-            cardDescription.Append(":name_badge: ").AppendFormat("**Postać** ({0})", cardObject.Idol.Name).AppendLine();
+            cardDescription.AppendFormat(":name_badge: **{0}** ({1})", tr.GetString(lang, "cardCharacter"), cardObject.Idol.Name).AppendLine();
 
             cardDescription.Append(":pencil: ").AppendFormat("**ID** ({0})", cardObject.Id).AppendLine();
 
@@ -141,7 +149,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             idolDescription.Append(idolObject.Favorite_food ?? "brak").AppendLine();
             idolDescription.Append(":broccoli: ").Append("**Nielubiane jedzenie**").Append(" ").AppendLine();
             idolDescription.Append(idolObject.Least_favorite_food ?? "brak").AppendLine();
-            idolDescription.Append(":ping_pong: ").Append("**Hobby**").Append(" ").AppendLine()
+            idolDescription.Append(":ping_pong: ").Append("**Hobby**").Append(" ").AppendLine();
             idolDescription.Append(idolObject.Hobbies ?? "brak").AppendLine();
             
             idolDescription.Append(":microphone2: **Seiyuu** ").AppendLine();

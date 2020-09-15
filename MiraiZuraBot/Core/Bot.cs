@@ -15,6 +15,7 @@ using MiraiZuraBot.Services.RandomMessagesService;
 using MiraiZuraBot.Services.RolesService;
 using MiraiZuraBot.Services.SchoolidoluService;
 using MiraiZuraBot.Services.TriviaService;
+using MiraiZuraBot.Translators;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -30,9 +31,9 @@ namespace MiraiZuraBot.Core
     class Bot
     {
 #if DEBUG
-        readonly string botname = "Mirai Zura Test";
+        public static readonly string botname = "Mirai Zura Test";
 #else
-        readonly string botname = "Mirai Zura";
+        public static readonly string botname = "Mirai Zura";
 #endif
 
         public struct ConfigJson
@@ -111,6 +112,9 @@ namespace MiraiZuraBot.Core
         private ServiceProvider BuildDependencies()
         {
             return new ServiceCollection()
+
+            // Singletons
+            .AddSingleton<Translator>()
 
             // Helpers
             .AddScoped<SchoolidoluHelper>()
