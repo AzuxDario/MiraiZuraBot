@@ -48,14 +48,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     // Some cards might not have idolised version
                     if (cardData.Data.Card_idolized_image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, true),
+                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, true),
                             cardData.Data.Card_idolized_image != null ? "http:" + cardData.Data.Card_idolized_image : null,
                             cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, false),
+                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, false),
                             cardData.Data.Card_image != null ? "http:" + cardData.Data.Card_image : null,
                             cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
@@ -66,14 +66,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     // Some cards are only idolised
                     if (cardData.Data.Card_image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, false),
+                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, false),
                             cardData.Data.Card_image != null ? "http:" + cardData.Data.Card_image : null,
                             cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardData.Data.Id + " : " + cardData.Data.Idol.Name, _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, true),
+                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, true),
                             cardData.Data.Card_idolized_image != null ? "http:" + cardData.Data.Card_idolized_image : null,
                             cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
@@ -82,7 +82,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
             else
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Karta", "Podana karta nie istnieje.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _translator.GetString(Language.Polish, "cardDoesntExist"), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -111,7 +111,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 // Some cards are only idolised
                 if (cardsResponse.Data.Results[0].Card_image != null)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name,
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardRandom"),
                         _schoolidoluHelper.MakeCardDescription(Language.Polish, cardsResponse.Data.Results[0], false),
                             cardsResponse.Data.Results[0].Card_image != null ? "http:" + cardsResponse.Data.Results[0].Card_image : null,
                             cardsResponse.Data.Results[0].Round_card_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_image) : null, SchoolidoluHelper.GetSchoolidoluFotter(),
@@ -119,7 +119,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 }
                 else
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, "Karta " + cardsResponse.Data.Results[0].Id + " : " + cardsResponse.Data.Results[0].Idol.Name,
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardRandom"),
                         _schoolidoluHelper.MakeCardDescription(Language.Polish, cardsResponse.Data.Results[0], true),
                             cardsResponse.Data.Results[0].Card_idolized_image != null ? "http:" + cardsResponse.Data.Results[0].Card_idolized_image : null,
                             cardsResponse.Data.Results[0].Round_card_idolized_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_idolized_image) : null, SchoolidoluHelper.GetSchoolidoluFotter(),
@@ -128,7 +128,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
             else
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Karta", "Podana idolka nie istnieje.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _translator.GetString(Language.Polish, "cardIdolDoesntExist"), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -145,7 +145,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if(!int.TryParse(page, out intPage))
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie kart", "Wystąpił błąd podczas wyszukiwania kart. Przed zapytaniem podaj numer strony.\nnp. `wyszukajKarte 1 You`",
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardSearch"), _translator.GetString(Language.Polish, "cardSearchNoPage"),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 return;
             }
@@ -165,19 +165,19 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (cardObject.Data.Count != 0)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie kart", _schoolidoluHelper.MakeSearchCardDescription(cardObject.Data, 10, intPage),
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardSearch"), _schoolidoluHelper.MakeSearchCardDescription(cardObject.Data, 10, intPage),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie kart", "Brak wyników, spróbuj wyszukać inną frazę. Pamiętaj, że można podać tylko jeden atrybut.",
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardSearch"), _translator.GetString(Language.Polish, "cardSearchNoResult"),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
             }
             else
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie kart",
-                    "Wystąpił błąd podczas pobierania kart. Mogło nastąpić odwołanie do nieistniejącej strony. Spróbuj wybrać stronę pierwszą.\n`wyszukajKarte 1 " + keywords + "`",
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardSearch"),
+                    string.Format(_translator.GetString(Language.Polish, "cardSearchError"), keywords.Trim()),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }

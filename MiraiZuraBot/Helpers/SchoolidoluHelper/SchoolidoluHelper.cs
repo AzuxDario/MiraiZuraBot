@@ -138,26 +138,26 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                 "{34}\n" +
                 ":globe_with_meridians: **{35}**\n" +
                 "[schoolido.lu]({36})",
-                tr.GetString(lang, "characterName"), idolObject.Name, idolObject.Japanese_name ?? tr.GetString(lang, "noData"),
-                tr.GetString(lang, "characterSchool"), idolObject.School ?? tr.GetString(lang, "noData"),
-                tr.GetString(lang, "characterMainUnit"), idolObject.Main_unit ?? tr.GetString(lang, "noData"),
-                tr.GetString(lang, "characterSubUnit"), idolObject.Sub_unit ?? tr.GetString(lang, "noData"),
-                GetEmojiForYear(idolObject.Year), tr.GetString(lang, "characterYear"), idolObject.Year ?? tr.GetString(lang, "noData"),
-                tr.GetString(lang, "characterAge"), idolObject.Age?.ToString() ?? tr.GetString(lang, "noData"),
-                tr.GetString(lang, "characterBirthday"), idolObject.Birthday ?? tr.GetString(lang, "noData"),
-                GetEmojiForZodiacSign(idolObject.Astrological_sign), tr.GetString(lang, "characterZodiac"), idolObject.Astrological_sign ?? tr.GetString(lang, "noData"),
-                GetEmojiForBloodType(idolObject.Blood), tr.GetString(lang, "characterBloodType"), idolObject.Blood ?? tr.GetString(lang, "noData"),
-                tr.GetString(lang, "characterHeight"), idolObject.Height?.ToString() ?? tr.GetString(lang, "noData"),
-                GetEmojiForAttribute(idolObject.Attribute), tr.GetString(lang, "characterAttribute"), idolObject.Attribute ?? tr.GetString(lang, "noData"),
-                tr.GetString(lang, "characterFavoriteFood"),
+                tr.GetString(lang, "idolName"), idolObject.Name, idolObject.Japanese_name ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "idolSchool"), idolObject.School ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "idolMainUnit"), idolObject.Main_unit ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "idolSubUnit"), idolObject.Sub_unit ?? tr.GetString(lang, "noData"),
+                GetEmojiForYear(idolObject.Year), tr.GetString(lang, "idolYear"), idolObject.Year ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "idolAge"), idolObject.Age?.ToString() ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "idolBirthday"), idolObject.Birthday ?? tr.GetString(lang, "noData"),
+                GetEmojiForZodiacSign(idolObject.Astrological_sign), tr.GetString(lang, "idolZodiac"), idolObject.Astrological_sign ?? tr.GetString(lang, "noData"),
+                GetEmojiForBloodType(idolObject.Blood), tr.GetString(lang, "idolBloodType"), idolObject.Blood ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "idolHeight"), idolObject.Height?.ToString() ?? tr.GetString(lang, "noData"),
+                GetEmojiForAttribute(idolObject.Attribute), tr.GetString(lang, "idolAttribute"), idolObject.Attribute ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "idolFavoriteFood"),
                 idolObject.Favorite_food ?? tr.GetString(lang, "noData"),
-                tr.GetString(lang, "characterDislikedFood"),
+                tr.GetString(lang, "idolDislikedFood"),
                 idolObject.Least_favorite_food ?? tr.GetString(lang, "noData"),
-                tr.GetString(lang, "characterHobby"),
+                tr.GetString(lang, "idolHobby"),
                 idolObject.Hobbies ?? tr.GetString(lang, "noData"),
-                tr.GetString(lang, "characterSeiyuu"),
+                tr.GetString(lang, "idolSeiyuu"),
                 idolObject.Cv?.Name ?? tr.GetString(lang, "noData"),
-                tr.GetString(lang, "characterURL"), idolObject.Website_url);
+                tr.GetString(lang, "idolURL"), idolObject.Website_url);
 
             if (idolObject.Wiki_url != null && idolObject.Wiki_url != "")
             {
