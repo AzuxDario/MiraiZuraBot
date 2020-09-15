@@ -46,11 +46,16 @@ namespace MiraiZuraBot.Translators
             catch (FileNotFoundException)
             {
                 Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Can't find language file: " + filename, DateTime.Now);
-                
+                Environment.Exit(-1);
             } 
             catch (DirectoryNotFoundException)
             {
                 Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Can't find directory: " + translationsDirectory, DateTime.Now);
+                Environment.Exit(-1);
+            }
+            catch
+            {
+                Environment.Exit(-1);
             }
         }
     }
