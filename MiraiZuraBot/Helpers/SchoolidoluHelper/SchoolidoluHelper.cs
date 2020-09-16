@@ -366,20 +366,19 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
 
         public string MakeSearchCardDescription(PaginatedResponse<CardObject> cardObjects, int elemPerPage, int page)
         {
-            StringBuilder eventDescription = new StringBuilder();
-            eventDescription.Append(":notepad_spiral: **Wyników ").Append(cardObjects.Count).Append(". Oto ").Append(cardObjects.Results.Count).Append("**").AppendLine();
-            eventDescription.Append(":name_badge: ").Append("Imie").Append(" - :pencil: ").Append("ID").Append(" - :love_letter: ").Append("Rzadkość").
+            StringBuilder cardDescription = new StringBuilder();
+            cardDescription.Append(":notepad_spiral: **Wyników ").Append(cardObjects.Count).Append(". Oto ").Append(cardObjects.Results.Count).Append("**").AppendLine();
+            cardDescription.Append(":name_badge: ").Append("Imie").Append(" - :pencil: ").Append("ID").Append(" - :love_letter: ").Append("Rzadkość").
                 Append(" - ").Append(GetEmojiForAttribute(null)).Append(" ").Append("Atrybut").AppendLine();
-            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            cardDescription.Append("---------------------------------------------------------").AppendLine();
             foreach (var cardObject in cardObjects.Results)
             {
-                eventDescription.Append(":name_badge: ").Append(cardObject.Idol.Name).Append(" - :pencil: ").Append(cardObject.Id).Append(" - :love_letter: ").Append(cardObject.Rarity).
+                cardDescription.Append(":name_badge: ").Append(cardObject.Idol.Name).Append(" - :pencil: ").Append(cardObject.Id).Append(" - :love_letter: ").Append(cardObject.Rarity).
                  Append(" - ").Append(GetEmojiForAttribute(cardObject.Attribute)).Append(" ").Append(cardObject.Attribute).AppendLine();
             }
-            eventDescription.Append("---------------------------------------------------------").AppendLine();
-            eventDescription.Append("Strona ").Append(page).Append(" z ").Append(cardObjects.Count / elemPerPage + 1);
+            AppendFooter(cardDescription, page, cardObjects.Count.Value / elemPerPage + 1);
 
-            return eventDescription.ToString();
+            return cardDescription.ToString();
         }
 
         public string MakeSearchEventDescription(PaginatedResponse<EventObject> eventObjects, int elemPerPage, int page)
@@ -392,28 +391,26 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             {
                 eventDescription.Append(":japan: ").Append(eventObject.Japanese_name).Append(" - :earth_africa: ").Append(eventObject.English_name ?? "brak angielskiej nazwy").AppendLine();
             }
-            eventDescription.Append("---------------------------------------------------------").AppendLine();
-            eventDescription.Append("Strona ").Append(page).Append(" z ").Append(eventObjects.Count / elemPerPage + 1);
+            AppendFooter(eventDescription, page, eventObjects.Count.Value / elemPerPage + 1);
 
             return eventDescription.ToString();
         }
 
         public string MakeSearchIdolDescription(PaginatedResponse<IdolObject> idolObjects, int elemPerPage, int page)
         {
-            StringBuilder eventDescription = new StringBuilder();
-            eventDescription.Append(":notepad_spiral: **Wyników ").Append(idolObjects.Count).Append(". Oto ").Append(idolObjects.Results.Count).Append("**").AppendLine();
-            eventDescription.Append(":name_badge: ").Append("Imie").Append(" - :microphone: ").Append("Main unit").Append(" - :school: ").Append("Szkoła").
+            StringBuilder idolDescription = new StringBuilder();
+            idolDescription.Append(":notepad_spiral: **Wyników ").Append(idolObjects.Count).Append(". Oto ").Append(idolObjects.Results.Count).Append("**").AppendLine();
+            idolDescription.Append(":name_badge: ").Append("Imie").Append(" - :microphone: ").Append("Main unit").Append(" - :school: ").Append("Szkoła").
                 Append(" - ").Append(GetEmojiForAttribute(null)).Append(" ").Append("Atrybut").AppendLine();
-            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            idolDescription.Append("---------------------------------------------------------").AppendLine();
             foreach (var idolObject in idolObjects.Results)
             {
-                eventDescription.Append(":name_badge: ").Append(idolObject.Name).Append(" - :microphone: ").Append(idolObject.Main_unit ?? "brak").Append(" - :school: ").Append(idolObject.School ?? "brak").
+                idolDescription.Append(":name_badge: ").Append(idolObject.Name).Append(" - :microphone: ").Append(idolObject.Main_unit ?? "brak").Append(" - :school: ").Append(idolObject.School ?? "brak").
                  Append(" - ").Append(GetEmojiForAttribute(idolObject.Attribute)).Append(" ").Append(idolObject.Attribute ?? "brak").AppendLine();
             }
-            eventDescription.Append("---------------------------------------------------------").AppendLine();
-            eventDescription.Append("Strona ").Append(page).Append(" z ").Append(idolObjects.Count / elemPerPage + 1);
+            AppendFooter(idolDescription, page, idolObjects.Count.Value / elemPerPage + 1);
 
-            return eventDescription.ToString();
+            return idolDescription.ToString();
         }
 
         public string MakeSearchSongDescription(PaginatedResponse<SongObject> songObjects, int elemPerPage, int page)
@@ -428,10 +425,15 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                 songDescription.Append(":name_badge: ").Append(songObject.Name).Append(" - :name_badge: ").Append(songObject.Romaji_name ?? "brak").Append(" - :microphone: ").Append(songObject.Main_unit ?? "brak").
                  Append(" - ").Append(GetEmojiForAttribute(songObject.Attribute)).Append(" ").Append(songObject.Attribute ?? "brak").AppendLine();
             }
-            songDescription.Append("---------------------------------------------------------").AppendLine();
-            songDescription.Append("Strona ").Append(page).Append(" z ").Append(songObjects.Count / elemPerPage + 1);
+            AppendFooter(songDescription, page, songObjects.Count.Value / elemPerPage + 1);
 
             return songDescription.ToString();
+        }
+
+        private void AppendFooter(StringBuilder builder, int page, int allpages)
+        {
+            builder.Append("---------------------------------------------------------").AppendLine();
+            builder.Append("Strona ").Append(page).Append(" z ").Append(allpages);
         }
 
         private string GetEmojiAvailability(bool? value)
