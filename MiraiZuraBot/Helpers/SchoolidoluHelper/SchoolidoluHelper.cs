@@ -177,98 +177,134 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return idolDescription.ToString();
         }
 
-        public string MakeCurrentWorldEventDescription(EventObject eventObject, bool finished, List<CardObject> eventCards = null)
+        public string MakeCurrentWorldEventDescription(Translator.Language lang, EventObject eventObject, bool finished, List<CardObject> eventCards = null)
         {
             StringBuilder eventDescription = new StringBuilder();
-            eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
-            eventDescription.Append(eventObject.English_name ?? "brak").AppendLine();
-            eventDescription.Append(":name_badge: **Japońska nazwa** ").AppendLine();
-            eventDescription.Append(eventObject.Japanese_name).AppendLine();
-            eventDescription.Append(":clock2: **Czas trwania** ").AppendLine();
-            eventDescription.Append(ConvertToPolandTimeFromUtc(eventObject.English_beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append(" - ")
-                            .Append(ConvertToPolandTimeFromUtc(eventObject.English_end)?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty zakończenia").AppendLine();
+            eventDescription.AppendFormat(":name_badge: **{0}**\n" +
+                "{1}\n" +
+                ":name_badge: **{2}**\n" +
+                "{3}\n" +
+                ":clock2: **{4}**\n" +
+                "{5} - {6}\n",
+                tr.GetString(lang, "eventName"),
+                eventObject.English_name ?? tr.GetString(lang, "noData"),
+                tr.GetString(lang, "eventJapanName"),
+                eventObject.Japanese_name,
+                tr.GetString(lang, "eventDuration"),
+                ConvertToPolandTimeFromUtc(eventObject.English_beginning)?.ToString("HH:mm dd.MM.yyyy") ?? tr.GetString(lang, "eventNoBeginDate"),
+                ConvertToPolandTimeFromUtc(eventObject.English_end)?.ToString("HH:mm dd.MM.yyyy") ?? tr.GetString(lang, "eventNoEndDate"));
+
             if (finished == false)
             {
-                eventDescription.Append(":timer: **Pozostały czas** ").AppendLine();
-                eventDescription.Append(GetTimeToEventEnd(ConvertToPolandTimeFromUtc(eventObject.English_end)) ?? "nie można obliczyć").AppendLine();
+                eventDescription.AppendFormat(":timer: **{0}**\n" +
+                    "{1}\n",
+                    tr.GetString(lang, "eventRemainingTime"),
+                    GetTimeToEventEnd(ConvertToPolandTimeFromUtc(eventObject.English_end)) ?? tr.GetString(lang, "eventCantCalculate"));
             }
-            eventDescription.Append(":clock9: **Czas trwania (UTC)** ").AppendLine();
-            eventDescription.Append(eventObject.English_beginning?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append(" - ")
-                            .Append(eventObject.English_end?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty zakończenia").AppendLine();
-            eventDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(eventObject.Website_url).Append(")").AppendLine();
-            eventDescription.Append(":notepad_spiral: **Dodatkowe informacje** ").AppendLine();
-            eventDescription.Append(eventObject.Note ?? "brak").AppendLine();
+            eventDescription.AppendFormat(":clock12: **{0}**\n" +
+                "{1} - {2}\n" +
+                ":globe_with_meridians: **{3}** [schoolido.lu]({4})\n" +
+                ":notepad_spiral: **{5}**\n" +
+                "{6}\n",
+                tr.GetString(lang, "eventDurationUTC"),
+                eventObject.English_beginning?.ToString("HH:mm dd.MM.yyyy") ?? tr.GetString(lang, "eventNoBeginDate"), eventObject.English_end?.ToString("HH:mm dd.MM.yyyy") ?? tr.GetString(lang, "eventNoEndDate"),
+                tr.GetString(lang, "eventUrl"), eventObject.Website_url,
+                tr.GetString(lang, "eventAdditionalInfo"),
+                eventObject.Note ?? tr.GetString(lang, "noData"));
 
             if (finished == true)
             {
-                eventDescription.Append(":medal: **Tiery** (punkty)").AppendLine();
-                eventDescription.Append(":first_place: **T1** ").Append(eventObject.English_t1_points?.ToString() ?? "brak").AppendLine();
-                eventDescription.Append(":second_place: **T2** ").Append(eventObject.English_t2_points?.ToString() ?? "brak").AppendLine();
+                eventDescription.AppendFormat(":medal: **{0}** ({1})\n" +
+                    ":first_place: **{2}** {3}\n" +
+                    ":second_place: **{4}** {5}\n",
+                    tr.GetString(lang, "eventTiers"), tr.GetString(lang, "eventPoint"),
+                    tr.GetString(lang, "eventT1"), eventObject.English_t1_points?.ToString() ?? tr.GetString(lang, "noData"),
+                    tr.GetString(lang, "eventT2"), eventObject.English_t2_points?.ToString() ?? tr.GetString(lang, "noData"));
             }
 
             if (eventCards != null)
             {
-                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append(eventCards.Count).Append(")").AppendLine();
+                eventDescription.AppendFormat(":microphone: **{0}** ({1})\n",
+                    tr.GetString(lang, "eventCards"), eventCards.Count);
                 foreach (CardObject eventCard in eventCards)
                 {
-                    eventDescription.Append(eventCard.Idol.Name).Append(" (").Append(eventCard.Id).Append(")").AppendLine();
+                    eventDescription.AppendFormat("{0} ({1})\n", eventCard.Idol.Name, eventCard.Id);
                 }
                 if (eventCards.Count == 0)
                 {
-                    eventDescription.Append("Obecnie brak o kartach").AppendLine();
+                    eventDescription.Append(tr.GetString(lang, "eventCardsNotYet")).AppendLine();
                 }
-                eventDescription.AppendLine().Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
+                eventDescription.Append("\n*").Append(tr.GetString(lang, "eventCardDetail")).Append("*");
             }
             else
             {
-                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append("brak").Append(")").AppendLine();
+                eventDescription.AppendFormat(":microphone: **{0}** ({1})\n",
+                    tr.GetString(lang, "eventCards"), tr.GetString(lang, "noData"));
             }
 
             return eventDescription.ToString();
         }
 
-        public string MakeCurrentJapanEventDescription(EventObject eventObject, bool finished, List<CardObject> eventCards = null)
+        public string MakeCurrentJapanEventDescription(Translator.Language lang, EventObject eventObject, bool finished, List<CardObject> eventCards = null)
         {
             StringBuilder eventDescription = new StringBuilder();
-            eventDescription.Append(":name_badge: **Nazwa** ").AppendLine();
-            eventDescription.Append(eventObject.Japanese_name).Append(" (").Append(eventObject.Romaji_name ?? "brak romaji").Append(")").AppendLine();
-            eventDescription.Append(":clock2: **Czas trwania** ").AppendLine();
-            eventDescription.Append(eventObject.Beginning?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty rozpoczęcia").Append(" - ").Append(eventObject.End?.ToString("HH:mm dd.MM.yyyy") ?? "brak daty zakończenia").AppendLine();
+            eventDescription.AppendFormat(":name_badge: **{0}**\n" +
+                "{1} ({2})\n" +
+                ":clock2: **{3}**\n" +
+                "{4} - {5}\n",
+                tr.GetString(lang, "eventName"),
+                eventObject.Japanese_name, eventObject.Romaji_name ?? tr.GetString(lang, "eventNoRomaji"),
+                tr.GetString(lang, "eventDuration"),
+                eventObject.Beginning?.ToString("HH:mm dd.MM.yyyy") ?? tr.GetString(lang, "eventNoBeginDate"),
+                eventObject.End?.ToString("HH:mm dd.MM.yyyy") ?? tr.GetString(lang, "eventNoEndDate"));
+
             if (finished == false)
             {
-                eventDescription.Append(":timer: **Pozostały czas** ").AppendLine();
-                eventDescription.Append(GetTimeToEventEnd(eventObject.End) ?? "nie można obliczyć").AppendLine();
+                eventDescription.AppendFormat(":timer: **{0}**\n" +
+                    "{1}\n",
+                    tr.GetString(lang, "eventRemainingTime"),
+                    GetTimeToEventEnd(eventObject.End) ?? tr.GetString(lang, "eventCantCalculate"));
             }
-            eventDescription.Append(":clock9: **Czas trwania (JST)** ").AppendLine();
-            eventDescription.Append(ConvertToJapanTimeFromPoland(eventObject.Beginning)?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty rozpoczęcia").Append(" - ")
-                            .Append(ConvertToJapanTimeFromPoland(eventObject.End)?.ToString("HH:mm dd.MM.yyyy") ?? "Brak daty zakończenia").AppendLine();
-            eventDescription.Append(":globe_with_meridians: **URL** ").AppendLine().Append("[").Append("schoolido.lu").Append("](").Append(eventObject.Website_url).Append(")").AppendLine();
-            eventDescription.Append(":notepad_spiral: **Dodatkowe informacje** ").AppendLine();
-            eventDescription.Append(eventObject.Note ?? "brak").AppendLine();
+            eventDescription.AppendFormat(":clock9: **{0}**\n" +
+                "{1} - {2}\n" +
+                ":globe_with_meridians: **{3}** [schoolido.lu]({4})\n" +
+                ":notepad_spiral: **{5}**\n" +
+                "{6}\n",
+                tr.GetString(lang, "eventDurationJST"),
+                ConvertToJapanTimeFromPoland(eventObject.Beginning)?.ToString("HH:mm dd.MM.yyyy") ?? tr.GetString(lang, "eventNoBeginDate"),
+                ConvertToJapanTimeFromPoland(eventObject.End)?.ToString("HH:mm dd.MM.yyyy") ?? tr.GetString(lang, "eventNoEndDate"),
+                tr.GetString(lang, "eventUrl"), eventObject.Website_url,
+                tr.GetString(lang, "eventAdditionalInfo"),
+                eventObject.Note ?? tr.GetString(lang, "noData"));
 
             if (finished == true)
             {
-                eventDescription.Append(":medal: **Tiery** ").AppendLine();
-                eventDescription.Append(":first_place: **T1** ").Append(eventObject.Japanese_t1_points?.ToString() ?? "brak").AppendLine();
-                eventDescription.Append(":second_place: **T2** ").Append(eventObject.Japanese_t2_points?.ToString() ?? "brak").AppendLine();
+                eventDescription.AppendFormat(":medal: **{0}** ({1})\n" +
+                    ":first_place: **{2}** {3}\n" +
+                    ":second_place: **{4}** {5}\n",
+                    tr.GetString(lang, "eventTiers"), tr.GetString(lang, "eventPoint"),
+                    tr.GetString(lang, "eventT1"), eventObject.Japanese_t1_points?.ToString() ?? tr.GetString(lang, "noData"),
+                    tr.GetString(lang, "eventT2"), eventObject.Japanese_t2_points?.ToString() ?? tr.GetString(lang, "noData"));
             }
 
             if (eventCards != null)
             {
-                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append(eventCards.Count).Append(")").AppendLine();
+                eventDescription.AppendFormat(":microphone: **{0}** ({1})\n",
+                    tr.GetString(lang, "eventCards"), eventCards.Count);
                 foreach (CardObject eventCard in eventCards)
                 {
-                    eventDescription.Append(eventCard.Idol.Name).Append(" (").Append(eventCard.Id).Append(")").AppendLine();
+                    eventDescription.AppendFormat("{0} ({1})\n", eventCard.Idol.Name, eventCard.Id);
                 }
-                if(eventCards.Count == 0)
+                if (eventCards.Count == 0)
                 {
-                    eventDescription.Append("Obecnie brak o kartach").AppendLine();
+                    eventDescription.Append(tr.GetString(lang, "eventCardsNotYet")).AppendLine();
                 }
-                eventDescription.AppendLine().Append("*Możesz użyć komendy `karta <id>` aby uzyskać więcej informacji o danej karcie*");
+                eventDescription.Append("\n*").Append(tr.GetString(lang, "eventCardDetail")).Append("*");
             }
             else
             {
-                eventDescription.Append(":microphone: **Karty** ").Append(" (").Append("brak").Append(")").AppendLine();
+                eventDescription.AppendFormat(":microphone: **{0}** ({1})\n",
+                    tr.GetString(lang, "eventCards"), tr.GetString(lang, "noData"));
             }
 
             return eventDescription.ToString();
