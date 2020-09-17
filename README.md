@@ -79,3 +79,5 @@ If you want to run this bot you need to do following steps.
 You need to create 2 files 'release.json' and 'debug.json' in main directory, using 'release.debug.example.json' as template. These files are used to run in release and debug mode respectively. They contains Discord Bot token, id of creator, and prefix for commands.
 ## Database
 You need to create file called 'DynamicDatabase.sqlite' in main directory, using 'DynamicDatabase.example.sqlite' as template.
+## Translations
+Move `translations` to bot directory.
