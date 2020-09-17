@@ -25,7 +25,7 @@ namespace MiraiZuraBot.Helpers
             if(thumbnailLink != null)
             {
                 int posThumbnail = thumbnailLink.LastIndexOf("/");
-                string toChangeThumbnail = imageLink.Substring(posThumbnail + 1);
+                string toChangeThumbnail = thumbnailLink.Substring(posThumbnail + 1);
                 string changedThumbnail = HttpUtility.UrlEncode(toChangeThumbnail, Encoding.UTF8);
                 thumbnailLink = thumbnailLink.Remove(posThumbnail + 1);
                 thumbnailLink += changedThumbnail;
