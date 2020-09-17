@@ -11,6 +11,7 @@ using MiraiZuraBot.Helpers.SchoolidoluHelper;
 using MiraiZuraBot.Helpers.TimeHelper;
 using MiraiZuraBot.Services.AnnouncementService;
 using MiraiZuraBot.Services.EmojiService;
+using MiraiZuraBot.Services.LanguageService;
 using MiraiZuraBot.Services.RandomMessagesService;
 using MiraiZuraBot.Services.RolesService;
 using MiraiZuraBot.Services.SchoolidoluService;
@@ -124,6 +125,7 @@ namespace MiraiZuraBot.Core
             .AddScoped<AssignRolesService>()
             .AddScoped<BirthdaysService>()
             .AddScoped<EmojiCounterService>()
+            .AddScoped<LanguageService>()
             .AddScoped<RandomMessageService>()
             .AddScoped<SchoolidoluService>()
             .AddScoped<TriviaService>()

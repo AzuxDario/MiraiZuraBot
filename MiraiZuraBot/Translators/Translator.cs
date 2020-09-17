@@ -11,6 +11,8 @@ namespace MiraiZuraBot.Translators
     {
         public enum Language { Polish };
 
+        private List<string> availableLanguages = new List<string>() { "Polski" };
+
         private Dictionary<Language, Dictionary<string, string>> languageStrings;
         private const string translationsDirectory = "translations/";
 
@@ -32,6 +34,16 @@ namespace MiraiZuraBot.Translators
             {
                 return "String not found";
             }
+        }
+
+        public Language GetDefaultLanguage()
+        {
+            return Language.Polish;
+        }
+
+        public List<string> GetAvailableLanguages()
+        {
+            return availableLanguages;
         }
 
         private void ReadFile(Language lang, string filename)

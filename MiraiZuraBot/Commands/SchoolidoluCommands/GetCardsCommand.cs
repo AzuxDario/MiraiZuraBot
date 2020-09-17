@@ -1,20 +1,16 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using MiraiZuraBot.Attributes;
-using MiraiZuraBot.Containers.Schoolidolu;
-using MiraiZuraBot.Containers.Schoolidolu.Cards;
 using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Helpers.SchoolidoluHelper;
+using MiraiZuraBot.Services.LanguageService;
 using MiraiZuraBot.Services.SchoolidoluService;
 using MiraiZuraBot.Translators;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using static MiraiZuraBot.Translators.Translator;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {
@@ -23,12 +19,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
     {
         private SchoolidoluService _schoolidoluService;
         private SchoolidoluHelper _schoolidoluHelper;
+        private LanguageService _languageService;
         private Translator _translator;
 
-        public GetCardsCommand(SchoolidoluService schoolidoluService, SchoolidoluHelper schoolidoluHelper, Translator translator)
+        public GetCardsCommand(SchoolidoluService schoolidoluService, SchoolidoluHelper schoolidoluHelper, LanguageService languageService, Translator translator)
         {
             _schoolidoluService = schoolidoluService;
             _schoolidoluHelper = schoolidoluHelper;
+            _languageService = languageService;
             _translator = translator;
         }
 
@@ -39,6 +37,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         {
             await ctx.TriggerTypingAsync();
 
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             var cardData = _schoolidoluService.GetCardById(id);
 
             if (cardData.StatusCode == HttpStatusCode.OK)
@@ -48,14 +48,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     // Some cards might not have idolised version
                     if (cardData.Data.Card_idolized_image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, true),
+                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "card"), _schoolidoluHelper.MakeCardDescription(lang, cardData.Data, true),
                             cardData.Data.Card_idolized_image != null ? "http:" + cardData.Data.Card_idolized_image : null,
                             cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, false),
+                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "card"), _schoolidoluHelper.MakeCardDescription(lang, cardData.Data, false),
                             cardData.Data.Card_image != null ? "http:" + cardData.Data.Card_image : null,
                             cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
@@ -66,14 +66,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                     // Some cards are only idolised
                     if (cardData.Data.Card_image != null)
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, false),
+                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "card"), _schoolidoluHelper.MakeCardDescription(lang, cardData.Data, false),
                             cardData.Data.Card_image != null ? "http:" + cardData.Data.Card_image : null,
                             cardData.Data.Round_card_image != null ? "http:" + cardData.Data.Round_card_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
                     }
                     else
                     {
-                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _schoolidoluHelper.MakeCardDescription(Language.Polish, cardData.Data, true),
+                        await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "card"), _schoolidoluHelper.MakeCardDescription(lang, cardData.Data, true),
                             cardData.Data.Card_idolized_image != null ? "http:" + cardData.Data.Card_idolized_image : null,
                             cardData.Data.Round_card_idolized_image != null ? "http:" + cardData.Data.Round_card_idolized_image : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardData.Data.Attribute));
@@ -82,7 +82,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
             else
             {
-                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _translator.GetString(Language.Polish, "cardDoesntExist"), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "card"), _translator.GetString(lang, "cardDoesntExist"), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -91,6 +91,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         public async Task RandomCard(CommandContext ctx, [Description("Imie idolki."), RemainingText] string name)
         {
             await ctx.TriggerTypingAsync();
+
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
 
             Dictionary<string, string> options = new Dictionary<string, string>
             {
@@ -111,16 +113,16 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
                 // Some cards are only idolised
                 if (cardsResponse.Data.Results[0].Card_image != null)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardRandom"),
-                        _schoolidoluHelper.MakeCardDescription(Language.Polish, cardsResponse.Data.Results[0], false),
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "cardRandom"),
+                        _schoolidoluHelper.MakeCardDescription(lang, cardsResponse.Data.Results[0], false),
                             cardsResponse.Data.Results[0].Card_image != null ? "http:" + cardsResponse.Data.Results[0].Card_image : null,
                             cardsResponse.Data.Results[0].Round_card_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_image) : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardsResponse.Data.Results[0].Attribute));
                 }
                 else
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardRandom"),
-                        _schoolidoluHelper.MakeCardDescription(Language.Polish, cardsResponse.Data.Results[0], true),
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "cardRandom"),
+                        _schoolidoluHelper.MakeCardDescription(lang, cardsResponse.Data.Results[0], true),
                             cardsResponse.Data.Results[0].Card_idolized_image != null ? "http:" + cardsResponse.Data.Results[0].Card_idolized_image : null,
                             cardsResponse.Data.Results[0].Round_card_idolized_image != null ? ("https:" + cardsResponse.Data.Results[0].Round_card_idolized_image) : null, SchoolidoluHelper.GetSchoolidoluFotter(),
                             _schoolidoluHelper.GetColorForAttribute(cardsResponse.Data.Results[0].Attribute));
@@ -128,7 +130,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
             }
             else
             {
-                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "card"), _translator.GetString(Language.Polish, "cardIdolDoesntExist"), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "card"), _translator.GetString(lang, "cardIdolDoesntExist"), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -141,11 +143,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         {
             await ctx.TriggerTypingAsync();
 
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             int intPage;
 
             if(!int.TryParse(page, out intPage))
             {
-                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardSearch"), _translator.GetString(Language.Polish, "cardSearchNoPage"),
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "cardSearch"), _translator.GetString(lang, "cardSearchNoPage"),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 return;
             }
@@ -165,19 +169,19 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (cardObject.Data.Count != 0)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardSearch"), _schoolidoluHelper.MakeSearchCardDescription(Language.Polish, cardObject.Data, 10, intPage),
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "cardSearch"), _schoolidoluHelper.MakeSearchCardDescription(lang, cardObject.Data, 10, intPage),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardSearch"), _translator.GetString(Language.Polish, "cardSearchNoResult"),
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "cardSearch"), _translator.GetString(lang, "cardSearchNoResult"),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
             }
             else
             {
-                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardSearch"),
-                    string.Format(_translator.GetString(Language.Polish, "cardSearchError"), keywords.Trim()),
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "cardSearch"),
+                    string.Format(_translator.GetString(lang, "cardSearchError"), keywords.Trim()),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
