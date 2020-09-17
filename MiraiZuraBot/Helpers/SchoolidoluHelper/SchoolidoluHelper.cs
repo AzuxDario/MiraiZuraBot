@@ -378,7 +378,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                 cardDescription.AppendFormat(":name_badge: {0} - :pencil: {1} - :love_letter: {2} - {3} {4}\n",
                     cardObject.Idol.Name, cardObject.Id, cardObject.Rarity, GetEmojiForAttribute(cardObject.Attribute), cardObject.Attribute);
             }
-            AppendFooter(cardDescription, page, cardObjects.Count.Value / elemPerPage + 1);
+            AppendFooter(lang, cardDescription, page, cardObjects.Count.Value / elemPerPage + 1);
 
             return cardDescription.ToString();
         }
@@ -396,7 +396,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             {
                 eventDescription.AppendFormat(":japan: {0} - :earth_africa: {1}\n", eventObject.Japanese_name, eventObject.English_name ?? tr.GetString(lang, "eventNoNameFromEN"));
             }
-            AppendFooter(eventDescription, page, eventObjects.Count.Value / elemPerPage + 1);
+            AppendFooter(lang, eventDescription, page, eventObjects.Count.Value / elemPerPage + 1);
 
             return eventDescription.ToString();
         }
@@ -416,7 +416,7 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                     idolObject.Name, idolObject.Main_unit ?? tr.GetString(lang, "noData"), idolObject.School ?? tr.GetString(lang, "noData"),
                     GetEmojiForAttribute(idolObject.Attribute), idolObject.Attribute ?? tr.GetString(lang, "noData"));
             }
-            AppendFooter(idolDescription, page, idolObjects.Count.Value / elemPerPage + 1);
+            AppendFooter(lang, idolDescription, page, idolObjects.Count.Value / elemPerPage + 1);
 
             return idolDescription.ToString();
         }
@@ -436,15 +436,16 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
                     songObject.Name, songObject.Romaji_name ?? tr.GetString(lang, "noData"), songObject.Main_unit ?? tr.GetString(lang, "noData"),
                     GetEmojiForAttribute(songObject.Attribute), songObject.Attribute ?? tr.GetString(lang, "noData"));
             }
-            AppendFooter(songDescription, page, songObjects.Count.Value / elemPerPage + 1);
+            AppendFooter(lang, songDescription, page, songObjects.Count.Value / elemPerPage + 1);
 
             return songDescription.ToString();
         }
 
-        private void AppendFooter(StringBuilder builder, int page, int allpages)
+        private void AppendFooter(Translator.Language lang, StringBuilder builder, int page, int allpages)
         {
-            builder.Append("---------------------------------------------------------").AppendLine();
-            builder.Append("Strona ").Append(page).Append(" z ").Append(allpages);
+            builder.AppendFormat("---------------------------------------------------------\n" +
+                "{0} {1} {2} {3}\n",
+                tr.GetString(lang, "searchPage"), page, tr.GetString(lang, "searchOfPage"), allpages);
         }
 
         private string GetEmojiAvailability(bool? value)
