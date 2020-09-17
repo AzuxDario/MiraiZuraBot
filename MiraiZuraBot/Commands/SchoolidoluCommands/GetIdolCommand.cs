@@ -1,18 +1,17 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using MiraiZuraBot.Attributes;
-using MiraiZuraBot.Containers.Schoolidolu;
-using MiraiZuraBot.Containers.Schoolidolu.Idols;
 using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Helpers.SchoolidoluHelper;
+using MiraiZuraBot.Services.LanguageService;
 using MiraiZuraBot.Services.SchoolidoluService;
-using Newtonsoft.Json;
+using MiraiZuraBot.Translators;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using static MiraiZuraBot.Translators.Translator;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {
@@ -21,11 +20,15 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
     {
         private SchoolidoluService _schoolidoluService;
         private SchoolidoluHelper _schoolidoluHelper;
+        private LanguageService _languageService;
+        private Translator _translator;
 
-        public GetIdolCommand(SchoolidoluService schoolidoluService, SchoolidoluHelper schoolidoluHelper)
+        public GetIdolCommand(SchoolidoluService schoolidoluService, SchoolidoluHelper schoolidoluHelper, LanguageService languageService, Translator translator)
         {
             _schoolidoluService = schoolidoluService;
             _schoolidoluHelper = schoolidoluHelper;
+            _languageService = languageService;
+            _translator = translator;
     }
 
         [Command("idolka")]
@@ -34,17 +37,19 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         {
             await ctx.TriggerTypingAsync();
 
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             var idolObject = _schoolidoluService.GetIdolByName(name);
 
             if (idolObject.StatusCode == HttpStatusCode.OK)
             {
-                string description = _schoolidoluHelper.MakeIdolDescription(idolObject.Data);
-                await PostEmbedHelper.PostEmbed(ctx, "Idolka", description, idolObject.Data.Chibi, idolObject.Data.Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter(),
+                string description = _schoolidoluHelper.MakeIdolDescription(lang, idolObject.Data);
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "idol"), description, idolObject.Data.Chibi, idolObject.Data.Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter(),
                     _schoolidoluHelper.GetColorForAttribute(idolObject.Data.Attribute));
             }
             else
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Idolka", "Podana idolka nie istnieje.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "idol"), _translator.GetString(lang, "idolDoesntExist") , null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -53,6 +58,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         public async Task RandomIdol(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
+
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
 
             Dictionary<string, string> options = new Dictionary<string, string>
             {
@@ -64,13 +71,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if (idolsResponse.StatusCode == HttpStatusCode.OK)
             {
-                string description = _schoolidoluHelper.MakeIdolDescription(idolsResponse.Data.Results[0]);
-                await PostEmbedHelper.PostEmbed(ctx, "Losowa idolka", description, idolsResponse.Data.Results[0].Chibi, idolsResponse.Data.Results[0].Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter(),
+                string description = _schoolidoluHelper.MakeIdolDescription(lang, idolsResponse.Data.Results[0]);
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "idolRandom"), description, idolsResponse.Data.Results[0].Chibi, idolsResponse.Data.Results[0].Chibi_small, SchoolidoluHelper.GetSchoolidoluFotter(),
                     _schoolidoluHelper.GetColorForAttribute(idolsResponse.Data.Results[0].Attribute));
             }
             else
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Losowa idolka", "Wystąpił błąd.", null, null, SchoolidoluHelper.GetSchoolidoluFotter());
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "idolRandom"), _translator.GetString(lang, "idolError"), null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }
 
@@ -81,11 +88,13 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         {
             await ctx.TriggerTypingAsync();
 
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             int intPage;
 
             if (!int.TryParse(page, out intPage))
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie idolek", "Wystąpił błąd podczas wyszukiwania idolek. Przed zapytaniem podaj numer strony.\nnp. `wyszukajIdolke 1 You`",
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "idolSearch"), _translator.GetString(lang, "idolSearchNoPage"),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 return;
             }
@@ -103,19 +112,19 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (idolObject.Data.Count != 0)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie idolek", _schoolidoluHelper.MakeSearchIdolDescription(idolObject.Data, 10, intPage),
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "idolSearch"), _schoolidoluHelper.MakeSearchIdolDescription(lang, idolObject.Data, 10, intPage),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie idolek", "Brak wyników, spróbuj wyszukać inną frazę.",
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "idolSearch"), _translator.GetString(lang, "idolSearchNoResult"),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
             }
             else
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Wyszukiwanie idolek",
-                    "Wystąpił błąd podczas pobierania idolek. Mogło nastąpić odwołanie do nieistniejącej strony. Spróbuj wybrać stronę pierwszą.\n`wyszukajIdolke 1 " + keywords + "`",
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "idolSearch"),
+                    string.Format(_translator.GetString(lang, "idolSearchError"), keywords),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
             }
         }

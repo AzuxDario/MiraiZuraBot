@@ -10,8 +10,6 @@ namespace MiraiZuraBot.Services.RolesService
 {
     class AssignRolesService
     {
-        public enum GiveRoleStatus { RoleGiven, AlreadyPossesed, RoleDoesntExist };
-
         public List<ulong> GetRoles(ulong serverId)
         {
             List<ulong> roles = new List<ulong>();

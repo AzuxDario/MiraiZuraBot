@@ -16,20 +16,18 @@ namespace MiraiZuraBot.Helpers
             // Discord can't handle links with japanese characters
             if (imageLink != null)
             {
-                imageLink = imageLink.Replace(" ", "%20");
                 int pos = imageLink.LastIndexOf("/");
-                string toChange = imageLink.Substring(pos);
+                string toChange = imageLink.Substring(pos + 1);
                 string changed = HttpUtility.UrlEncode(toChange, Encoding.UTF8);
-                imageLink = imageLink.Remove(pos);
+                imageLink = imageLink.Remove(pos + 1);
                 imageLink += changed;
             }
             if(thumbnailLink != null)
             {
-                thumbnailLink = thumbnailLink.Replace(" ", "%20");
                 int posThumbnail = thumbnailLink.LastIndexOf("/");
-                string toChangeThumbnail = imageLink.Substring(posThumbnail);
+                string toChangeThumbnail = thumbnailLink.Substring(posThumbnail + 1);
                 string changedThumbnail = HttpUtility.UrlEncode(toChangeThumbnail, Encoding.UTF8);
-                thumbnailLink = thumbnailLink.Remove(posThumbnail);
+                thumbnailLink = thumbnailLink.Remove(posThumbnail + 1);
                 thumbnailLink += changedThumbnail;
             }
 
