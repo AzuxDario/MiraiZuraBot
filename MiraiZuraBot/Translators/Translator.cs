@@ -9,9 +9,9 @@ namespace MiraiZuraBot.Translators
 {
     class Translator
     {
-        public enum Language { Polish };
+        public enum Language { Polish, English };
 
-        private List<string> availableLanguages = new List<string>() { "Polski" };
+        private List<string> availableLanguages = new List<string>() { "English", "Polski" };
 
         private Dictionary<Language, Dictionary<string, string>> languageStrings;
         private const string translationsDirectory = "translations/";
@@ -21,6 +21,7 @@ namespace MiraiZuraBot.Translators
             languageStrings = new Dictionary<Language, Dictionary<string, string>>();
 
             ReadFile(Language.Polish, "polish.json");
+            ReadFile(Language.English, "english.json");
 
         }
 
@@ -38,7 +39,7 @@ namespace MiraiZuraBot.Translators
 
         public Language GetDefaultLanguage()
         {
-            return Language.Polish;
+            return Language.English;
         }
 
         public List<string> GetAvailableLanguages()
