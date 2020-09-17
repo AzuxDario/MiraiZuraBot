@@ -36,6 +36,7 @@ namespace MiraiZuraBot.Commands.LanguageCommands
 
         [Command("zmienJezyk")]
         [Description("Zmień język.")]
+        [RequireUserPermissions(DSharpPlus.Permissions.ManageGuild)]
         public async Task ChangeLanguage(CommandContext ctx, [Description("Język."), RemainingText] string language)
         {
             await ctx.TriggerTypingAsync();
