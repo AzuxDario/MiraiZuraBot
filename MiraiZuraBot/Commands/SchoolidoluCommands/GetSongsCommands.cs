@@ -112,7 +112,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (songObject.Data.Count != 0)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "songSearch"), _schoolidoluHelper.MakeSearchSongDescription(songObject.Data, 10, intPage),
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "songSearch"), _schoolidoluHelper.MakeSearchSongDescription(Language.Polish, songObject.Data, 10, intPage),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else

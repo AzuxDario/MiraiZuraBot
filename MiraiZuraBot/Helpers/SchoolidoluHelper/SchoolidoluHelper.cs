@@ -364,66 +364,77 @@ namespace MiraiZuraBot.Helpers.SchoolidoluHelper
             return songDescription.ToString();
         }
 
-        public string MakeSearchCardDescription(PaginatedResponse<CardObject> cardObjects, int elemPerPage, int page)
+        public string MakeSearchCardDescription(Translator.Language lang, PaginatedResponse<CardObject> cardObjects, int elemPerPage, int page)
         {
             StringBuilder cardDescription = new StringBuilder();
-            cardDescription.Append(":notepad_spiral: **Wyników ").Append(cardObjects.Count).Append(". Oto ").Append(cardObjects.Results.Count).Append("**").AppendLine();
-            cardDescription.Append(":name_badge: ").Append("Imie").Append(" - :pencil: ").Append("ID").Append(" - :love_letter: ").Append("Rzadkość").
-                Append(" - ").Append(GetEmojiForAttribute(null)).Append(" ").Append("Atrybut").AppendLine();
-            cardDescription.Append("---------------------------------------------------------").AppendLine();
+            cardDescription.AppendFormat(":notepad_spiral: **{0} {1}**\n" +
+                ":name_badge: {2} - :pencil: {3} - :love_letter: {4} - {5} {6}\n" +
+                "---------------------------------------------------------\n",
+                tr.GetString(lang, "cardResults"),  cardObjects.Count,
+                tr.GetString(lang, "cardCharacter"), tr.GetString(lang, "cardID"), tr.GetString(lang, "cardRarity"), GetEmojiForAttribute(null), tr.GetString(lang, "cardAttribute"));
+
             foreach (var cardObject in cardObjects.Results)
             {
-                cardDescription.Append(":name_badge: ").Append(cardObject.Idol.Name).Append(" - :pencil: ").Append(cardObject.Id).Append(" - :love_letter: ").Append(cardObject.Rarity).
-                 Append(" - ").Append(GetEmojiForAttribute(cardObject.Attribute)).Append(" ").Append(cardObject.Attribute).AppendLine();
+                cardDescription.AppendFormat(":name_badge: {0} - :pencil: {1} - :love_letter: {2} - {3} {4}\n",
+                    cardObject.Idol.Name, cardObject.Id, cardObject.Rarity, GetEmojiForAttribute(cardObject.Attribute), cardObject.Attribute);
             }
             AppendFooter(cardDescription, page, cardObjects.Count.Value / elemPerPage + 1);
 
             return cardDescription.ToString();
         }
 
-        public string MakeSearchEventDescription(PaginatedResponse<EventObject> eventObjects, int elemPerPage, int page)
+        public string MakeSearchEventDescription(Translator.Language lang, PaginatedResponse<EventObject> eventObjects, int elemPerPage, int page)
         {
             StringBuilder eventDescription = new StringBuilder();
-            eventDescription.Append(":notepad_spiral: **Wyników ").Append(eventObjects.Count).Append(". Oto ").Append(eventObjects.Results.Count).Append("**").AppendLine();
-            eventDescription.Append(":japan: ").Append("Nazwa z serwera JP").Append(" - :earth_africa: ").Append("Nazwa z serwera EN").AppendLine();
-            eventDescription.Append("---------------------------------------------------------").AppendLine();
+            eventDescription.AppendFormat(":notepad_spiral: **{0} {1}**\n" +
+                ":japan: {2} - :earth_africa: {3}\n" +
+                "---------------------------------------------------------\n",
+                 tr.GetString(lang, "eventResults"), eventObjects.Count,
+                 tr.GetString(lang, "eventNameFromJP"), tr.GetString(lang, "eventNameFromEN"));
+
             foreach (var eventObject in eventObjects.Results)
             {
-                eventDescription.Append(":japan: ").Append(eventObject.Japanese_name).Append(" - :earth_africa: ").Append(eventObject.English_name ?? "brak angielskiej nazwy").AppendLine();
+                eventDescription.AppendFormat(":japan: {0} - :earth_africa: {1}\n", eventObject.Japanese_name, eventObject.English_name ?? tr.GetString(lang, "eventNoNameFromEN"));
             }
             AppendFooter(eventDescription, page, eventObjects.Count.Value / elemPerPage + 1);
 
             return eventDescription.ToString();
         }
 
-        public string MakeSearchIdolDescription(PaginatedResponse<IdolObject> idolObjects, int elemPerPage, int page)
+        public string MakeSearchIdolDescription(Translator.Language lang, PaginatedResponse<IdolObject> idolObjects, int elemPerPage, int page)
         {
             StringBuilder idolDescription = new StringBuilder();
-            idolDescription.Append(":notepad_spiral: **Wyników ").Append(idolObjects.Count).Append(". Oto ").Append(idolObjects.Results.Count).Append("**").AppendLine();
-            idolDescription.Append(":name_badge: ").Append("Imie").Append(" - :microphone: ").Append("Main unit").Append(" - :school: ").Append("Szkoła").
-                Append(" - ").Append(GetEmojiForAttribute(null)).Append(" ").Append("Atrybut").AppendLine();
-            idolDescription.Append("---------------------------------------------------------").AppendLine();
+            idolDescription.AppendFormat(":notepad_spiral: **{0} {1}**\n" +
+                ":name_badge: {2} - :microphone: {3} - :school: {4} - {5} {6}\n" +
+                "---------------------------------------------------------\n",
+                tr.GetString(lang, "idolResults"), idolObjects.Count,
+                tr.GetString(lang, "idolName"), tr.GetString(lang, "idolMainUnit"), tr.GetString(lang, "idolSchool"), GetEmojiForAttribute(null), tr.GetString(lang, "idolAttribute"));
+
             foreach (var idolObject in idolObjects.Results)
             {
-                idolDescription.Append(":name_badge: ").Append(idolObject.Name).Append(" - :microphone: ").Append(idolObject.Main_unit ?? "brak").Append(" - :school: ").Append(idolObject.School ?? "brak").
-                 Append(" - ").Append(GetEmojiForAttribute(idolObject.Attribute)).Append(" ").Append(idolObject.Attribute ?? "brak").AppendLine();
+                idolDescription.AppendFormat(":name_badge: {0} - :microphone: {1} - :school: {2} - {3} {4}\n",
+                    idolObject.Name, idolObject.Main_unit ?? tr.GetString(lang, "noData"), idolObject.School ?? tr.GetString(lang, "noData"),
+                    GetEmojiForAttribute(idolObject.Attribute), idolObject.Attribute ?? tr.GetString(lang, "noData"));
             }
             AppendFooter(idolDescription, page, idolObjects.Count.Value / elemPerPage + 1);
 
             return idolDescription.ToString();
         }
 
-        public string MakeSearchSongDescription(PaginatedResponse<SongObject> songObjects, int elemPerPage, int page)
+        public string MakeSearchSongDescription(Translator.Language lang, PaginatedResponse<SongObject> songObjects, int elemPerPage, int page)
         {
             StringBuilder songDescription = new StringBuilder();
-            songDescription.Append(":notepad_spiral: **Wyników ").Append(songObjects.Count).Append(". Oto ").Append(songObjects.Results.Count).Append("**").AppendLine();
-            songDescription.Append(":name_badge: ").Append("Japońska nazwa").Append(" - :name_badge: ").Append("Romaji").Append(" - :microphone: ").Append("Main unit").
-                Append(" - ").Append(GetEmojiForAttribute(null)).Append(" ").Append("Atrybut").AppendLine();
-            songDescription.Append("---------------------------------------------------------").AppendLine();
+            songDescription.AppendFormat(":notepad_spiral: **{0} {1}**\n" +
+                ":name_badge: {2} - :name_badge: {3} - :microphone: {4} - {5} {6}\n" +
+                "---------------------------------------------------------\n",
+                tr.GetString(lang, "songResults"), songObjects.Count,
+                tr.GetString(lang, "songJapanName"), tr.GetString(lang, "songRomaji"), tr.GetString(lang, "songMainUnit"), GetEmojiForAttribute(null), tr.GetString(lang, "songAttribute"));
+
             foreach (var songObject in songObjects.Results)
             {
-                songDescription.Append(":name_badge: ").Append(songObject.Name).Append(" - :name_badge: ").Append(songObject.Romaji_name ?? "brak").Append(" - :microphone: ").Append(songObject.Main_unit ?? "brak").
-                 Append(" - ").Append(GetEmojiForAttribute(songObject.Attribute)).Append(" ").Append(songObject.Attribute ?? "brak").AppendLine();
+                songDescription.AppendFormat(":name_badge: {0} - :name_badge: {1} - :microphone: {2} - {3} {4}\n",
+                    songObject.Name, songObject.Romaji_name ?? tr.GetString(lang, "noData"), songObject.Main_unit ?? tr.GetString(lang, "noData"),
+                    GetEmojiForAttribute(songObject.Attribute), songObject.Attribute ?? tr.GetString(lang, "noData"));
             }
             AppendFooter(songDescription, page, songObjects.Count.Value / elemPerPage + 1);
 

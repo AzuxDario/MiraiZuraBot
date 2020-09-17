@@ -496,7 +496,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (eventObject.Data.Count != 0)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "eventSearch"), _schoolidoluHelper.MakeSearchEventDescription(eventObject.Data, 10, intPage),
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "eventSearch"), _schoolidoluHelper.MakeSearchEventDescription(Language.Polish, eventObject.Data, 10, intPage),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else

@@ -107,7 +107,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (idolObject.Data.Count != 0)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "idolSearch"), _schoolidoluHelper.MakeSearchIdolDescription(idolObject.Data, 10, intPage),
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "idolSearch"), _schoolidoluHelper.MakeSearchIdolDescription(Language.Polish, idolObject.Data, 10, intPage),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else

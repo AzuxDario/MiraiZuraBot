@@ -165,7 +165,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
                 if (cardObject.Data.Count != 0)
                 {
-                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardSearch"), _schoolidoluHelper.MakeSearchCardDescription(cardObject.Data, 10, intPage),
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(Language.Polish, "cardSearch"), _schoolidoluHelper.MakeSearchCardDescription(Language.Polish, cardObject.Data, 10, intPage),
                         null, null, SchoolidoluHelper.GetSchoolidoluFotter());
                 }
                 else
