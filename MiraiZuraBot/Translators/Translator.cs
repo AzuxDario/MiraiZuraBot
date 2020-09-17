@@ -37,6 +37,19 @@ namespace MiraiZuraBot.Translators
             }
         }
 
+        public Language GetEnumForString(string language)
+        {
+            switch (language)
+            {
+                case "English":
+                    return Language.English;
+                case "Polski":
+                    return Language.Polish;
+                default:
+                    return GetDefaultLanguage();
+            }
+        }
+
         public Language GetDefaultLanguage()
         {
             return Language.English;

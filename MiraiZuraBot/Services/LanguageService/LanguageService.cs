@@ -31,5 +31,22 @@ namespace MiraiZuraBot.Services.LanguageService
                 return dbServer.Language;
             }
         }
+
+        public void ChangeLanguage(ulong serverId, Translator.Language language)
+        {
+            using (var databaseContext = new DynamicDBContext())
+            {
+                Server dbServer = databaseContext.Servers.Where(p => p.ServerID == serverId.ToString()).FirstOrDefault();
+
+                //If server is not present in database add it.
+                if (dbServer == null)
+                {
+                    dbServer = new Server(serverId);
+                    databaseContext.Add(dbServer);
+                }
+                dbServer.Language = language;
+                databaseContext.SaveChanges();
+            }
+        }
     }
 }
