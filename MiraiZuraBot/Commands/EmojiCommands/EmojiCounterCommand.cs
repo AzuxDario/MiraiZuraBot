@@ -2,7 +2,10 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using MiraiZuraBot.Attributes;
+using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Services.EmojiService;
+using MiraiZuraBot.Services.LanguageService;
+using MiraiZuraBot.Translators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +18,14 @@ namespace MiraiZuraBot.Commands.EmojiCommands
     class EmojiCounterCommand : BaseCommandModule
     {
         private EmojiCounterService _emojiCounterService;
+        private LanguageService _languageService;
+        private Translator _translator;
 
-        public EmojiCounterCommand(EmojiCounterService emojiCounterService)
+        public EmojiCounterCommand(EmojiCounterService emojiCounterService, LanguageService languageService, Translator translator)
         {
             _emojiCounterService = emojiCounterService;
+            _languageService = languageService;
+            _translator = translator;
         }
 
         [Command("policzEmoji")]
@@ -26,6 +33,9 @@ namespace MiraiZuraBot.Commands.EmojiCommands
         public async Task CountEmoji(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
+
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             List<EmojiData> emojiData = _emojiCounterService.GetEmojiData(ctx.Guild.Id);
 
             if (emojiData.Count != 0)
@@ -57,28 +67,13 @@ namespace MiraiZuraBot.Commands.EmojiCommands
                     }
                 }
 
-                string wholeMessage = "";
                 emojiHolderList = emojiHolderList.OrderByDescending(p => p.UsageCount).ToList();
 
-                foreach (EmojiHolder emoji in emojiHolderList)
-                {
-                    wholeMessage += emoji.GetEmojiToSend() + "\n";
-                    if(wholeMessage.Length > 1800)
-                    {
-                        await ctx.RespondAsync(wholeMessage);
-                        wholeMessage = "";
-                    }
-                }
-
-                if (wholeMessage != null)
-                {
-                    await ctx.RespondAsync(wholeMessage);
-                    return;
-                }
-
+                await PostLongMessageHelper.PostLongMessage(ctx, emojiHolderList.Select(p => p.GetEmojiToSend()).ToList(), _translator.GetString(lang, "emojiUsage"));
+                return;
             }
 
-            await ctx.RespondAsync("Na tym serwerze jeszcze nie użyto emoji.");
+            await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "emojiUsage"), _translator.GetString(lang, "emojiNotUsage"));
         }
     }
 
@@ -97,7 +92,7 @@ namespace MiraiZuraBot.Commands.EmojiCommands
 
         public string GetEmojiToSend()
         {
-            return "<:" + EmojiName + ":" + EmojiID + "> użyto: " + UsageCount;
+            return string.Format("<:{0}:{1}> - {2}\n", EmojiName, EmojiID, UsageCount);
         }
     }
 }

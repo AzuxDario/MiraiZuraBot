@@ -8,7 +8,7 @@ namespace MiraiZuraBot.Helpers
 {
     class PostLongMessageHelper
     {
-        public static async Task PostLongMessage(CommandContext ctx, List<string> strings, string header = null)
+        public static async Task PostLongMessage(CommandContext ctx, List<string> strings, string header = null, string separator = null)
         {
             StringBuilder response = new StringBuilder(2000);
             foreach (string s in strings)
@@ -23,7 +23,7 @@ namespace MiraiZuraBot.Helpers
                 }
                 if (strings.IndexOf(s) != strings.Count - 1)
                 {
-                    response.Append(", ");
+                    response.Append(separator);
                 }
             }
             if (response.Length > 0)

@@ -33,8 +33,8 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         public BirthdaysCommand(BirthdaysService birthdaysService, LanguageService languageService, Translator translator)
         {
             _birthdaysService = birthdaysService;
-            _translator = translator;
             _languageService = languageService;
+            _translator = translator;            
             checkMessagesInterval = 1000 * 60 * 1;    // every 1 minutes;
             checkMessagesTimer = new Timer(PostBirthdayMessage, null, checkMessagesInterval, Timeout.Infinite);
         }
@@ -49,7 +49,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
 
             var topics = _birthdaysService.GetBirthdayTopics();
 
-            await PostLongMessageHelper.PostLongMessage(ctx, topics, _translator.GetString(lang, "birthdaysAvailableTopics"));
+            await PostLongMessageHelper.PostLongMessage(ctx, topics, _translator.GetString(lang, "birthdaysAvailableTopics"), ", ");
         }
 
         [Command("aktywneTematyUrodzin")]
@@ -68,7 +68,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
             var topics = _birthdaysService.GetActiveBirthdayTopicsForChannel(Convert.ToUInt64(channelId));
             if (topics.Count > 0)
             {
-                await PostLongMessageHelper.PostLongMessage(ctx, topics, _translator.GetString(lang, "birthdaysActiveTopics"));
+                await PostLongMessageHelper.PostLongMessage(ctx, topics, _translator.GetString(lang, "birthdaysActiveTopics"), ", ");
             }
             else
             {

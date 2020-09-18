@@ -31,7 +31,7 @@ namespace MiraiZuraBot.Commands.LanguageCommands
 
             List<string> languages = _translator.GetAvailableLanguages();
 
-            await PostLongMessageHelper.PostLongMessage(ctx, languages, "**Dostępne języki to:**");
+            await PostLongMessageHelper.PostLongMessage(ctx, languages, "**Dostępne języki to:**", ", ");
         }
 
         [Command("zmienJezyk")]

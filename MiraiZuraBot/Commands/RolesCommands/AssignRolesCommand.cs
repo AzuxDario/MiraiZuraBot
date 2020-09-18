@@ -49,7 +49,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
                 }
 
                 List<DiscordRole> sortedRoles = discordRoles.OrderBy(o => o.Name).ToList();
-                await PostLongMessageHelper.PostLongMessage(ctx, sortedRoles.Select(p => p.Name).ToList(), "**Role dostępne na serwerze to:**");
+                await PostLongMessageHelper.PostLongMessage(ctx, sortedRoles.Select(p => p.Name).ToList(), "**Role dostępne na serwerze to:**", ", ");
             } 
         }
 

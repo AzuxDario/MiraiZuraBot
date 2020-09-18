@@ -27,7 +27,7 @@ namespace MiraiZuraBot.Commands.RandomMessagesCommands
         {
             await ctx.TriggerTypingAsync();
             List<string> topics = _triviaService.GetTopics();
-            await PostLongMessageHelper.PostLongMessage(ctx, topics, "Tematy ciekawostek");
+            await PostLongMessageHelper.PostLongMessage(ctx, topics, "Tematy ciekawostek", ", ");
         }
 
         [Command("ciekawostka")]
