@@ -149,5 +149,7 @@
 	"birthdaysAlreadyTurnedOn" : "Podany temat jest włączony.",
 	"birthdaysTopicDoesntExist" : "Podany temat nie istnieje.",
 	"birthdaysTurnedOff" : "Temat wyłączono.",
-	"birthdaysAlreadyTurnedOff" : "Podany temat jest wyłączony."
+	"birthdaysAlreadyTurnedOff" : "Podany temat jest wyłączony.",
+	"emojiUsage" : "Liczba użyć emoji",
+	"emojiNotUsage" : "Na tym serwerze jeszcze nie użyto emoji.",
 }
