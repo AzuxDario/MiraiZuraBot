@@ -140,5 +140,14 @@
   "songJapanName": "Japanese name",
   "songRomaji": "Romaji",
   "searchPage": "Page",
-  "searchOfPage": "of"
+  "searchOfPage": "of",
+  "birthdays" : "Birthdays",
+  "birthdaysAvailableTopics" : "Available birthday topics",
+  "birthdaysActiveTopics" : "Birthday topics enabled for this channel",
+  "birthdaysNoActiveTopics" : "There are no birthday topics enabled for this channel.",
+  "birthdaysTurnedOn" : "Topic has been enabled.",
+  "birthdaysAlreadyTurnedOn" : "Topic is already enabled.",
+  "birthdaysTopicDoesntExist" : "Topic doesn't exist.",
+  "birthdaysTurnedOff" : "Topic has been disabled.",
+  "birthdaysAlreadyTurnedOff" : "Topic is already disabled."
 }

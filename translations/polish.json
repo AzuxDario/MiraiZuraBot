@@ -140,5 +140,14 @@
 	"songJapanName" : "Japońska nazwa",
 	"songRomaji" : "Romaji",
 	"searchPage" : "Strona",
-	"searchOfPage" : "z"
+	"searchOfPage" : "z",
+	"birthdays" : "Urodziny",
+	"birthdaysAvailableTopics" : "Dostępne tematy urodzin",
+	"birthdaysActiveTopics" : "Tematy urodzin włączone na tym kanale",
+	"birthdaysNoActiveTopics" : "Dla tego kanału nie ma włączonych żadnych tematów urodzin.",
+	"birthdaysTurnedOn" : "Temat włączono.",
+	"birthdaysAlreadyTurnedOn" : "Podany temat jest włączony.",
+	"birthdaysTopicDoesntExist" : "Podany temat nie istnieje.",
+	"birthdaysTurnedOff" : "Temat wyłączono.",
+	"birthdaysAlreadyTurnedOff" : "Podany temat jest wyłączony."
 }
