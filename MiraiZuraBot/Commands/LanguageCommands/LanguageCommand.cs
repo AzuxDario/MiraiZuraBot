@@ -29,9 +29,11 @@ namespace MiraiZuraBot.Commands.LanguageCommands
         {
             await ctx.TriggerTypingAsync();
 
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             List<string> languages = _translator.GetAvailableLanguages();
 
-            await PostLongMessageHelper.PostLongMessage(ctx, languages, "**Dostępne języki to:**", ", ");
+            await PostLongMessageHelper.PostLongMessage(ctx, languages, _translator.GetString(lang, "languagesAvailable"), ", ");
         }
 
         [Command("zmienJezyk")]
@@ -41,17 +43,19 @@ namespace MiraiZuraBot.Commands.LanguageCommands
         {
             await ctx.TriggerTypingAsync();
 
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             List<string> languages = _translator.GetAvailableLanguages();
 
             if(!languages.Contains(language))
             {
-                await PostEmbedHelper.PostEmbed(ctx, "Zmiana języka", "Wybrany język nie znajduje się na liście");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "languagesAvailable"), _translator.GetString(lang, "languagesNotOnList"));
             }
             else
             {
-                Translator.Language lang = _translator.GetEnumForString(language);
-                _languageService.ChangeLanguage(ctx.Guild.Id, lang);
-                await PostEmbedHelper.PostEmbed(ctx, "Zmiana języka", "Zmieniono język serwera");
+                Translator.Language newLang = _translator.GetEnumForString(language);
+                _languageService.ChangeLanguage(ctx.Guild.Id, newLang);
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(newLang, "languagesAvailable"), _translator.GetString(newLang, "languagesChanged"));
             }
         }
     }

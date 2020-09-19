@@ -152,4 +152,8 @@
 	"birthdaysAlreadyTurnedOff" : "Topic is already disabled.",
 	"emojiUsage" : "Number of emoji uses",
 	"emojiNotUsage" : "No emojis have been used on this server yet.",
+	"languagesAvailable" : "Available languages",
+	"languagesChange" : "Language change",
+	"languagesNotOnList" : "The selected language is not in the list.",	
+	"languagesChanged" : "Server language has been changed."
 }

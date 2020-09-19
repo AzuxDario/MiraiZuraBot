@@ -152,4 +152,8 @@
 	"birthdaysAlreadyTurnedOff" : "Podany temat jest wyłączony.",
 	"emojiUsage" : "Liczba użyć emoji",
 	"emojiNotUsage" : "Na tym serwerze jeszcze nie użyto emoji.",
+	"languagesAvailable" : "Dostępne języki",
+	"languagesChange" : "Zmiana języka",
+	"languagesNotOnList" : "Wybrany język nie znajduje się na liście.",	
+	"languagesChanged" : "Zmieniono język serwera."
 }
