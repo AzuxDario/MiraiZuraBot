@@ -7,6 +7,8 @@
 
 Simple Discord bot developed for polish community server of Love Live! series.
 
+Mirai Zura is going to be translated to english and will be multilanguage.
+
 # Bot features
 Bots has features like system which allows members to auto assign roles, simple usage of School Idol Tomodachi API, counting emoji and advertising characters/seiyuu birthdays.
 
