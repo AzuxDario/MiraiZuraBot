@@ -155,5 +155,9 @@
 	"languagesAvailable" : "Dostępne języki",
 	"languagesChange" : "Zmiana języka",
 	"languagesNotOnList" : "Wybrany język nie znajduje się na liście.",	
-	"languagesChanged" : "Zmieniono język serwera."
+	"languagesChanged" : "Zmieniono język serwera.",
+	"trivia" : "Ciekawostka",
+	"triviaTopics" : "Tematy ciekawostek",
+	"triviaWrongTopic" : "Podany temat nie istnieje. Sprawdź listę tematów komendą `tematyCiekawostek`.",
+	"triviaSource" : "Źródło"
 }

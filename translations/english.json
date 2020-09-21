@@ -155,5 +155,9 @@
 	"languagesAvailable" : "Available languages",
 	"languagesChange" : "Language change",
 	"languagesNotOnList" : "The selected language is not in the list.",	
-	"languagesChanged" : "Server language has been changed."
+	"languagesChanged" : "Server language has been changed.",
+	"trivia" : "Trivia",
+	"triviaTopics" : "Trivia topics",
+	"triviaWrongTopic" : "The given topic does not exist. Check the list of topics with the command `tematyCiekawostek`.",
+	"triviaSource" : "Source"
 }
