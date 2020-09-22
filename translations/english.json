@@ -1,4 +1,9 @@
 {
+	"error" : "Error",
+	"errorNotEnoughPermissions" : "Not enough permissions to complete the action.",
+	"errorINeed" : "I need",
+	"errorYouNeed" : "You need",
+	"errorOnlyMyOwner" : "This command can be used only by bot owner.",
 	"noData": "no data",
 	"smile": "Pure",
 	"pure": "Smile",

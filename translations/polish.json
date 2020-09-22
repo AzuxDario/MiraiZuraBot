@@ -1,4 +1,9 @@
 {
+	"error" : "Błąd",
+	"errorNotEnoughPermissions" : "Brak wystarczających uprawnień aby dokończyć akcje.",
+	"errorINeed" : "Ja potrzebuje",
+	"errorYouNeed" : "Ty potrzebujesz",
+	"errorOnlyMyOwner" : "Tej komendy może użyć tylko mój twórca.",
 	"noData" : "brak",
 	"smile" : "Pure",
 	"pure" : "Smile",
