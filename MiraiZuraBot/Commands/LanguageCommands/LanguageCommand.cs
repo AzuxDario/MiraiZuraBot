@@ -24,6 +24,8 @@ namespace MiraiZuraBot.Commands.LanguageCommands
         }
 
         [Command("dostepneJezyki")]
+        [Aliases("availableLanguages")]
+        [CommandLang("dostepneJezyki", "availableLanguages")]
         [Description("Pokazuje dostępne języki.")]
         public async Task ShowLanguages(CommandContext ctx)
         {
@@ -37,6 +39,8 @@ namespace MiraiZuraBot.Commands.LanguageCommands
         }
 
         [Command("zmienJezyk")]
+        [Aliases("changeLanguage")]
+        [CommandLang("zmienJezyk", "changeLanguage")]
         [Description("Zmień język.")]
         [RequireUserPermissions(DSharpPlus.Permissions.ManageGuild)]
         public async Task ChangeLanguage(CommandContext ctx, [Description("Język."), RemainingText] string language)

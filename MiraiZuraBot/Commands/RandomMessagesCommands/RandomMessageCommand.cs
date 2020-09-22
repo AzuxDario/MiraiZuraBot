@@ -20,6 +20,7 @@ namespace MiraiZuraBot.Commands.RandomMessagesCommands
         }
 
         [Command("AqoursNews")]
+        [CommandLang("AqoursNews", "AqoursNews")]
         [Description("Pokazuje zmyśloną informacje o Aqours.")]
         public async Task AqoursNews(CommandContext ctx)
         {

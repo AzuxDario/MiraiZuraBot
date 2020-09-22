@@ -14,6 +14,8 @@ namespace MiraiZuraBot.Commands.ManagementCommands
     class ChangeNameCommand : BaseCommandModule
     {
         [Command("zmienNazwe")]
+        [Aliases("changeName")]
+        [CommandLang("zmienNazwe", "changeName")]
         [Description("Zmień imię bota.")]
         [RequireOwner]
         public async Task ChangeName(CommandContext ctx, [Description("Nowe imię.")] [RemainingText] string name)
@@ -22,6 +24,8 @@ namespace MiraiZuraBot.Commands.ManagementCommands
         }
 
         [Command("zmienPseudonim")]
+        [Aliases("changeNick")]
+        [CommandLang("zmienPseudonim", "changeNick")]
         [Description("Zmień pseudonim bota.")]
         [RequireOwner]
         public async Task ChangeNick(CommandContext ctx, [Description("Nowy pseudonim.")] [RemainingText] string name)
@@ -30,6 +34,8 @@ namespace MiraiZuraBot.Commands.ManagementCommands
         }
 
         [Command("usunPseudonim")]
+        [Aliases("removeNick")]
+        [CommandLang("usunPseudonim", "removeNick")]
         [Description("Usuń pseudonim bota.")]
         [RequireOwner]
         public async Task RemoveNick(CommandContext ctx)

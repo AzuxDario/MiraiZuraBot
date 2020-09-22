@@ -29,6 +29,8 @@ namespace MiraiZuraBot.Commands.EmojiCommands
         }
 
         [Command("policzEmoji")]
+        [Aliases("countEmoji")]
+        [CommandLang("policzEmoji", "countEmoji")]
         [Description("Zlicza emoji użyte do tej pory na serwerze podczas działania bota.")]
         public async Task CountEmoji(CommandContext ctx)
         {

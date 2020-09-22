@@ -29,6 +29,8 @@ namespace MiraiZuraBot.Commands.RolesCommands
         }
 
         [Command("pokazRole")]
+        [Aliases("showRoles")]
+        [CommandLang("pokazRole", "showRoles")]
         [Description("Pokazuje role, które można przydzielić sobie na tym serwerze.")]
         public async Task ShowRoles(CommandContext ctx)
         {
@@ -59,6 +61,8 @@ namespace MiraiZuraBot.Commands.RolesCommands
         }
 
         [Command("nadajRole")]
+        [Aliases("assignRole")]
+        [CommandLang("nadajRole", "assignRole")]
         [Description("Dodaje role z listy ról.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         public async Task GiveRole(CommandContext ctx, [RemainingText] string message)
@@ -100,6 +104,8 @@ namespace MiraiZuraBot.Commands.RolesCommands
         }
 
         [Command("odbierzRole")]
+        [Aliases("removeRole")]
+        [CommandLang("odbierzRole", "removeRole")]
         [Description("Odbiera role z listy ról.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         public async Task RemoveRole(CommandContext ctx, [RemainingText] string message)
@@ -141,6 +147,8 @@ namespace MiraiZuraBot.Commands.RolesCommands
 
 
         [Command("dodajRole")]
+        [Aliases("addRole")]
+        [CommandLang("dodajRole", "addRole")]
         [Description("Dodaje rolę do listy roli jakie mogą sobie przydzielać członkowie serwera.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         [RequireUserPermissions(DSharpPlus.Permissions.ManageRoles)]
@@ -180,6 +188,8 @@ namespace MiraiZuraBot.Commands.RolesCommands
         }
 
         [Command("usunRole")]
+        [Aliases("deleteRole")]
+        [CommandLang("usunRole", "deleteRole")]
         [Description("Usuwa rolę z listy roli jakie mogą sobie przydzielać członkowie serwera.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         [RequireUserPermissions(DSharpPlus.Permissions.ManageRoles)]

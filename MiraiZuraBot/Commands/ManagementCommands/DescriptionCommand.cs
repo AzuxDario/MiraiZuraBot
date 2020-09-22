@@ -28,6 +28,8 @@ namespace MiraiZuraBot.Commands.ManagementCommands
         }
 
         [Command("opis")]
+        [Aliases("description")]
+        [CommandLang("opis", "description")]
         [Description("Zmień opis bota.")]
         [RequireOwner]
         public async Task Description(CommandContext ctx, [Description("New description.")] [RemainingText] string description)

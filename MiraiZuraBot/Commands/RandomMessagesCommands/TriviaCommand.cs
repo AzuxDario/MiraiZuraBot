@@ -28,6 +28,8 @@ namespace MiraiZuraBot.Commands.RandomMessagesCommands
         }
 
         [Command("tematyCiekawostek")]
+        [Aliases("triviaTopics")]
+        [CommandLang("tematyCiekawostek", "triviaTopics")]
         [Description("Pokazuje tematy ciekawostek.")]
         public async Task TriviaTopics(CommandContext ctx)
         {
@@ -40,6 +42,8 @@ namespace MiraiZuraBot.Commands.RandomMessagesCommands
         }
 
         [Command("ciekawostka")]
+        [Aliases("trivia")]
+        [CommandLang("ciekawostka", "trivia")]
         [Description("Pokazuje ciekawostkę")]
         public async Task GetTrivia(CommandContext ctx, [Description("Temat z listy tematów.")] [RemainingText] string topic = null)
         {

@@ -32,6 +32,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
     }
 
         [Command("idolka")]
+        [Aliases("idol")]
+        [CommandLang("idolka", "idol")]
         [Description("Pokazuje idolkę na bazie jej nazwy.\nnp:\n*idolka Watanabe You \n*idolka Sonoda Umi")]
         public async Task Idol(CommandContext ctx, [Description("Imie postaci."), RemainingText] string name)
         {
@@ -54,6 +56,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("losowaIdolka")]
+        [Aliases("randomIdol")]
+        [CommandLang("losowaIdolka", "randomIdol")]
         [Description("Pokazuje losową idolkę.\nnp:\n*losowaIdolka")]
         public async Task RandomIdol(CommandContext ctx)
         {
@@ -82,6 +86,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("wyszukajIdolke")]
+        [Aliases("searchIdol")]
+        [CommandLang("wyszukajIdolke", "searchIdol")]
         [Description("Wyszukuje idolki.\nnp:\n`wyszukajIdolke 1 You`\nPolecam jako początkową stronę podać `1`." +
             "\nWyszukiwanie odbywa się po imionach, urodzinach, wymiarach, jedzeniu, hobby oraz danych seiyuu.")]
         public async Task SearchIdol(CommandContext ctx, [Description("Strona wyników.")] string page, [Description("Słowa kluczowe."), RemainingText] string keywords)

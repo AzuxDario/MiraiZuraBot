@@ -33,6 +33,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("losowaPiosenka")]
+        [Aliases("randomSong")]
+        [CommandLang("losowaPiosenka", "randomSong")]
         [Description("Pokazuje losową piosenkę.\nnp:\n*losowaPiosenka")]
         public async Task RandomSong(CommandContext ctx)
         {
@@ -61,6 +63,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("piosenka")]
+        [Aliases("song")]
+        [CommandLang("piosenka", "song")]
         [Description("Pokazuje piosenkę.\n------------------------------\nSkąd wziąć japońską nazwę ?\nKomendą `wyszukajEvent 1 <nazwa japońska bądź angielska>`")]
         public async Task GetJapanEvent(CommandContext ctx, [Description("Nazwa piosenki po japońsku."), RemainingText] string name)
         {
@@ -91,6 +95,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("wyszukajPiosenke")]
+        [Aliases("searchSong")]
+        [CommandLang("wyszukajPiosenke", "searchSong")]
         [Description("Wyszukuje piosenki.\nnp:\n`wyszukajPiosenke 1 Snow`\nPolecam jako początkową stronę podać `1`." +
             "\nWyszukiwanie odbywa się po nazwach.")]
         public async Task SearchIdol(CommandContext ctx, [Description("Strona wyników.")] string page, [Description("Słowa kluczowe."), RemainingText] string keywords)

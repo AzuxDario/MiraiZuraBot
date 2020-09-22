@@ -32,6 +32,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
 
         [Command("karta")]
+        [Aliases("card")]
+        [CommandLang("karta", "card")]
         [Description("Pokazuje karte na bazie jej id.\nnp:\n*karta 1599\n*karta 1599 idolizowana")]
         public async Task Card(CommandContext ctx, [Description("ID karty.")] string id, [Description("Czy idolizowana.")] string isIdolised = null)
         {
@@ -87,6 +89,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("losowaKarta")]
+        [Aliases("randomCard")]
+        [CommandLang("losowaKarta", "randomCard")]
         [Description("Pokazuje losową karte. Można sprecyzować imie idolki.\nnp:\n*losowaKarta\n*losowaKarta Watanabe You")]
         public async Task RandomCard(CommandContext ctx, [Description("Imie idolki."), RemainingText] string name)
         {
@@ -135,6 +139,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("wyszukajKarte")]
+        [Aliases("searchCard")]
+        [CommandLang("wyszukajKarte", "searchCard")]
         [Description("Wyszukuje karty na podstawie fraz oraz rzadkości i atrybutu.\nnp:\n`wyszukajKarte 1 Watanabe You UR cool`\nPolecam jako początkową stronę podać `1`." +
             "\nDozwolone atrybuty: `Smile`, `Pure`, `Cool`, `All`nDozwolone rzadkości: `N`, `R`, `SR`, `SSR`, `UR`" +
             "\n Można podać jedną wartość atrybutu oraz wiele rzadkości w dowolnym miejscu zapytania." +

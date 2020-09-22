@@ -84,7 +84,7 @@ namespace MiraiZuraBot.Core
                     foreach (var method in commandHandlers)
                     {
                         var methodAttributes = method.GetCustomAttributes();
-                        var commandAttribute = (CommandAttribute)methodAttributes.FirstOrDefault(p => p is CommandAttribute);
+                        var commandAttribute = (CommandLangAttribute)methodAttributes.FirstOrDefault(p => p is CommandLangAttribute);
 
                         if (commandAttribute != null)
                         {
@@ -93,7 +93,7 @@ namespace MiraiZuraBot.Core
                                 _subCommands.Add(groupAttribute.GetGroup(_lang), new List<string>());
                             }
 
-                            _subCommands[groupAttribute.GetGroup(_lang)].Add($"`{commandAttribute.Name}`");
+                            _subCommands[groupAttribute.GetGroup(_lang)].Add($"`{commandAttribute.GetCommand(_lang)}`");
                         }
 
                         _subCommands[groupAttribute.GetGroup(_lang)] = _subCommands[groupAttribute.GetGroup(_lang)].OrderBy(p => p).ToList();

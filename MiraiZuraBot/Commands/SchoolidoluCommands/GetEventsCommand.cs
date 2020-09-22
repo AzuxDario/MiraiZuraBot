@@ -33,6 +33,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("obecnyEventEN")]
+        [Aliases("currentEventEN")]
+        [CommandLang("obecnyEventEN", "currentEventEN")]
         [Description("Pokazuje obecnie trwający event na serwerze EN.")]
         public async Task CurrentWorldEvent(CommandContext ctx)
         {
@@ -80,6 +82,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("obecnyEventJP")]
+        [Aliases("currentEventJP")]
+        [CommandLang("obecnyEventJP", "currentEventJP")]
         [Description("Pokazuje obecnie trwający event na serwerze JP.")]
         public async Task CurrentJapanEvent(CommandContext ctx)
         {
@@ -127,6 +131,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("nastepnyEventEN")]
+        [Aliases("nextEventEN")]
+        [CommandLang("nastepnyEventEN", "nextEventEN")]
         [Description("Pokazuje następny event na serwerze EN.")]
         public async Task NextWorldEvent(CommandContext ctx)
         {
@@ -169,6 +175,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("nastepnyEventJP")]
+        [Aliases("nextEventJP")]
+        [CommandLang("nastepnyEventJP", "nextEventJP")]
         [Description("Pokazuje następny event na serwerze JP.")]
         public async Task NextJapanEvent(CommandContext ctx)
         {
@@ -212,6 +220,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("poprzedniEventEN")]
+        [Aliases("previousEventEN")]
+        [CommandLang("poprzedniEventEN", "previousEventEN")]
         [Description("Pokazuje ostatnio zakończony event na serwerze EN.")]
         public async Task LastFinishedWorldEvent(CommandContext ctx)
         {
@@ -259,6 +269,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("poprzedniEventJP")]
+        [Aliases("previousEventJP")]
+        [CommandLang("poprzedniEventJP", "previousEventJP")]
         [Description("Pokazuje ostatnio zakończony event na serwerze JP.")]
         public async Task LastFinishedJapanEvent(CommandContext ctx)
         {
@@ -306,6 +318,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("eventEN")]
+        [CommandLang("eventEN", "eventEN")]
         [Description("Pokazuje event na serwerze EN.\n------------------------------\nDlaczego nazwa eventu po japońsku?\n" +
             "Komenda pobiera jeden event korzystając z endpointa który wyszukuje event po jego dokładnej japońskiej nazwie. " +
             "\n------------------------------\nSkąd wziąć japońską nazwę?\nKomendą `wyszukajEvent 1 <nazwa japońska bądź angielska>`")]
@@ -352,6 +365,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("eventJP")]
+        [CommandLang("eventJP", "eventJP")]
         [Description("Pokazuje event na serwerze JP.\n------------------------------\nSkąd wziąć japońską nazwę ?\nKomendą `wyszukajEvent 1 <nazwa japońska bądź angielska>`")]
         public async Task GetJapanEvent(CommandContext ctx, [Description("Nazwa eventu po japońsku."), RemainingText] string name)
         {
@@ -391,6 +405,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("losowyEventEN")]
+        [Aliases("randomEventEN")]
+        [CommandLang("losowyEventEN", "randomEventEN")]
         [Description("Pokazuje losowy event z serwera EN.")]
         public async Task GetRandomWorldEvent(CommandContext ctx)
         {
@@ -443,6 +459,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("losowyEventJP")]
+        [Aliases("randomEventJP")]
+        [CommandLang("losowyEventJP", "randomEventJP")]
         [Description("Pokazuje losowy event z serwera JP.")]
         public async Task GetRandomJapanEvent(CommandContext ctx)
         {
@@ -489,6 +507,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("wyszukajEvent")]
+        [Aliases("searchEvent")]
+        [CommandLang("wyszukajEvent", "searchEvent")]
         [Description("Wyszukuje nazwy eventów.\nnp:\n`wyszukajEvent 1 Medley`\nPolecam jako początkową stronę podać `1`.")]
         public async Task SearchEvent(CommandContext ctx, [Description("Strona wyników.")] string page, [Description("Słowa kluczowe."), RemainingText] string keywords)
         {

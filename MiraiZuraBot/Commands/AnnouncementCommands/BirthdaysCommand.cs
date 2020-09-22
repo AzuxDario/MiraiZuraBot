@@ -40,6 +40,8 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         }
 
         [Command("tematyUrodzin")]
+        [Aliases("birthdayTopics")]
+        [CommandLang("tematyUrodzin", "birthdayTopics")]
         [Description("Wyświetla możliwe tematy urodzin.")]
         public async Task BirthdayTopics(CommandContext ctx)
         {
@@ -53,6 +55,8 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         }
 
         [Command("aktywneTematyUrodzin")]
+        [Aliases("activeBirthdayTopics")]
+        [CommandLang("aktywneTematyUrodzin", "activeBirthdayTopics")]
         [Description("Wyświetla aktywne tematy urodzin dla danego kanału.")]
         [RequireBotPermissions(Permissions.ManageGuild)]
         [RequireUserPermissions(Permissions.ManageGuild)]
@@ -141,6 +145,8 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         }
 
         [Command("wlaczTematUrodzin")]
+        [Aliases("turnOnBirthdayTopic")]
+        [CommandLang("wlaczTematUrodzin", "turnOnBirthdayTopic")]
         [Description("Włącza temat urodzin dla danego kanału.")]
         [RequireBotPermissions(Permissions.ManageGuild)]
         [RequireUserPermissions(Permissions.ManageGuild)]
@@ -167,6 +173,8 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         }
 
         [Command("wylaczTematUrodzin")]
+        [Aliases("turnOffBirthdayTopic")]
+        [CommandLang("wylaczTematUrodzin", "turnOffBirthdayTopic")]
         [Description("Wyłącza temat urodzin dla danego kanału.")]
         [RequireBotPermissions(Permissions.ManageGuild)]
         [RequireUserPermissions(Permissions.ManageGuild)]
