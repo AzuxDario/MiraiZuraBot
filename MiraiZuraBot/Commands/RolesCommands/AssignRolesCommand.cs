@@ -1,12 +1,11 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using Microsoft.EntityFrameworkCore;
 using MiraiZuraBot.Attributes;
-using MiraiZuraBot.Database;
-using MiraiZuraBot.Database.Models.DynamicDB;
 using MiraiZuraBot.Helpers;
+using MiraiZuraBot.Services.LanguageService;
 using MiraiZuraBot.Services.RolesService;
+using MiraiZuraBot.Translators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +18,14 @@ namespace MiraiZuraBot.Commands.RolesCommands
     class AssignRolesCommand : BaseCommandModule
     {
         private AssignRolesService _assignRolesService;
+        private LanguageService _languageService;
+        private Translator _translator;
 
-        public AssignRolesCommand(AssignRolesService assignRolesService)
+        public AssignRolesCommand(AssignRolesService assignRolesService, LanguageService languageService, Translator translator)
         {
             _assignRolesService = assignRolesService;
+            _languageService = languageService;
+            _translator = translator;
         }
 
         [Command("pokazRole")]
@@ -31,11 +34,13 @@ namespace MiraiZuraBot.Commands.RolesCommands
         {
             await ctx.TriggerTypingAsync();
 
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             var assignRoles = _assignRolesService.GetRoles(ctx.Guild.Id);
 
             if(assignRoles.Count == 0)
             {
-                await ctx.RespondAsync("Na tym serwerze nie ma ról, które można sobie przypisać.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleRolesOnServer"), _translator.GetString(lang, "roleNoRolesOnServer"));
             }
             else
             {
@@ -49,7 +54,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
                 }
 
                 List<DiscordRole> sortedRoles = discordRoles.OrderBy(o => o.Name).ToList();
-                await PostLongMessageHelper.PostLongMessage(ctx, sortedRoles.Select(p => p.Name).ToList(), "**Role dostępne na serwerze to:**");
+                await PostLongMessageHelper.PostLongMessage(ctx, sortedRoles.Select(p => p.Name).ToList(), _translator.GetString(lang, "roleRolesOnServer"), ", ");
             } 
         }
 
@@ -60,18 +65,20 @@ namespace MiraiZuraBot.Commands.RolesCommands
         {
             await ctx.TriggerTypingAsync();
 
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             var serverRoles = ctx.Guild.Roles;
             var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
             
             if(role.Value == null)
             {
-                await ctx.RespondAsync("Podana rola nie istnieje.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleDoesntExist"));
                 return;
             }
 
             if (HasUserRole(ctx.Member, role.Value))
             {
-                await ctx.RespondAsync("Posiadasz już tę rolę.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleAlreadyHas"));
                 return;
             }
 
@@ -79,16 +86,16 @@ namespace MiraiZuraBot.Commands.RolesCommands
             {
                 if (!CanBotModifyThisRole(role.Value, ctx.Guild.CurrentMember.Roles.ToList()))
                 {
-                    await ctx.RespondAsync("Moje role są za nisko abym mógł nadać tę rolę.");
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleBotRolesTooLowToGrant"));
                     return;
                 }
 
-                await ctx.Member.GrantRoleAsync(role.Value, "Rola nadana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
-                await ctx.RespondAsync("Rola nadana.");
+                await ctx.Member.GrantRoleAsync(role.Value, _translator.GetString(lang, "roleGrantedServerLog"));
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleGranted"));
             }
             else
             {
-                await ctx.RespondAsync("Roli nie ma na liście.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleNotOnList"));
             }
         }
 
@@ -99,18 +106,20 @@ namespace MiraiZuraBot.Commands.RolesCommands
         {
             await ctx.TriggerTypingAsync();
 
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             var serverRoles = ctx.Guild.Roles;
             var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
 
             if (role.Value == null)
             {
-                await ctx.RespondAsync("Podana rola nie istnieje.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleDoesntExist"));
                 return;
             }
 
             if (!HasUserRole(ctx.Member, role.Value))
             {
-                await ctx.RespondAsync("Nie posiadasz tej roli.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleDoesntHas"));
                 return;
             }
 
@@ -118,15 +127,15 @@ namespace MiraiZuraBot.Commands.RolesCommands
             {
                 if (!CanBotModifyThisRole(role.Value, ctx.Guild.CurrentMember.Roles.ToList()))
                 {
-                    await ctx.RespondAsync("Moje role są za nisko abym mógł odebrać tę rolę.");
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleBotRolesTooLowToRemove"));
                     return;
                 }
-                await ctx.Member.RevokeRoleAsync(role.Value, "Rola odebrana przez bota przy użyciu systemu nadawania ról. Działanie zostało zainicjowane przez użytkownika.");
-                await ctx.RespondAsync("Rola odebrana.");
+                await ctx.Member.GrantRoleAsync(role.Value, _translator.GetString(lang, "roleRemovedServerLog"));
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleRemoved"));
             }
             else
             {
-                await ctx.RespondAsync("Roli nie ma na liście.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleNotOnList"));
             }
         }
 
@@ -139,18 +148,20 @@ namespace MiraiZuraBot.Commands.RolesCommands
         {
             await ctx.TriggerTypingAsync();
 
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             var serverRoles = ctx.Guild.Roles;
             var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
 
             if (role.Value == null)
             {
-                await ctx.RespondAsync("Podana rola nie istnieje.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleDoesntExist"));
                 return;
             }
 
             if (_assignRolesService.IsRoleOnList(role.Value.Id))
             {
-                await ctx.RespondAsync("Rola jest już na liście.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleAlreadyOnList"));
                 return;
             }
 
@@ -160,11 +171,11 @@ namespace MiraiZuraBot.Commands.RolesCommands
             {
                 // Add role to database
                 _assignRolesService.AddRoleToDatabase(ctx.Guild.Id, role.Value.Id);
-                await ctx.RespondAsync("Rola dodana do listy ról.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleAddedToList"));
             }
             else
             {
-                await ctx.RespondAsync("Nie możesz dodać tej roli gdyż jest równa lub wyższa twojej najwyższej roli.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleCantAddToList"));
             }
         }
 
@@ -176,18 +187,20 @@ namespace MiraiZuraBot.Commands.RolesCommands
         {
             await ctx.TriggerTypingAsync();
 
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             var serverRoles = ctx.Guild.Roles;
             var role = serverRoles.Select(p => p).Where(q => q.Value.Name == message).FirstOrDefault();
 
             if (role.Value == null)
             {
-                await ctx.RespondAsync("Podana rola nie istnieje.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleDoesntExist"));
                 return;
             }
 
             if (!_assignRolesService.IsRoleOnList(role.Value.Id))
             {
-                await ctx.RespondAsync("Roli nie ma na liście.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleNotOnList"));
                 return;
             }
 
@@ -197,11 +210,11 @@ namespace MiraiZuraBot.Commands.RolesCommands
             {
                 // Add role to database
                 _assignRolesService.RemoveRoleFromDatabase(ctx.Guild.Id, role.Value.Id);
-                await ctx.RespondAsync("Rola usunięta z listy ról.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleRemovedFromList"));
             }
             else
             {
-                await ctx.RespondAsync("Nie możesz usunąć tej roli gdyż jest równa lub wyższa twojej najwyższej roli.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleCantRemoveFromList"));
             }
         }
 

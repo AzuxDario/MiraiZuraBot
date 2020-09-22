@@ -15,6 +15,8 @@ using System.IO;
 using DSharpPlus;
 using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Services.AnnouncementService;
+using MiraiZuraBot.Translators;
+using MiraiZuraBot.Services.LanguageService;
 
 namespace MiraiZuraBot.Commands.AnnouncementCommands
 {
@@ -22,13 +24,17 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
     class BirthdaysCommand : BaseCommandModule
     {
         private BirthdaysService _birthdaysService;
+        private LanguageService _languageService;
+        private Translator _translator;
         private Timer checkMessagesTimer;
         private int checkMessagesInterval;
         private const string imageDirectory = "birthdays/";
 
-        public BirthdaysCommand(BirthdaysService birthdaysService)
+        public BirthdaysCommand(BirthdaysService birthdaysService, LanguageService languageService, Translator translator)
         {
             _birthdaysService = birthdaysService;
+            _languageService = languageService;
+            _translator = translator;            
             checkMessagesInterval = 1000 * 60 * 1;    // every 1 minutes;
             checkMessagesTimer = new Timer(PostBirthdayMessage, null, checkMessagesInterval, Timeout.Infinite);
         }
@@ -37,8 +43,13 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [Description("Wyświetla możliwe tematy urodzin.")]
         public async Task BirthdayTopics(CommandContext ctx)
         {
+            await ctx.TriggerTypingAsync();
+
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             var topics = _birthdaysService.GetBirthdayTopics();
-            await PostLongMessageHelper.PostLongMessage(ctx, topics, "Dostępne tematy urodzin:");
+
+            await PostLongMessageHelper.PostLongMessage(ctx, topics, _translator.GetString(lang, "birthdaysAvailableTopics"), ", ");
         }
 
         [Command("aktywneTematyUrodzin")]
@@ -47,17 +58,21 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task ActiveBirthdayTopics(CommandContext ctx)
         {
+            await ctx.TriggerTypingAsync();
+
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             string channelId;
             channelId = ctx.Channel.Id.ToString();
 
             var topics = _birthdaysService.GetActiveBirthdayTopicsForChannel(Convert.ToUInt64(channelId));
             if (topics.Count > 0)
             {
-                await PostLongMessageHelper.PostLongMessage(ctx, topics, "Tematy urodzin włączone na tym kanale:");
+                await PostLongMessageHelper.PostLongMessage(ctx, topics, _translator.GetString(lang, "birthdaysActiveTopics"), ", ");
             }
             else
             {
-                await ctx.RespondAsync("Dla tego kanału nie ma włączonych żadnych tematów urodzin.");
+                await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "birthdays"), _translator.GetString(lang, "birthdaysNoActiveTopics"));
             }
         }
 
@@ -131,18 +146,22 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task TurnOnBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
         {
+            await ctx.TriggerTypingAsync();
+
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             var result = _birthdaysService.TurnOnBirthdayTopic(ctx.Guild.Id, ctx.Channel.Id, topicName);
 
             switch(result)
             {
                 case BirthdaysService.TurnOnStatus.TurnedOn:
-                    await ctx.RespondAsync("Temat włączono.");
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "birthdays"), _translator.GetString(lang, "birthdaysTurnedOn"));
                     return;
                 case BirthdaysService.TurnOnStatus.AlreadyTurnedOn:
-                    await ctx.RespondAsync("Podany temat jest włączony.");
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "birthdays"), _translator.GetString(lang, "birthdaysAlreadyTurnedOn"));
                     return;
                 case BirthdaysService.TurnOnStatus.TopicDoesntExist:
-                    await ctx.RespondAsync("Podany temat nie istnieje.");
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "birthdays"), _translator.GetString(lang, "birthdaysTopicDoesntExist"));
                     return;
             }
         }
@@ -153,18 +172,22 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task TurnOffBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
         {
+            await ctx.TriggerTypingAsync();
+
+            var lang = _languageService.GetServerLanguage(ctx.Guild.Id);
+
             var result = _birthdaysService.TurnOffBirthdayTopic(ctx.Guild.Id, ctx.Channel.Id, topicName);
 
             switch (result)
             {
                 case BirthdaysService.TurnOffStatus.TurnedOff:
-                    await ctx.RespondAsync("Temat wyłączono.");
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "birthdays"), _translator.GetString(lang, "birthdaysTurnedOff"));
                     return;
                 case BirthdaysService.TurnOffStatus.AlreadyTurnedOff:
-                    await ctx.RespondAsync("Podany temat jest wyłączony.");
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "birthdays"), _translator.GetString(lang, "birthdaysAlreadyTurnedOff"));
                     return;
                 case BirthdaysService.TurnOffStatus.TopicDoesntExist:
-                    await ctx.RespondAsync("Podany temat nie istnieje.");
+                    await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "birthdays"), _translator.GetString(lang, "birthdaysTopicDoesntExist"));
                     return;
             }
         }

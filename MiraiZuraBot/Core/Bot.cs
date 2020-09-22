@@ -7,6 +7,7 @@ using DSharpPlus.Net.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using MiraiZuraBot.Attributes;
 using MiraiZuraBot.Handlers.EmojiHandlers;
+using MiraiZuraBot.Helpers;
 using MiraiZuraBot.Helpers.SchoolidoluHelper;
 using MiraiZuraBot.Helpers.TimeHelper;
 using MiraiZuraBot.Services.AnnouncementService;
@@ -53,6 +54,8 @@ namespace MiraiZuraBot.Core
         public static DiscordClient DiscordClient { get; set; }
         private CommandsNextExtension _commands { get; set; }
         public static ConfigJson configJson { get; private set; }
+        private LanguageService _languageService;
+        private Translator _translator;
 
         public void Run()
         {
@@ -85,6 +88,9 @@ namespace MiraiZuraBot.Core
                 UseInternalLogHandler = true
             };
 
+            _translator = new Translator();
+            _languageService = new LanguageService(_translator);
+
             DiscordClient = new DiscordClient(connectionConfig);
             DiscordClient.MessageCreated += DiscordClient_MessageCreatedAsync;
             DiscordClient.MessageUpdated += DiscordClient_MessageUpdatedAsync;
@@ -115,7 +121,7 @@ namespace MiraiZuraBot.Core
             return new ServiceCollection()
 
             // Singletons
-            .AddSingleton<Translator>()
+            .AddSingleton(_translator)
 
             // Helpers
             .AddScoped<SchoolidoluHelper>()
@@ -237,41 +243,45 @@ namespace MiraiZuraBot.Core
         {
             e.Context.Client.DebugLogger.LogMessage(LogLevel.Error, botname, $"{e.Context.User.Username} tried executing '{e.Command?.QualifiedName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}.", DateTime.Now);
 
+            var lang = _languageService.GetServerLanguage(e.Context.Guild.Id);
+
             switch (e.Exception)
             {
                 case Checks​Failed​Exception ex:
                     {
                         StringBuilder messageToSend = new StringBuilder();
-                        messageToSend.Append("Brak wystarczających uprawnień aby dokończyć akcje.").AppendLine();
+                        messageToSend.Append(_translator.GetString(lang, "errorNotEnoughPermissions")).AppendLine();
 
                         var failedChecks = ex.FailedChecks;
                         foreach(var failedCheck in failedChecks)
                         {
                             if (failedCheck is RequireBotPermissionsAttribute failBot)
                             {
-                                messageToSend.Append("Ja potrzebuje: ");
+                                messageToSend.Append(_translator.GetString(lang, "errorINeed"));
+                                messageToSend.Append(": ");
                                 messageToSend.Append(failBot.Permissions.ToPermissionString());
                                 messageToSend.AppendLine();
                             }
                             else if (failedCheck is RequireUserPermissionsAttribute failUser)
                             {
-                                messageToSend.Append("Ty potrzebujesz: ");
+                                messageToSend.Append(_translator.GetString(lang, "errorYouNeed"));
+                                messageToSend.Append(": ");
                                 messageToSend.Append(failUser.Permissions.ToPermissionString());
                                 messageToSend.AppendLine();
                             }
                             else if (failedCheck is RequireOwnerAttribute)
                             {
-                                messageToSend.Append("Tej komendy może użyć tylko mój twórca.");
+                                messageToSend.Append(_translator.GetString(lang, "errorOnlyMyOwner"));
                                 messageToSend.AppendLine();
                             }
                         }
 
-                        await e.Context.Channel.SendMessageAsync(messageToSend.ToString());
+                        await PostEmbedHelper.PostEmbed(e.Context, _translator.GetString(lang, "error"), messageToSend.ToString());
                         break;
                     }
                 case UnauthorizedException _:
                     {
-                        await e.Context.Member.SendMessageAsync("Brak wystarczających uprawnień aby dokończyć akcje.");
+                        await e.Context.Member.SendMessageAsync(_translator.GetString(lang, "errorNotEnoughPermissions"));
                         break;
                     }
 
