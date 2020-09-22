@@ -4,6 +4,8 @@ using DSharpPlus.CommandsNext.Converters;
 using DSharpPlus.CommandsNext.Entities;
 using DSharpPlus.Entities;
 using MiraiZuraBot.Attributes;
+using MiraiZuraBot.Services.LanguageService;
+using MiraiZuraBot.Translators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,9 @@ namespace MiraiZuraBot.Core
 {
     class CustomHelpFormatter : BaseHelpFormatter
     {
+        private LanguageService _languageService;
+        private Translator _translator;
+        private Translator.Language _lang;
         private string _commandName;
         private string _commandDescription;
         private List<string> _aliases;
@@ -22,11 +27,14 @@ namespace MiraiZuraBot.Core
 
         private const string Color = "#5588EE";
 
-        public CustomHelpFormatter(CommandContext ctx) : base(ctx)
+        public CustomHelpFormatter(CommandContext ctx, LanguageService languageService, Translator translator) : base(ctx)
         {
+            _languageService = languageService;
+            _translator = translator;
+            _lang = _languageService.GetServerLanguage(ctx.Guild.Id);
             _aliases = new List<string>();
             _parameters = new List<string>();
-            _subCommands = new Dictionary<string, List<string>>();
+            _subCommands = new Dictionary<string, List<string>>();            
         }
 
         public override BaseHelpFormatter WithCommand(Command command)
@@ -43,7 +51,7 @@ namespace MiraiZuraBot.Core
 
                     if (argument.DefaultValue != null)
                     {
-                        argumentBuilder.Append($" Default value: {argument.DefaultValue}");
+                        argumentBuilder.Append($" {_translator.GetString(_lang, "helpDefaultValue")}: {argument.DefaultValue}");
                     }
 
                     _parameters.Add(argumentBuilder.ToString());
@@ -108,7 +116,7 @@ namespace MiraiZuraBot.Core
 
         private CommandHelpMessage BuildGeneralHelp(DiscordEmbedBuilder embed)
         {
-            embed.AddField("HELP", "Napisz *help <command_name> aby uzyskać informację o danej komendzie.");
+            embed.AddField(_translator.GetString(_lang, "help"), string.Format(_translator.GetString(_lang, "helpDescription"), Bot.configJson.CommandPrefix));
 
             var orderedSubCommands = _subCommands.OrderBy(p => p.Key).ToList();
             foreach (var group in orderedSubCommands)
@@ -123,8 +131,8 @@ namespace MiraiZuraBot.Core
         {
             embed.AddField(_commandName, _commandDescription);
 
-            if (_aliases.Count > 0) embed.AddField("Aliasy", string.Join(", ", _aliases));
-            if (_parameters.Count > 0) embed.AddField("Parametry", string.Join("\r\n", _parameters));
+            if (_aliases.Count > 0) embed.AddField(_translator.GetString(_lang, "helpAliases"), string.Join(", ", _aliases));
+            if (_parameters.Count > 0) embed.AddField(_translator.GetString(_lang, "helpParameters"), string.Join("\r\n", _parameters));
 
             return new CommandHelpMessage(string.Empty, embed);
         }
