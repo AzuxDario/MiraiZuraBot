@@ -159,5 +159,7 @@
 	"trivia" : "Ciekawostka",
 	"triviaTopics" : "Tematy ciekawostek",
 	"triviaWrongTopic" : "Podany temat nie istnieje. Sprawdź listę tematów komendą `tematyCiekawostek`.",
-	"triviaSource" : "Źródło"
+	"triviaSource" : "Źródło",
+	"timeJst" : "Czas JST",
+	"githubLink" : "**[Link]({0})** do repozytorium bota.",
 }

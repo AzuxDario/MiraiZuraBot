@@ -159,5 +159,7 @@
 	"trivia" : "Trivia",
 	"triviaTopics" : "Trivia topics",
 	"triviaWrongTopic" : "The given topic does not exist. Check the list of topics with the command `tematyCiekawostek`.",
-	"triviaSource" : "Source"
+	"triviaSource" : "Source",
+	"timeJst" : "Time JST",
+	"githubLink" : "**[Link]({0})** to bot repository.",
 }
