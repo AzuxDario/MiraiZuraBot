@@ -20,7 +20,7 @@ using MiraiZuraBot.Services.LanguageService;
 
 namespace MiraiZuraBot.Commands.AnnouncementCommands
 {
-    [CommandsGroup("Powiadamianie")]
+    [GroupLang("Powiadamianie", "Announcing")]
     class BirthdaysCommand : BaseCommandModule
     {
         private BirthdaysService _birthdaysService;

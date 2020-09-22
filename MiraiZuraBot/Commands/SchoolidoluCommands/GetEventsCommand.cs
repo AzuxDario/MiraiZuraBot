@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {
-    [CommandsGroup("SIF")]
+    [GroupLang("SIF", "SIF")]
     class GetEventsCommand : BaseCommandModule
     {
         private SchoolidoluService _schoolidoluService;

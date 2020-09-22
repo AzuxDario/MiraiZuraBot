@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.EmojiCommands
 {
-    [CommandsGroup("Emoji")]
+    [GroupLang("Emoji", "Emoji")]
     class EmojiCounterCommand : BaseCommandModule
     {
         private EmojiCounterService _emojiCounterService;

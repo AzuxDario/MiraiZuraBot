@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.TimeCommands
 {
-    [CommandsGroup("Czas")]
+    [GroupLang("Czas", "Time")]
     class TimeCommand : BaseCommandModule
     {
         private TimeHelper _timeHelper;

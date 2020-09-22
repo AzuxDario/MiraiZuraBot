@@ -74,11 +74,11 @@ namespace MiraiZuraBot.Core
             foreach (var type in assemblyTypes)
             {
                 var attributes = type.GetCustomAttributes();
-                var commandGroupAttribute = attributes.FirstOrDefault(p => p is CommandsGroupAttribute);
+                var commandGroupAttribute = attributes.FirstOrDefault(p => p is GroupLangAttribute);
 
                 if (commandGroupAttribute != null)
                 {
-                    var groupAttribute = (CommandsGroupAttribute)attributes.First(p => p is CommandsGroupAttribute);
+                    var groupAttribute = (GroupLangAttribute)attributes.First(p => p is GroupLangAttribute);
                     var commandHandlers = type.GetMethods();
 
                     foreach (var method in commandHandlers)
@@ -88,15 +88,15 @@ namespace MiraiZuraBot.Core
 
                         if (commandAttribute != null)
                         {
-                            if (!_subCommands.ContainsKey(groupAttribute.Group))
+                            if (!_subCommands.ContainsKey(groupAttribute.GetGroup(_lang)))
                             {
-                                _subCommands.Add(groupAttribute.Group, new List<string>());
+                                _subCommands.Add(groupAttribute.GetGroup(_lang), new List<string>());
                             }
 
-                            _subCommands[groupAttribute.Group].Add($"`{commandAttribute.Name}`");
+                            _subCommands[groupAttribute.GetGroup(_lang)].Add($"`{commandAttribute.Name}`");
                         }
 
-                        _subCommands[groupAttribute.Group] = _subCommands[groupAttribute.Group].OrderBy(p => p).ToList();
+                        _subCommands[groupAttribute.GetGroup(_lang)] = _subCommands[groupAttribute.GetGroup(_lang)].OrderBy(p => p).ToList();
                     }
                 }
             }

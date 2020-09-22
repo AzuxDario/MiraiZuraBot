@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.ManagementCommands
 {
-    [CommandsGroup("Zarządzanie")]
+    [GroupLang("Zarządzanie", "Management")]
     class DescriptionCommand : BaseCommandModule
     {
         private Timer refreshDescriptionTimer;

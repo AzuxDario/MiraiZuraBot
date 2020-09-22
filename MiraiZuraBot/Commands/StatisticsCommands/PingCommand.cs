@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.StatisticsCommands
 {
-    [CommandsGroup("Statystyka")]
+    [GroupLang("Statystyka", "Statistics")]
     class PingCommand : BaseCommandModule
     {
         [Command("ping")]

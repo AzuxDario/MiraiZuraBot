@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.RandomMessagesCommands
 {
-    [CommandsGroup("Tekst")]
+    [GroupLang("Tekst", "Text")]
     class RandomMessageCommand : BaseCommandModule
     {
         private RandomMessageService _randomMessageService;

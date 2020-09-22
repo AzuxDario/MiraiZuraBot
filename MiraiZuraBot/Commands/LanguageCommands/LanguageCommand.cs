@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.LanguageCommands
 {
-    [CommandsGroup("Jęsyk")]
+    [GroupLang("Język", "Language")]
     class LanguageCommand : BaseCommandModule
     {
         private LanguageService _languageService;

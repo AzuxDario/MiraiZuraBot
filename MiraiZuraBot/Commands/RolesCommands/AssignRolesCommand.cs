@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.RolesCommands
 {
-    [CommandsGroup("Role")]
+    [GroupLang("Role", "Roles")]
     class AssignRolesCommand : BaseCommandModule
     {
         private AssignRolesService _assignRolesService;

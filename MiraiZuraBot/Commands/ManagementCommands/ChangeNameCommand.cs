@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.ManagementCommands
 {
-    [CommandsGroup("Zarządzanie")]
+    [GroupLang("Zarządzanie", "Management")]
     class ChangeNameCommand : BaseCommandModule
     {
         [Command("zmienNazwe")]

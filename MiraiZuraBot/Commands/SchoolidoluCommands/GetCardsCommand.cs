@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {
-    [CommandsGroup("SIF")]
+    [GroupLang("SIF", "SIF")]
     class GetCardsCommand : BaseCommandModule
     {
         private SchoolidoluService _schoolidoluService;

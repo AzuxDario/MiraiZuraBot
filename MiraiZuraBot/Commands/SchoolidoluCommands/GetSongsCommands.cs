@@ -16,7 +16,7 @@ using static MiraiZuraBot.Translators.Translator;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {
-    [CommandsGroup("SIF")]
+    [GroupLang("SIF", "SIF")]
     class GetSongsCommands : BaseCommandModule
     {
         private SchoolidoluService _schoolidoluService;

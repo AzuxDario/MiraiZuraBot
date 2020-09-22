@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.RandomMessagesCommands
 {
-    [CommandsGroup("Tekst")]
+    [GroupLang("Tekst", "Text")]
     class TriviaCommand : BaseCommandModule
     {
         private TriviaService _triviaService;
