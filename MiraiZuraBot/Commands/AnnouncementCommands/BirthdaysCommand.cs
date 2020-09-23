@@ -42,7 +42,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [Command("tematyUrodzin")]
         [Aliases("birthdayTopics")]
         [CommandLang("tematyUrodzin", "birthdayTopics")]
-        [Description("Wyświetla możliwe tematy urodzin.")]
+        [DescriptionLang("Wyświetla możliwe tematy urodzin.", "Shows available bitrhday topics")]
         public async Task BirthdayTopics(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -57,7 +57,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [Command("aktywneTematyUrodzin")]
         [Aliases("activeBirthdayTopics")]
         [CommandLang("aktywneTematyUrodzin", "activeBirthdayTopics")]
-        [Description("Wyświetla aktywne tematy urodzin dla danego kanału.")]
+        [DescriptionLang("Wyświetla aktywne tematy urodzin dla danego kanału.", "Shows active bitrhday topics on given channel.")]
         [RequireBotPermissions(Permissions.ManageGuild)]
         [RequireUserPermissions(Permissions.ManageGuild)]
         public async Task ActiveBirthdayTopics(CommandContext ctx)
@@ -147,10 +147,10 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [Command("wlaczTematUrodzin")]
         [Aliases("turnOnBirthdayTopic")]
         [CommandLang("wlaczTematUrodzin", "turnOnBirthdayTopic")]
-        [Description("Włącza temat urodzin dla danego kanału.")]
+        [DescriptionLang("Włącza temat urodzin dla danego kanału.", "Turn on bitrhday topic on given channel.")]
         [RequireBotPermissions(Permissions.ManageGuild)]
         [RequireUserPermissions(Permissions.ManageGuild)]
-        public async Task TurnOnBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
+        public async Task TurnOnBirthdayTopic(CommandContext ctx, [DescriptionLang("Temat", "Topic"), RemainingText] string topicName)
         {
             await ctx.TriggerTypingAsync();
 
@@ -175,10 +175,10 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [Command("wylaczTematUrodzin")]
         [Aliases("turnOffBirthdayTopic")]
         [CommandLang("wylaczTematUrodzin", "turnOffBirthdayTopic")]
-        [Description("Wyłącza temat urodzin dla danego kanału.")]
+        [DescriptionLang("Wyłącza temat urodzin dla danego kanału.", "Turn off bitrhday topic on given channel.")]
         [RequireBotPermissions(Permissions.ManageGuild)]
         [RequireUserPermissions(Permissions.ManageGuild)]
-        public async Task TurnOffBirthdayTopic(CommandContext ctx, [Description("Temat."), RemainingText] string topicName)
+        public async Task TurnOffBirthdayTopic(CommandContext ctx, [DescriptionLang("Temat", "Topic"), RemainingText] string topicName)
         {
             await ctx.TriggerTypingAsync();
 
