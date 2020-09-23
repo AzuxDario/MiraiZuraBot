@@ -66,17 +66,22 @@ namespace MiraiZuraBot.Core
                 foreach (var argument in command.Overloads[0].Arguments)
                 {
                     var argumentBuilder = new StringBuilder();
+                    string argumentName = argument.Name;
                     string argumentDesc = null;
 
-                    foreach (var attribute in command.CustomAttributes)
+                    foreach (var attribute in argument.CustomAttributes)
                     {
                         if (attribute is DescriptionLangAttribute desc)
                         {
                             argumentDesc = desc.GetDescription(_lang);
                         }
+                        else if (attribute is ParameterLangAttribute param)
+                        {
+                            argumentName = param.GetParameterName(_lang);
+                        }
                     }
 
-                        argumentBuilder.Append($"`{argument.Name}`: {argumentDesc}");
+                        argumentBuilder.Append($"`{argumentName}`: {argumentDesc}");
 
                     if (argument.DefaultValue != null)
                     {
