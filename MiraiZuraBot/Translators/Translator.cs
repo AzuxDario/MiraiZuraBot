@@ -11,9 +11,12 @@ namespace MiraiZuraBot.Translators
     {
         public enum Language { Polish, English };
 
+        public enum DbString { Birthdays, Trivia, RandomMessages };
+
         private List<string> availableLanguages = new List<string>() { "English", "Polski" };
 
         private Dictionary<Language, Dictionary<string, string>> languageStrings;
+        private Dictionary<Language, Dictionary<DbString, Dictionary<string, string>>> databaseStrings;
         private const string translationsDirectory = "translations/";
 
         public Translator()
@@ -30,6 +33,18 @@ namespace MiraiZuraBot.Translators
             try
             {
                 return languageStrings[lang][stringName];
+            }
+            catch (KeyNotFoundException)
+            {
+                return "String not found";
+            }
+        }
+
+        public string GetDbString(Language lang, DbString dbString, string stringName)
+        {
+            try
+            {
+                return databaseStrings[lang][dbString][stringName];
             }
             catch (KeyNotFoundException)
             {
