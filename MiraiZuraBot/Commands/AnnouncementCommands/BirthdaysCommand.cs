@@ -150,7 +150,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [DescriptionLang("Włącza temat urodzin dla danego kanału.", "Turn on bitrhday topic on given channel.")]
         [RequireBotPermissions(Permissions.ManageGuild)]
         [RequireUserPermissions(Permissions.ManageGuild)]
-        public async Task TurnOnBirthdayTopic(CommandContext ctx, [DescriptionLang("Temat", "Topic"), RemainingText] string topicName)
+        public async Task TurnOnBirthdayTopic(CommandContext ctx, [DescriptionLang("Nazwa tematu", "Topic name"), ParameterLang("Temat", "Topic"), RemainingText] string topicName)
         {
             await ctx.TriggerTypingAsync();
 
@@ -178,7 +178,7 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
         [DescriptionLang("Wyłącza temat urodzin dla danego kanału.", "Turn off bitrhday topic on given channel.")]
         [RequireBotPermissions(Permissions.ManageGuild)]
         [RequireUserPermissions(Permissions.ManageGuild)]
-        public async Task TurnOffBirthdayTopic(CommandContext ctx, [DescriptionLang("Temat", "Topic"), RemainingText] string topicName)
+        public async Task TurnOffBirthdayTopic(CommandContext ctx, [DescriptionLang("Nazwa tematu", "Topic name"), ParameterLang("Temat", "Topic"), RemainingText] string topicName)
         {
             await ctx.TriggerTypingAsync();
 
