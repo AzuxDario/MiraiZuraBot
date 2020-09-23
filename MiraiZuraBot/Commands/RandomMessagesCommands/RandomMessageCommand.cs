@@ -21,7 +21,7 @@ namespace MiraiZuraBot.Commands.RandomMessagesCommands
 
         [Command("AqoursNews")]
         [CommandLang("AqoursNews", "AqoursNews")]
-        [Description("Pokazuje zmyśloną informacje o Aqours.")]
+        [DescriptionLang("Pokazuje zmyśloną informacje o Aqours.", "It shows fake news about Aqours.")]
         public async Task AqoursNews(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

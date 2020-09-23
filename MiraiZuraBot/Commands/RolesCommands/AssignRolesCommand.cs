@@ -31,7 +31,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
         [Command("pokazRole")]
         [Aliases("showRoles")]
         [CommandLang("pokazRole", "showRoles")]
-        [Description("Pokazuje role, które można przydzielić sobie na tym serwerze.")]
+        [DescriptionLang("Pokazuje role, które można przydzielić sobie na tym serwerze.", "Shows the roles that you can assign yourself on this server.")]
         public async Task ShowRoles(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -63,9 +63,9 @@ namespace MiraiZuraBot.Commands.RolesCommands
         [Command("nadajRole")]
         [Aliases("assignRole")]
         [CommandLang("nadajRole", "assignRole")]
-        [Description("Dodaje role z listy ról.")]
+        [DescriptionLang("Dodaje tobie role z listy ról.", "Assign role to you from the role list.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
-        public async Task GiveRole(CommandContext ctx, [RemainingText] string message)
+        public async Task GiveRole(CommandContext ctx, [DescriptionLang("Pełna nazwa roli", "Full role name"), ParameterLang("Rola", "Role"), RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
 
@@ -106,9 +106,9 @@ namespace MiraiZuraBot.Commands.RolesCommands
         [Command("odbierzRole")]
         [Aliases("removeRole")]
         [CommandLang("odbierzRole", "removeRole")]
-        [Description("Odbiera role z listy ról.")]
+        [DescriptionLang("Odbiera tobie role z listy ról.", "Remove role from you from the role list.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
-        public async Task RemoveRole(CommandContext ctx, [RemainingText] string message)
+        public async Task RemoveRole(CommandContext ctx, [DescriptionLang("Pełna nazwa roli", "Full role name"), ParameterLang("Rola", "Role"), RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
 
@@ -149,10 +149,10 @@ namespace MiraiZuraBot.Commands.RolesCommands
         [Command("dodajRole")]
         [Aliases("addRole")]
         [CommandLang("dodajRole", "addRole")]
-        [Description("Dodaje rolę do listy roli jakie mogą sobie przydzielać członkowie serwera.")]
+        [DescriptionLang("Dodaje rolę do listy roli jakie mogą sobie przydzielać członkowie serwera.", "Adds a role to the role list that server members can assign.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         [RequireUserPermissions(DSharpPlus.Permissions.ManageRoles)]
-        public async Task AddRole(CommandContext ctx, [RemainingText] string message)
+        public async Task AddRole(CommandContext ctx, [DescriptionLang("Pełna nazwa roli", "Full role name"), ParameterLang("Rola", "Role"), RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
 
@@ -190,10 +190,10 @@ namespace MiraiZuraBot.Commands.RolesCommands
         [Command("usunRole")]
         [Aliases("deleteRole")]
         [CommandLang("usunRole", "deleteRole")]
-        [Description("Usuwa rolę z listy roli jakie mogą sobie przydzielać członkowie serwera.")]
+        [DescriptionLang("Usuwa rolę z listy roli jakie mogą sobie przydzielać członkowie serwera.", "Removes a role from the role list that can be assigned by server members.")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageRoles)]
         [RequireUserPermissions(DSharpPlus.Permissions.ManageRoles)]
-        public async Task DeleteRole(CommandContext ctx, [RemainingText] string message)
+        public async Task DeleteRole(CommandContext ctx, [DescriptionLang("Pełna nazwa roli", "Full role name"), ParameterLang("Rola", "Role"), RemainingText] string message)
         {
             await ctx.TriggerTypingAsync();
 

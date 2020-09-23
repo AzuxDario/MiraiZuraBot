@@ -26,7 +26,7 @@ namespace MiraiZuraBot.Commands.StatisticsCommands
 
         [Command("github")]
         [CommandLang("github", "github")]
-        [Description("Zwraca link do repozytorium")]
+        [DescriptionLang("Zwraca link do repozytorium bota.", "Shows link to bot repository.")]
         public async Task Github(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

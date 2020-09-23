@@ -35,7 +35,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         [Command("losowaPiosenka")]
         [Aliases("randomSong")]
         [CommandLang("losowaPiosenka", "randomSong")]
-        [Description("Pokazuje losową piosenkę.\nnp:\n*losowaPiosenka")]
+        [DescriptionLang("Pokazuje losową piosenkę.\nnp:\n*losowaPiosenka", "Shows a random song.\ne.g.\n`randomSong`")]
         public async Task RandomSong(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -65,8 +65,9 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         [Command("piosenka")]
         [Aliases("song")]
         [CommandLang("piosenka", "song")]
-        [Description("Pokazuje piosenkę.\n------------------------------\nSkąd wziąć japońską nazwę ?\nKomendą `wyszukajEvent 1 <nazwa japońska bądź angielska>`")]
-        public async Task GetJapanEvent(CommandContext ctx, [Description("Nazwa piosenki po japońsku."), RemainingText] string name)
+        [DescriptionLang("Pokazuje piosenkę.\n------------------------------\nSkąd wziąć japońską nazwę?\nKomendą `wyszukajPiosenke 1 <nazwa japońska bądź angielska>`",
+            "Shows song.\n------------------------------\nWhere to get the Japanese name?\nBy command `searchSong 1  <Japanese or English name>`")]
+        public async Task GetJapanEvent(CommandContext ctx, [DescriptionLang("Nazwa piosenki po japońsku", "The name of the song in Japanese"), ParameterLang("Tytuł", "Title"), RemainingText] string name)
         {
             await ctx.TriggerTypingAsync();
 
@@ -97,9 +98,12 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         [Command("wyszukajPiosenke")]
         [Aliases("searchSong")]
         [CommandLang("wyszukajPiosenke", "searchSong")]
-        [Description("Wyszukuje piosenki.\nnp:\n`wyszukajPiosenke 1 Snow`\nPolecam jako początkową stronę podać `1`." +
-            "\nWyszukiwanie odbywa się po nazwach.")]
-        public async Task SearchIdol(CommandContext ctx, [Description("Strona wyników.")] string page, [Description("Słowa kluczowe."), RemainingText] string keywords)
+        [DescriptionLang("Wyszukuje piosenki.\nnp:\n`wyszukajPiosenke 1 Snow`\nPolecam jako początkową stronę podać `1`." +
+            "\nWyszukiwanie odbywa się po nazwach.",
+            "Search for songs.\ne.g.\n`searchSong 1 Snow`\nI recommend to choose `1` as the initial page." +
+            "\nSearch by names.")]
+        public async Task SearchIdol(CommandContext ctx, [DescriptionLang("Strona wyników", "Result page"), ParameterLang("Strona", "Page")]  string page,
+            [DescriptionLang("Fraza do wyszukania", "The phrase to search for"), ParameterLang("Słowa kluczowe", "Keywords"), RemainingText] string keywords)
         {
             await ctx.TriggerTypingAsync();
 

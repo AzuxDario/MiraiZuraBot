@@ -28,7 +28,7 @@ namespace MiraiZuraBot.Commands.TimeCommands
 
         [Command("jst")]
         [CommandLang("jst", "jst")]
-        [Description("Pokazuje japoński czas.")]
+        [DescriptionLang("Pokazuje japoński czas.", "Shows Japan time.")]
         public async Task Jst(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

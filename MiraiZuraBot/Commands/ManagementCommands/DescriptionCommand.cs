@@ -30,9 +30,9 @@ namespace MiraiZuraBot.Commands.ManagementCommands
         [Command("opis")]
         [Aliases("description")]
         [CommandLang("opis", "description")]
-        [Description("Zmień opis bota.")]
+        [DescriptionLang("Zmień opis bota.", "Changes bot description.")]
         [RequireOwner]
-        public async Task Description(CommandContext ctx, [Description("New description.")] [RemainingText] string description)
+        public async Task Description(CommandContext ctx, [DescriptionLang("Nowy opis", "New description"), ParameterLang("Opis", "Description"), RemainingText] string description)
         {
             if (ctx.Member.Id == Bot.configJson.Developer)
             {

@@ -13,6 +13,7 @@ namespace MiraiZuraBot.Commands.StatisticsCommands
     {
         [Command("ping")]
         [CommandLang("ping", "ping")]
+        [DescriptionLang("Sprawdź ping.", "Check ping.")]
         [Description("Sprawdź ping.")]
         public async Task Ping(CommandContext ctx)
         {

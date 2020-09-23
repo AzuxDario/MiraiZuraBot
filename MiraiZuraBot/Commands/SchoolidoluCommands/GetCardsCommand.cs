@@ -34,8 +34,9 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         [Command("karta")]
         [Aliases("card")]
         [CommandLang("karta", "card")]
-        [Description("Pokazuje karte na bazie jej id.\nnp:\n*karta 1599\n*karta 1599 idolizowana")]
-        public async Task Card(CommandContext ctx, [Description("ID karty.")] string id, [Description("Czy idolizowana.")] string isIdolised = null)
+        [DescriptionLang("Pokazuje karte na bazie jej id.\nnp:\n`karta 1599`\n`karta 1599 idolizowana`", "Shows card based on her id.\ne.g.\n`card 1599`\n`card 1599 idolised`")]
+        public async Task Card(CommandContext ctx, [DescriptionLang("ID Karty", "Card ID"), ParameterLang("ID", "ID")] string id,
+            [DescriptionLang("Napisz `idolizowana` dla idolizowanej karty", "Write `idolised` for idolised card"), ParameterLang("Idolizowana", "Idolised")] string isIdolised = null)
         {
             await ctx.TriggerTypingAsync();
 
@@ -45,7 +46,7 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
 
             if (cardData.StatusCode == HttpStatusCode.OK)
             {
-                if (isIdolised == "idolizowana")
+                if (isIdolised == "idolizowana" || isIdolised == "idolised")
                 {
                     // Some cards might not have idolised version
                     if (cardData.Data.Card_idolized_image != null)
@@ -91,8 +92,8 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         [Command("losowaKarta")]
         [Aliases("randomCard")]
         [CommandLang("losowaKarta", "randomCard")]
-        [Description("Pokazuje losową karte. Można sprecyzować imie idolki.\nnp:\n*losowaKarta\n*losowaKarta Watanabe You")]
-        public async Task RandomCard(CommandContext ctx, [Description("Imie idolki."), RemainingText] string name)
+        [DescriptionLang("Pokazuje losową karte. Można sprecyzować imie idolki.\nnp:\n`losowaKarta`\n`losowaKarta Watanabe You`", "Shows random card.\ne.g.\n`randomCard`\n`randomCard Watanabe You`")]
+        public async Task RandomCard(CommandContext ctx, [DescriptionLang("Imie idolki", "Idol name"), ParameterLang("Imie", "Name"), RemainingText] string name)
         {
             await ctx.TriggerTypingAsync();
 
@@ -141,11 +142,16 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         [Command("wyszukajKarte")]
         [Aliases("searchCard")]
         [CommandLang("wyszukajKarte", "searchCard")]
-        [Description("Wyszukuje karty na podstawie fraz oraz rzadkości i atrybutu.\nnp:\n`wyszukajKarte 1 Watanabe You UR cool`\nPolecam jako początkową stronę podać `1`." +
-            "\nDozwolone atrybuty: `Smile`, `Pure`, `Cool`, `All`nDozwolone rzadkości: `N`, `R`, `SR`, `SSR`, `UR`" +
-            "\n Można podać jedną wartość atrybutu oraz wiele rzadkości w dowolnym miejscu zapytania." +
-            "\nWyszukiwanie odbywa się po imionach, skillach oraz eventach.")]
-        public async Task SearchCard(CommandContext ctx, [Description("Strona wyników.")] string page, [Description("Słowa kluczowe."), RemainingText] string keywords)
+        [DescriptionLang("Wyszukuje karty na podstawie fraz oraz rzadkości i atrybutu.\nnp:\n`wyszukajKarte 1 Watanabe You UR cool`\nPolecam jako początkową stronę podać `1`." +
+            "\nDozwolone atrybuty: `Smile`, `Pure`, `Cool`, `All`\nDozwolone rzadkości: `N`, `R`, `SR`, `SSR`, `UR`" +
+            "\nMożna podać jedną wartość atrybutu oraz wiele rzadkości w dowolnym miejscu zapytania." +
+            "\nWyszukiwanie odbywa się po imionach, skillach oraz eventach.",
+            "Search for cards based on phrases, rarity and attribute.\ne.g.\n`searchCard 1 Watanabe You UR cool`\nI recommend to choose `1` as the initial page." +
+            "\nAllowed attributes: `Smile`, `Pure`, `Cool`, `All` \nAllowed rarities: `N`, `R`, `SR`, `SSR`, `UR`" +
+            "\nOne attribute value and multiple rarities can be specified anywhere in the query." +
+            "\nSearch is done by names, skills and events.")]
+        public async Task SearchCard(CommandContext ctx, [DescriptionLang("Strona wyników", "Result page"), ParameterLang("Strona", "Page")] string page,
+            [DescriptionLang("Fraza do wyszukania", "The phrase to search for"), ParameterLang("Słowa kluczowe", "Keywords"), RemainingText] string keywords)
         {
             await ctx.TriggerTypingAsync();
 
