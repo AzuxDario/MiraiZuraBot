@@ -20,8 +20,8 @@ namespace MiraiZuraBot.Translators
         {
             languageStrings = new Dictionary<Language, Dictionary<string, string>>();
 
-            ReadFile(Language.Polish, "polish.json");
-            ReadFile(Language.English, "english.json");
+            languageStrings.Add(Language.Polish, ReadFile(Language.Polish, "polish.json"));
+            languageStrings.Add(Language.English, ReadFile(Language.English, "english.json"));
 
         }
 
@@ -60,14 +60,13 @@ namespace MiraiZuraBot.Translators
             return availableLanguages;
         }
 
-        private void ReadFile(Language lang, string filename)
+        private Dictionary<string, string> ReadFile(Language lang, string filename)
         {
             try
             {
                 string file = File.ReadAllText(translationsDirectory + filename);
 
-                Dictionary<string, string> dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(file);
-                languageStrings.Add(lang, dict);
+                return JsonConvert.DeserializeObject<Dictionary<string, string>>(file);
             }
             catch (FileNotFoundException ex)
             {
@@ -89,6 +88,7 @@ namespace MiraiZuraBot.Translators
                 Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Problem during reading: " + filename + " Errored: " + ex.Message, DateTime.Now);
                 Environment.Exit(-1);
             }
+            return null;
         }
     }
 }
