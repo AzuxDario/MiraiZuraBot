@@ -39,15 +39,44 @@ namespace MiraiZuraBot.Core
 
         public override BaseHelpFormatter WithCommand(Command command)
         {
-            _commandName = command.Name;
-            _commandDescription = command.Description;
+            _commandDescription = _translator.GetString(_lang, "helpCommandNoDescription");
+
+            foreach (var attribute in command.CustomAttributes)
+            {
+                if (attribute is CommandLangAttribute comm)
+                {
+                    _commandName = comm.GetCommand(_lang);
+                }
+                else if (attribute is DescriptionLangAttribute desc)
+                {
+                    _commandDescription = desc.GetDescription(_lang);
+                }
+                else if (attribute is AliasLangAttribute al)
+                {
+                    var aliases = al.GetAliases(_lang);
+                    foreach (var alias in aliases)
+                    {
+                        _aliases.Add($"`{alias}`");
+                    }
+                }
+            }
 
             if (command.Overloads.Count > 0)
             {
                 foreach (var argument in command.Overloads[0].Arguments)
                 {
                     var argumentBuilder = new StringBuilder();
-                    argumentBuilder.Append($"`{argument.Name}`: {argument.Description}");
+                    string argumentDesc = null;
+
+                    foreach (var attribute in command.CustomAttributes)
+                    {
+                        if (attribute is DescriptionLangAttribute desc)
+                        {
+                            argumentDesc = desc.GetDescription(_lang);
+                        }
+                    }
+
+                        argumentBuilder.Append($"`{argument.Name}`: {argumentDesc}");
 
                     if (argument.DefaultValue != null)
                     {
@@ -57,12 +86,6 @@ namespace MiraiZuraBot.Core
                     _parameters.Add(argumentBuilder.ToString());
                 }
             }
-
-            foreach (var alias in command.Aliases)
-            {
-                _aliases.Add($"`{alias}`");
-            }
-
             return this;
         }
 

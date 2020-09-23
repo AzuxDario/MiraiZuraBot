@@ -6,6 +6,7 @@
 	"errorOnlyMyOwner" : "This command can be used only by bot owner.",
 	"help" : "Help",
 	"helpDescription" : "Type {0}help <command_name> to get info about given command.",
+	"helpCommandNoDescription" : "Command has no description.",
 	"helpAliases" : "Aliases",
 	"helpParameters" : "Parameters",
 	"helpDefaultValue" : "Default value",

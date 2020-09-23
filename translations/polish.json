@@ -6,6 +6,7 @@
 	"errorOnlyMyOwner" : "Tej komendy może użyć tylko mój twórca.",
 	"help" : "Pomoc",
 	"helpDescription" : "Napisz {0}help <command_name> aby uzyskać informację o danej komendzie.",
+	"helpCommandNoDescription" : "Brak opisu komendy.",
 	"helpAliases" : "Aliasy",
 	"helpParameters" : "Parametry",
 	"helpDefaultValue" : "Domyślna wartość",
