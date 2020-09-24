@@ -26,6 +26,22 @@ namespace MiraiZuraBot.Translators
             languageStrings.Add(Language.Polish, ReadFile(Language.Polish, "polish.json"));
             languageStrings.Add(Language.English, ReadFile(Language.English, "english.json"));
 
+            databaseStrings = new Dictionary<Language, Dictionary<DbString, Dictionary<string, string>>>();
+
+            databaseStrings.Add(Language.Polish,
+                new Dictionary<DbString, Dictionary<string, string>>
+                {
+                    { DbString.Birthdays, ReadFile(Language.Polish, "polishBirthdays.json") }
+                }
+            );
+
+            databaseStrings.Add(Language.English,
+                new Dictionary<DbString, Dictionary<string, string>>
+                {
+                    { DbString.Birthdays, ReadFile(Language.English, "englishBirthdays.json") }
+                }
+            );
+
         }
 
         public string GetString(Language lang, string stringName)
