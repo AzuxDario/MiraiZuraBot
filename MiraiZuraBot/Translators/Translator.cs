@@ -31,14 +31,16 @@ namespace MiraiZuraBot.Translators
             databaseStrings.Add(Language.Polish,
                 new Dictionary<DbString, Dictionary<string, string>>
                 {
-                    { DbString.Birthdays, ReadFile(Language.Polish, "polishBirthdays.json") }
+                    { DbString.Birthdays, ReadFile(Language.Polish, "polishBirthdays.json") },
+                    { DbString.Trivia, ReadFile(Language.Polish, "polishTrivia.json") }
                 }
             );
 
             databaseStrings.Add(Language.English,
                 new Dictionary<DbString, Dictionary<string, string>>
                 {
-                    { DbString.Birthdays, ReadFile(Language.English, "englishBirthdays.json") }
+                    { DbString.Birthdays, ReadFile(Language.English, "englishBirthdays.json") },
+                    { DbString.Trivia, ReadFile(Language.English, "englishTrivia.json") }
                 }
             );
 
