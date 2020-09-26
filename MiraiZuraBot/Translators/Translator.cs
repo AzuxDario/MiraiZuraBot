@@ -32,7 +32,8 @@ namespace MiraiZuraBot.Translators
                 new Dictionary<DbString, Dictionary<string, string>>
                 {
                     { DbString.Birthdays, ReadFile(Language.Polish, "polishBirthdays.json") },
-                    { DbString.Trivia, ReadFile(Language.Polish, "polishTrivia.json") }
+                    { DbString.Trivia, ReadFile(Language.Polish, "polishTrivia.json") },
+                    { DbString.RandomMessages, ReadFile(Language.Polish, "polishRandomMessages.json") }
                 }
             );
 
@@ -40,7 +41,8 @@ namespace MiraiZuraBot.Translators
                 new Dictionary<DbString, Dictionary<string, string>>
                 {
                     { DbString.Birthdays, ReadFile(Language.English, "englishBirthdays.json") },
-                    { DbString.Trivia, ReadFile(Language.English, "englishTrivia.json") }
+                    { DbString.Trivia, ReadFile(Language.English, "englishTrivia.json") },
+                    { DbString.RandomMessages, ReadFile(Language.English, "englishRandomMessages.json") }
                 }
             );
 
