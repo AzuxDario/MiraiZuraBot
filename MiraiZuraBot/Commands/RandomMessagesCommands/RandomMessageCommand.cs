@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.RandomMessagesCommands
 {
-    [CommandsGroup("Tekst")]
+    [GroupLang("Tekst", "Text")]
     class RandomMessageCommand : BaseCommandModule
     {
         private RandomMessageService _randomMessageService;
@@ -20,7 +20,8 @@ namespace MiraiZuraBot.Commands.RandomMessagesCommands
         }
 
         [Command("AqoursNews")]
-        [Description("Pokazuje zmyśloną informacje o Aqours.")]
+        [CommandLang("AqoursNews", "AqoursNews")]
+        [DescriptionLang("Pokazuje zmyśloną informacje o Aqours.", "It shows fake news about Aqours.")]
         public async Task AqoursNews(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

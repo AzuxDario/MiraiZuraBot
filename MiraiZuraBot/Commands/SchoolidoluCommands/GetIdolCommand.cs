@@ -15,7 +15,7 @@ using static MiraiZuraBot.Translators.Translator;
 
 namespace MiraiZuraBot.Commands.SchoolidoluCommands
 {
-    [CommandsGroup("SIF")]
+    [GroupLang("SIF", "SIF")]
     class GetIdolCommand : BaseCommandModule
     {
         private SchoolidoluService _schoolidoluService;
@@ -32,8 +32,10 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
     }
 
         [Command("idolka")]
-        [Description("Pokazuje idolkę na bazie jej nazwy.\nnp:\n*idolka Watanabe You \n*idolka Sonoda Umi")]
-        public async Task Idol(CommandContext ctx, [Description("Imie postaci."), RemainingText] string name)
+        [Aliases("idol")]
+        [CommandLang("idolka", "idol")]
+        [DescriptionLang("Pokazuje idolkę na bazie jej nazwy.\nnp:\n`idolka Watanabe You` \n`idolka Sonoda Umi`", "Shows the idol based on its name.\ne.g.\n`idol Watanabe You`\n`idol Sonoda Umi`")]
+        public async Task Idol(CommandContext ctx, [DescriptionLang("Imie idolki", "Idol name"), ParameterLang("Imie", "Name"), RemainingText] string name)
         {
             await ctx.TriggerTypingAsync();
 
@@ -54,7 +56,9 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("losowaIdolka")]
-        [Description("Pokazuje losową idolkę.\nnp:\n*losowaIdolka")]
+        [Aliases("randomIdol")]
+        [CommandLang("losowaIdolka", "randomIdol")]
+        [DescriptionLang("Pokazuje losową idolkę.\nnp:\n`losowaIdolka`", "Shows a random idol.\ne.g.\n`randomIdol`")]
         public async Task RandomIdol(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -82,9 +86,14 @@ namespace MiraiZuraBot.Commands.SchoolidoluCommands
         }
 
         [Command("wyszukajIdolke")]
-        [Description("Wyszukuje idolki.\nnp:\n`wyszukajIdolke 1 You`\nPolecam jako początkową stronę podać `1`." +
-            "\nWyszukiwanie odbywa się po imionach, urodzinach, wymiarach, jedzeniu, hobby oraz danych seiyuu.")]
-        public async Task SearchIdol(CommandContext ctx, [Description("Strona wyników.")] string page, [Description("Słowa kluczowe."), RemainingText] string keywords)
+        [Aliases("searchIdol")]
+        [CommandLang("wyszukajIdolke", "searchIdol")]
+        [DescriptionLang("Wyszukuje idolki.\nnp:\n`wyszukajIdolke 1 You`\nPolecam jako początkową stronę podać `1`." +
+            "\nWyszukiwanie odbywa się po imionach, urodzinach, wymiarach, jedzeniu, hobby oraz danych seiyuu.",
+            "Search for idols.\ne.g.\n`searchIdol 1 You`\nI recommend to choose `1` as the initial page." +
+            "\nSearch by names, birthdays, dimensions, food, hobbies and seiyuu data.")]
+        public async Task SearchIdol(CommandContext ctx, [DescriptionLang("Strona wyników", "Result page"), ParameterLang("Strona", "Page")] string page,
+            [DescriptionLang("Fraza do wyszukania", "The phrase to search for"), ParameterLang("Słowa kluczowe", "Keywords"), RemainingText] string keywords)
         {
             await ctx.TriggerTypingAsync();
 

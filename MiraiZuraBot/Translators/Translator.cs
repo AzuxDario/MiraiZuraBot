@@ -11,17 +11,40 @@ namespace MiraiZuraBot.Translators
     {
         public enum Language { Polish, English };
 
+        public enum DbString { Birthdays, Trivia, RandomMessages };
+
         private List<string> availableLanguages = new List<string>() { "English", "Polski" };
 
         private Dictionary<Language, Dictionary<string, string>> languageStrings;
+        private Dictionary<Language, Dictionary<DbString, Dictionary<string, string>>> databaseStrings;
         private const string translationsDirectory = "translations/";
 
         public Translator()
         {
             languageStrings = new Dictionary<Language, Dictionary<string, string>>();
 
-            ReadFile(Language.Polish, "polish.json");
-            ReadFile(Language.English, "english.json");
+            languageStrings.Add(Language.Polish, ReadFile(Language.Polish, "polish.json"));
+            languageStrings.Add(Language.English, ReadFile(Language.English, "english.json"));
+
+            databaseStrings = new Dictionary<Language, Dictionary<DbString, Dictionary<string, string>>>();
+
+            databaseStrings.Add(Language.Polish,
+                new Dictionary<DbString, Dictionary<string, string>>
+                {
+                    { DbString.Birthdays, ReadFile(Language.Polish, "polishBirthdays.json") },
+                    { DbString.Trivia, ReadFile(Language.Polish, "polishTrivia.json") },
+                    { DbString.RandomMessages, ReadFile(Language.Polish, "polishRandomMessages.json") }
+                }
+            );
+
+            databaseStrings.Add(Language.English,
+                new Dictionary<DbString, Dictionary<string, string>>
+                {
+                    { DbString.Birthdays, ReadFile(Language.English, "englishBirthdays.json") },
+                    { DbString.Trivia, ReadFile(Language.English, "englishTrivia.json") },
+                    { DbString.RandomMessages, ReadFile(Language.English, "englishRandomMessages.json") }
+                }
+            );
 
         }
 
@@ -30,6 +53,18 @@ namespace MiraiZuraBot.Translators
             try
             {
                 return languageStrings[lang][stringName];
+            }
+            catch (KeyNotFoundException)
+            {
+                return "String not found";
+            }
+        }
+
+        public string GetDbString(Language lang, DbString dbString, string stringName)
+        {
+            try
+            {
+                return databaseStrings[lang][dbString][stringName];
             }
             catch (KeyNotFoundException)
             {
@@ -60,14 +95,13 @@ namespace MiraiZuraBot.Translators
             return availableLanguages;
         }
 
-        private void ReadFile(Language lang, string filename)
+        private Dictionary<string, string> ReadFile(Language lang, string filename)
         {
             try
             {
                 string file = File.ReadAllText(translationsDirectory + filename);
 
-                Dictionary<string, string> dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(file);
-                languageStrings.Add(lang, dict);
+                return JsonConvert.DeserializeObject<Dictionary<string, string>>(file);
             }
             catch (FileNotFoundException ex)
             {
@@ -89,6 +123,7 @@ namespace MiraiZuraBot.Translators
                 Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Problem during reading: " + filename + " Errored: " + ex.Message, DateTime.Now);
                 Environment.Exit(-1);
             }
+            return null;
         }
     }
 }

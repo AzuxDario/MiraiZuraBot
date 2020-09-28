@@ -224,7 +224,7 @@ namespace MiraiZuraBot.Core
             foreach (var type in assemblyTypes)
             {
                 var attributes = type.GetCustomAttributes();
-                if (attributes.Any(p => p.GetType() == typeof(CommandsGroupAttribute)))
+                if (attributes.Any(p => p.GetType() == typeof(GroupLangAttribute)))
                 {
                     var genericRegisterCommandMethod = registerCommandsMethod.MakeGenericMethod(type);
                     genericRegisterCommandMethod.Invoke(_commands, null);

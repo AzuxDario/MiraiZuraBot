@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.LanguageCommands
 {
-    [CommandsGroup("Jęsyk")]
+    [GroupLang("Język", "Language")]
     class LanguageCommand : BaseCommandModule
     {
         private LanguageService _languageService;
@@ -24,7 +24,9 @@ namespace MiraiZuraBot.Commands.LanguageCommands
         }
 
         [Command("dostepneJezyki")]
-        [Description("Pokazuje dostępne języki.")]
+        [Aliases("availableLanguages")]
+        [CommandLang("dostepneJezyki", "availableLanguages")]
+        [DescriptionLang("Pokazuje dostępne języki.", "Shows available languages.")]
         public async Task ShowLanguages(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();
@@ -37,9 +39,11 @@ namespace MiraiZuraBot.Commands.LanguageCommands
         }
 
         [Command("zmienJezyk")]
-        [Description("Zmień język.")]
+        [Aliases("changeLanguage")]
+        [CommandLang("zmienJezyk", "changeLanguage")]
+        [DescriptionLang("Zmienia język bota na serwerze.", "Changes bot language on server.")]
         [RequireUserPermissions(DSharpPlus.Permissions.ManageGuild)]
-        public async Task ChangeLanguage(CommandContext ctx, [Description("Język."), RemainingText] string language)
+        public async Task ChangeLanguage(CommandContext ctx, [DescriptionLang("Język z listy dostępnych", "Language from the list of available"), ParameterLang("Język", "Language"), RemainingText] string language)
         {
             await ctx.TriggerTypingAsync();
 

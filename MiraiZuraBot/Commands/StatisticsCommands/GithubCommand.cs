@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.StatisticsCommands
 {
-    [CommandsGroup("Statystyka")]
+    [GroupLang("Statystyka", "Statistics")]
     class GithubCommand : BaseCommandModule
     {
         private readonly string GithubLink = "https://github.com/AzuxDario/MiraiZuraBot";
@@ -25,7 +25,8 @@ namespace MiraiZuraBot.Commands.StatisticsCommands
         }
 
         [Command("github")]
-        [Description("Zwraca link do repozytorium")]
+        [CommandLang("github", "github")]
+        [DescriptionLang("Zwraca link do repozytorium bota.", "Shows link to bot repository.")]
         public async Task Github(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

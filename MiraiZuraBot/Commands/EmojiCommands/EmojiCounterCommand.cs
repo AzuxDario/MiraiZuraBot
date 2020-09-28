@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.EmojiCommands
 {
-    [CommandsGroup("Emoji")]
+    [GroupLang("Emoji", "Emoji")]
     class EmojiCounterCommand : BaseCommandModule
     {
         private EmojiCounterService _emojiCounterService;
@@ -29,7 +29,9 @@ namespace MiraiZuraBot.Commands.EmojiCommands
         }
 
         [Command("policzEmoji")]
-        [Description("Zlicza emoji użyte do tej pory na serwerze podczas działania bota.")]
+        [Aliases("countEmoji")]
+        [CommandLang("policzEmoji", "countEmoji")]
+        [DescriptionLang("Zlicza emoji użyte do tej pory na serwerze podczas działania bota.", "Counts the emoji used so far on the server while bot was running.")]
         public async Task CountEmoji(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

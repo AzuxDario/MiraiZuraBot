@@ -10,27 +10,33 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.ManagementCommands
 {
-    [CommandsGroup("Zarządzanie")]
+    [GroupLang("Zarządzanie", "Management")]
     class ChangeNameCommand : BaseCommandModule
     {
         [Command("zmienNazwe")]
-        [Description("Zmień imię bota.")]
+        [Aliases("changeName")]
+        [CommandLang("zmienNazwe", "changeName")]
+        [DescriptionLang("Zmień imie bota.", "Changes bot name.")]
         [RequireOwner]
-        public async Task ChangeName(CommandContext ctx, [Description("Nowe imię.")] [RemainingText] string name)
+        public async Task ChangeName(CommandContext ctx, [DescriptionLang("Nowe imie", "New name"), ParameterLang("Imie", "Name"), RemainingText] string name)
         {
             await Bot.DiscordClient.UpdateCurrentUserAsync(name);
         }
 
         [Command("zmienPseudonim")]
-        [Description("Zmień pseudonim bota.")]
+        [Aliases("changeNick")]
+        [CommandLang("zmienPseudonim", "changeNick")]
+        [DescriptionLang("Zmień pseudonim bota.", "Changes bot nickname.")]
         [RequireOwner]
-        public async Task ChangeNick(CommandContext ctx, [Description("Nowy pseudonim.")] [RemainingText] string name)
+        public async Task ChangeNick(CommandContext ctx, [DescriptionLang("Nowy pseudonim", "New nickname"), ParameterLang("Pseudomin", "Nick"), RemainingText] string name)
         {
             await ctx.Guild.CurrentMember.ModifyAsync(p => p.Nickname = name);
         }
 
         [Command("usunPseudonim")]
-        [Description("Usuń pseudonim bota.")]
+        [Aliases("removeNick")]
+        [CommandLang("usunPseudonim", "removeNick")]
+        [DescriptionLang("Usuń pseudonim bota.", "Remove bot nickname.")]
         [RequireOwner]
         public async Task RemoveNick(CommandContext ctx)
         {

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.RandomMessagesCommands
 {
-    [CommandsGroup("Tekst")]
+    [GroupLang("Tekst", "Text")]
     class TriviaCommand : BaseCommandModule
     {
         private TriviaService _triviaService;
@@ -28,6 +28,9 @@ namespace MiraiZuraBot.Commands.RandomMessagesCommands
         }
 
         [Command("tematyCiekawostek")]
+        [Aliases("triviaTopics")]
+        [CommandLang("tematyCiekawostek", "triviaTopics")]
+        [DescriptionLang("Pokazuje tematy ciekawostek.", "Shows trivia topics")]
         [Description("Pokazuje tematy ciekawostek.")]
         public async Task TriviaTopics(CommandContext ctx)
         {
@@ -40,8 +43,10 @@ namespace MiraiZuraBot.Commands.RandomMessagesCommands
         }
 
         [Command("ciekawostka")]
-        [Description("Pokazuje ciekawostkę")]
-        public async Task GetTrivia(CommandContext ctx, [Description("Temat z listy tematów.")] [RemainingText] string topic = null)
+        [Aliases("trivia")]
+        [CommandLang("ciekawostka", "trivia")]
+        [DescriptionLang("Pokazuje losową ciekawostkę.", "Shows random trivia.")]
+        public async Task GetTrivia(CommandContext ctx, [DescriptionLang("Temat z listy tematów", "Topic from topic list"), ParameterLang("Temat", "Topic"), RemainingText] string topic = null)
         {
             await ctx.TriggerTypingAsync();
 

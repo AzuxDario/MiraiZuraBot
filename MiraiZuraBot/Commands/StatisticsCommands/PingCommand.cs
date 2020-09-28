@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.StatisticsCommands
 {
-    [CommandsGroup("Statystyka")]
+    [GroupLang("Statystyka", "Statistics")]
     class PingCommand : BaseCommandModule
     {
         [Command("ping")]
+        [CommandLang("ping", "ping")]
+        [DescriptionLang("Sprawdź ping.", "Check ping.")]
         [Description("Sprawdź ping.")]
         public async Task Ping(CommandContext ctx)
         {

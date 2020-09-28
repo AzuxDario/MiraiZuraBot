@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.TimeCommands
 {
-    [CommandsGroup("Czas")]
+    [GroupLang("Czas", "Time")]
     class TimeCommand : BaseCommandModule
     {
         private TimeHelper _timeHelper;
@@ -27,7 +27,8 @@ namespace MiraiZuraBot.Commands.TimeCommands
         }
 
         [Command("jst")]
-        [Description("Pokazuje japoński czas.")]
+        [CommandLang("jst", "jst")]
+        [DescriptionLang("Pokazuje japoński czas.", "Shows Japan time.")]
         public async Task Jst(CommandContext ctx)
         {
             await ctx.TriggerTypingAsync();

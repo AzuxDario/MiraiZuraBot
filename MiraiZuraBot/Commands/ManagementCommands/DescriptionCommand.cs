@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MiraiZuraBot.Commands.ManagementCommands
 {
-    [CommandsGroup("Zarządzanie")]
+    [GroupLang("Zarządzanie", "Management")]
     class DescriptionCommand : BaseCommandModule
     {
         private Timer refreshDescriptionTimer;
@@ -28,9 +28,11 @@ namespace MiraiZuraBot.Commands.ManagementCommands
         }
 
         [Command("opis")]
-        [Description("Zmień opis bota.")]
+        [Aliases("description")]
+        [CommandLang("opis", "description")]
+        [DescriptionLang("Zmień opis bota.", "Changes bot description.")]
         [RequireOwner]
-        public async Task Description(CommandContext ctx, [Description("New description.")] [RemainingText] string description)
+        public async Task Description(CommandContext ctx, [DescriptionLang("Nowy opis", "New description"), ParameterLang("Opis", "Description"), RemainingText] string description)
         {
             if (ctx.Member.Id == Bot.configJson.Developer)
             {
