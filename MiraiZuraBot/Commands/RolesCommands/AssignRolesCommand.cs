@@ -80,11 +80,11 @@ namespace MiraiZuraBot.Commands.RolesCommands
                 return;
             }
 
-            if (HasUserRole(ctx.Member, role.Value))
+            /*if (HasUserRole(ctx.Member, role.Value))
             {
                 await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleAlreadyHas"));
                 return;
-            }
+            }*/
 
             if (_assignRolesService.IsRoleOnList(role.Value.Id))
             {
@@ -123,11 +123,11 @@ namespace MiraiZuraBot.Commands.RolesCommands
                 return;
             }
 
-            if (!HasUserRole(ctx.Member, role.Value))
+            /*if (!HasUserRole(ctx.Member, role.Value))
             {
                 await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleDoesntHas"));
                 return;
-            }
+            }*/
 
             if (_assignRolesService.IsRoleOnList(role.Value.Id))
             {
