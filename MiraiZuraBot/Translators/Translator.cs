@@ -1,4 +1,5 @@
-﻿using MiraiZuraBot.Core;
+﻿using Microsoft.Extensions.Logging;
+using MiraiZuraBot.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -105,22 +106,22 @@ namespace MiraiZuraBot.Translators
             }
             catch (FileNotFoundException ex)
             {
-                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Can't find language file: " + filename + " Errored: " + ex.Message, DateTime.Now);
+                Bot.DiscordClient.Logger.Log(LogLevel.Critical, Bot.botname, "Can't find language file: " + filename + " Errored: " + ex.Message, DateTime.Now);
                 Environment.Exit(-1);
             } 
             catch (DirectoryNotFoundException ex)
             {
-                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Can't find directory: " + translationsDirectory + " Errored: " + ex.Message, DateTime.Now);
+                Bot.DiscordClient.Logger.Log(LogLevel.Critical, Bot.botname, "Can't find directory: " + translationsDirectory + " Errored: " + ex.Message, DateTime.Now);
                 Environment.Exit(-1);
             }
             catch (JsonSerializationException ex)
             {
-                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Problem in JSON file: " + filename + " Errored: " + ex.Message, DateTime.Now);
+                Bot.DiscordClient.Logger.Log(LogLevel.Critical, Bot.botname, "Problem in JSON file: " + filename + " Errored: " + ex.Message, DateTime.Now);
                 Environment.Exit(-1);
             }
             catch (Exception ex)
             {
-                Bot.DiscordClient.DebugLogger.LogMessage(DSharpPlus.LogLevel.Critical, Bot.botname, "Problem during reading: " + filename + " Errored: " + ex.Message, DateTime.Now);
+                Bot.DiscordClient.Logger.Log(LogLevel.Critical, Bot.botname, "Problem during reading: " + filename + " Errored: " + ex.Message, DateTime.Now);
                 Environment.Exit(-1);
             }
             return null;
