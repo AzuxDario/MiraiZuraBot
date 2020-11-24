@@ -136,7 +136,7 @@ namespace MiraiZuraBot.Commands.RolesCommands
                     await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleBotRolesTooLowToRemove"));
                     return;
                 }
-                await ctx.Member.GrantRoleAsync(role.Value, _translator.GetString(lang, "roleRemovedServerLog"));
+                await ctx.Member.RevokeRoleAsync(role.Value, _translator.GetString(lang, "roleRemovedServerLog"));
                 await PostEmbedHelper.PostEmbed(ctx, _translator.GetString(lang, "roleSystem"), _translator.GetString(lang, "roleRemoved"));
             }
             else
