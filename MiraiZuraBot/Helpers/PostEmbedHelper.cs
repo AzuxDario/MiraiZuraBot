@@ -56,7 +56,7 @@ namespace MiraiZuraBot.Helpers
                 embed.Thumbnail.Url = thumbnailLink;
             }
 
-            await ctx.RespondAsync(null, false, embed);
+            await ctx.RespondAsync(embed);
         }
     }
 }   

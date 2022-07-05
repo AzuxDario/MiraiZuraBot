@@ -104,7 +104,11 @@ namespace MiraiZuraBot.Commands.AnnouncementCommands
                                 reader.BaseStream.Read(buffer, 0, (int)reader.BaseStream.Length);
                                 var memStream = new MemoryStream(buffer);
 
-                                discordMessage = await discordChannel.SendFileAsync(name, memStream, brithdayRolesMention + channel.Content);
+                                //discordMessage = await discordChannel.SendFileAsync(name, memStream, brithdayRolesMention + channel.Content);
+                                DiscordMessageBuilder builder = new DiscordMessageBuilder();
+                                builder.WithFile(name, memStream);
+                                builder.WithContent(brithdayRolesMention + channel.Content);
+                                discordMessage = await discordChannel.SendMessageAsync(builder);
                             }
                         }
                         catch (FileNotFoundException)
